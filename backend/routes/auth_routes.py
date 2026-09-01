@@ -1,12 +1,63 @@
 import uuid
 from datetime import datetime
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from backend.services.data_service import (
     load_users, save_users, get_user_by_email, update_user
 )
 
 auth_bp = Blueprint('auth_bp', __name__)
+
+
+def public_user(user):
+    """Return the account shape used by the React client without the hash."""
+    favorites = user.get('favorites', {})
+    if not favorites:
+        favorites = {
+            'places': user.get('favorites_places', []),
+            'hotels': user.get('favorites_hotels', [])
+        }
+    return {k: v for k, v in {**user, 'favorites': favorites}.items() if k != 'password_hash'}
+
+
+@auth_bp.route('/api/auth/me')
+def api_me():
+    user = load_users()
+    current = next((item for item in user if item.get('id') == session.get('user_id')), None)
+    return jsonify({'user': public_user(current) if current else None})
+
+
+@auth_bp.route('/api/auth/login', methods=['POST'])
+def api_login():
+    data = request.get_json(silent=True) or {}
+    account = get_user_by_email(data.get('email', ''))
+    if not account or not check_password_hash(account.get('password_hash', ''), data.get('password', '')):
+        return jsonify({'message': 'Email or password is incorrect.'}), 401
+    session.update(user_id=account['id'], name=account['name'], email=account['email'], role=account.get('role', 'tourist'))
+    return jsonify({'user': public_user(account)})
+
+
+@auth_bp.route('/api/auth/signup', methods=['POST'])
+def api_signup():
+    data = request.get_json(silent=True) or {}
+    name, email, password = data.get('name', '').strip(), data.get('email', '').strip().lower(), data.get('password', '')
+    if not name or not email or len(password) < 6 or password != data.get('confirm_password'):
+        return jsonify({'message': 'Enter a name, valid email, and matching password of at least 6 characters.'}), 400
+    if get_user_by_email(email):
+        return jsonify({'message': 'An account with this email already exists.'}), 409
+    account = {'id': f"user_{uuid.uuid4().hex[:8]}", 'name': name, 'email': email, 'phone': data.get('phone', ''), 'password_hash': generate_password_hash(password), 'role': 'tourist', 'favorites': {'places': [], 'hotels': []}, 'created_at': datetime.now().isoformat()}
+    users = load_users()
+    users.append(account)
+    if not save_users(users):
+        return jsonify({'message': 'Unable to create the account right now.'}), 500
+    session.update(user_id=account['id'], name=name, email=email, role='tourist')
+    return jsonify({'user': public_user(account)}), 201
+
+
+@auth_bp.route('/api/auth/logout', methods=['POST'])
+def api_logout():
+    session.clear()
+    return jsonify({'status': 'success'})
 
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
