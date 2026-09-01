@@ -10,15 +10,15 @@
     <div class="detail-hero-content">
       <div style="display: flex; gap: 10px; align-items: center;">
         <span class="place-category-badge" style="position: static;">
-          <i class="fa-solid fa-chart-line"></i> Data Science Scoring Model
+           <i class="fa-solid fa-sparkles"></i> Handpicked stay matches
         </span>
         <span style="color: var(--color-gold-light); font-size: 0.85rem;">
           Haversine Distance + Multi-Criteria MCDM
         </span>
       </div>
-      <h1 class="detail-title" style="font-size: 2.2rem;">Intelligent Hotel Recommendation Engine</h1>
+       <h1 class="detail-title" style="font-size: 2.2rem;">Find a stay that fits your trip</h1>
       <p class="detail-subtitle">
-        Find the optimal hotel tailored to your preferred tourist attraction, budget window, minimum rating, and required amenities using geospatial scoring.
+         Tell us where you are going, what you want to spend, and what matters most. We will bring the best nearby stays to the top.
       </p>
     </div>
   </div>
@@ -124,7 +124,7 @@
             <i class="fa-solid fa-bell-concierge" style="color: var(--color-primary);"></i> Required Facilities:
           </label>
           <div class="checkbox-grid">
-            {% for fac in all_facilities %}
+            {% for fac in ['Free WiFi', 'AC Rooms', 'Swimming Pool', 'Restaurant', 'Gym', 'Free Parking', '24/7 Room Service', 'Breakfast Included', 'Bar', 'Conference Hall'] %}
             <label class="checkbox-label">
               <input 
                 type="checkbox" 
@@ -164,7 +164,7 @@
           <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">
             Target Attraction: 
             <strong style="color: var(--color-primary);">
-              {% if destination %}{{ destination.name }}{% else %}Kolhapur City Center{% endif %}
+              {% if target_place %}{{ target_place.name }}{% else %}Kolhapur City Center{% endif %}
             </strong> 
             • Priority Model: <span style="text-transform: capitalize; font-weight: 600;">{{ priority }}</span>
           </div>
@@ -259,7 +259,7 @@
 
               <!-- Facilities Badges -->
               <div class="hotel-facilities-tags">
-                {% for fac in hotel.matched_facilities %}
+                {% for fac in (hotel.matched_facilities or hotel.facilities) %}
                 <span class="facility-tag matched" title="Matched requested facility">
                   <i class="fa-solid fa-check"></i> {{ fac }}
                 </span>
@@ -276,16 +276,16 @@
             <!-- Algorithm Component Breakdown Metrics -->
             <div class="hotel-score-breakdown">
               <span class="score-pill" title="Proximity Score">
-                <i class="fa-solid fa-route"></i> Dist: <strong>{{ hotel.score_dist }}</strong>
+                <i class="fa-solid fa-route"></i> Dist: <strong>{{ hotel.score_breakdown.proximity_score if hotel.score_breakdown else '-' }}</strong>
               </span>
               <span class="score-pill" title="Price Fit Score">
-                <i class="fa-solid fa-wallet"></i> Price: <strong>{{ hotel.score_price }}</strong>
+                <i class="fa-solid fa-wallet"></i> Price: <strong>{{ hotel.score_breakdown.budget_score if hotel.score_breakdown else '-' }}</strong>
               </span>
               <span class="score-pill" title="Rating Score">
-                <i class="fa-solid fa-star"></i> Rating: <strong>{{ hotel.score_rating }}</strong>
+                <i class="fa-solid fa-star"></i> Rating: <strong>{{ hotel.score_breakdown.rating_score if hotel.score_breakdown else '-' }}</strong>
               </span>
               <span class="score-pill" title="Facility Overlap Score">
-                <i class="fa-solid fa-list-check"></i> Fac: <strong>{{ hotel.score_fac }}</strong>
+                <i class="fa-solid fa-list-check"></i> Fac: <strong>{{ hotel.score_breakdown.amenity_score if hotel.score_breakdown else '-' }}</strong>
               </span>
             </div>
           </div>
@@ -295,7 +295,7 @@
             
             <!-- Circular Total Composite Score Indicator -->
             <div class="score-ring" title="Calculated Composite Recommendation Score (0-100)">
-              <span class="score-num">{{ hotel.total_score }}</span>
+              <span class="score-num">{{ hotel.recommendation_score }}</span>
               <span class="score-label">Score</span>
             </div>
 
@@ -318,7 +318,7 @@
               <button 
                 type="button" 
                 class="btn btn-gold btn-sm"
-                onclick="openBookingModal('{{ hotel.id }}', '{{ hotel.name|replace("'", "\\'") }}', {{ hotel.price_per_night }}, '{{ hotel.image_filename }}', '{{ destination.id if destination else (hotel.destination_id if hotel.destination_id else "") }}', '{{ destination.name if destination else "Kolhapur City Center" }}')"
+                onclick="openBookingModal('{{ hotel.id }}', '{{ hotel.name|replace("'", "\\'") }}', {{ hotel.price_per_night }}, '{{ hotel.image_filename }}', '{{ target_place.id if target_place else (hotel.destination_id if hotel.destination_id else "") }}', '{{ target_place.name if target_place else "Kolhapur City Center" }}')"
                 style="font-weight: 700;"
               >
                 <i class="fa-solid fa-calendar-check"></i> Book Stay
@@ -334,7 +334,7 @@
                 <i class="fa-solid fa-diamond-turn-right"></i> Directions
               </a>
               <a 
-                href="{{ hotel.maps_url }}" 
+                href="https://www.google.com/maps/search/?api=1&query={{ hotel.latitude }},{{ hotel.longitude }}"
                 target="_blank" 
                 rel="noopener noreferrer" 
                 class="btn btn-outline btn-sm"

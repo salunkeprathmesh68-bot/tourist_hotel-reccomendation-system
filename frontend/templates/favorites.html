@@ -31,16 +31,16 @@
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">
       <h2 style="font-size: 1.6rem; color: var(--color-primary-dark); margin: 0;">
         <i class="fa-solid fa-map-location-dot" style="color: var(--color-primary);"></i> Saved Destinations 
-        <span style="font-size: 1rem; color: var(--text-muted); font-weight: normal;">({{ saved_places|length }})</span>
+        <span style="font-size: 1rem; color: var(--text-muted); font-weight: normal;">({{ favorite_places|length }})</span>
       </h2>
       <a href="{{ url_for('index') }}" class="btn btn-outline btn-sm">
         <i class="fa-solid fa-plus"></i> Explore More Destinations
       </a>
     </div>
 
-    {% if saved_places %}
+    {% if favorite_places %}
     <div class="places-grid">
-      {% for place in saved_places %}
+      {% for place in favorite_places %}
       <article class="place-card" id="fav-place-card-{{ place.id }}">
         <div class="place-card-image">
           <img 
@@ -106,16 +106,16 @@
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">
       <h2 style="font-size: 1.6rem; color: var(--color-primary-dark); margin: 0;">
         <i class="fa-solid fa-hotel" style="color: var(--color-primary);"></i> Saved Hotels & Resorts 
-        <span style="font-size: 1rem; color: var(--text-muted); font-weight: normal;">({{ saved_hotels|length }})</span>
+        <span style="font-size: 1rem; color: var(--text-muted); font-weight: normal;">({{ favorite_hotels|length }})</span>
       </h2>
       <a href="{{ url_for('hotels_page') }}" class="btn btn-outline btn-sm">
         <i class="fa-solid fa-wand-magic-sparkles"></i> Hotel Recommendation Portal
       </a>
     </div>
 
-    {% if saved_hotels %}
+    {% if favorite_hotels %}
     <div class="hotel-results-list">
-      {% for hotel in saved_hotels %}
+      {% for hotel in favorite_hotels %}
       <article class="hotel-card" id="fav-hotel-card-{{ hotel.id }}">
         <div class="hotel-card-image">
           <img 

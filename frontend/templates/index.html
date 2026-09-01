@@ -65,7 +65,7 @@
   <div class="container">
     <div class="categories-container">
       {% for cat in categories %}
-      <button class="category-btn {% if cat.id == 'all' %}active{% endif %}" data-category="{{ cat.id }}">
+      <button class="category-btn {% if (active_category|default('all')) == cat.id %}active{% endif %}" data-category="{{ cat.id }}">
         <i class="fa-solid {{ cat.icon }}"></i>
         <span>{{ cat.name }}</span>
       </button>

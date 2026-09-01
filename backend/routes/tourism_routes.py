@@ -122,7 +122,10 @@ def api_toggle_favorite():
         return jsonify({"status": "error", "message": "User not found."}), 404
 
     if 'favorites' not in user:
-        user['favorites'] = {"places": [], "hotels": []}
+        user['favorites'] = {
+            "places": user.get('favorites_places', []),
+            "hotels": user.get('favorites_hotels', [])
+        }
 
     target_list = user['favorites']['places'] if item_type == 'place' else user['favorites']['hotels']
 
@@ -142,6 +145,16 @@ def api_toggle_favorite():
         "item_type": item_type,
         "total_favorites": len(target_list)
     })
+
+
+@tourism_bp.route('/api/favorites')
+@login_required
+def api_favorites():
+    user = get_user_by_id(session['user_id'])
+    favorites = user.get('favorites', {})
+    place_ids = favorites.get('places', user.get('favorites_places', []))
+    hotel_ids = favorites.get('hotels', user.get('favorites_hotels', []))
+    return jsonify({'places': [get_place_by_id(i) for i in place_ids if get_place_by_id(i)], 'hotels': [get_hotel_by_id(i) for i in hotel_ids if get_hotel_by_id(i)]})
 
 
 @tourism_bp.route('/api/places')

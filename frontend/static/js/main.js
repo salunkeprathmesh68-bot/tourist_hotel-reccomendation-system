@@ -208,8 +208,10 @@ async function toggleFavorite(itemId, itemType, btnElement, cardIdToRemove = nul
     if (response.ok) {
       const data = await response.json();
 
+      const isSaved = typeof data.is_saved === 'boolean' ? data.is_saved : data.action === 'added';
+
       if (btnElement) {
-        if (data.is_saved) {
+        if (isSaved) {
           btnElement.classList.add('active');
           btnElement.title = "Remove from favorites";
         } else {
@@ -221,11 +223,11 @@ async function toggleFavorite(itemId, itemType, btnElement, cardIdToRemove = nul
       // If on detail page, update detail text
       const detailFavText = document.getElementById('detailFavText');
       if (detailFavText) {
-        detailFavText.textContent = data.is_saved ? "Saved in Favorites" : "Save to Favorites";
+        detailFavText.textContent = isSaved ? "Saved in Favorites" : "Save to Favorites";
       }
 
       // If on /my-favorites page and unbookmarked, animate and remove card
-      if (cardIdToRemove && !data.is_saved) {
+      if (cardIdToRemove && !isSaved) {
         const cardElem = document.getElementById(cardIdToRemove);
         if (cardElem) {
           cardElem.style.transition = 'all 0.3s ease';
@@ -237,7 +239,7 @@ async function toggleFavorite(itemId, itemType, btnElement, cardIdToRemove = nul
         }
       }
 
-      showToast(data.message, data.is_saved ? 'success' : 'info');
+      showToast(data.message || (isSaved ? 'Saved to your favorites.' : 'Removed from your favorites.'), isSaved ? 'success' : 'info');
     }
   } catch (err) {
     console.error("Error toggling favorite:", err);

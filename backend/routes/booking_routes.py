@@ -184,6 +184,13 @@ def my_bookings():
     return render_template('bookings.html', bookings=user_bookings)
 
 
+@booking_bp.route('/api/bookings')
+@login_required
+def api_bookings():
+    user_id = session['user_id']
+    return jsonify({'bookings': [b for b in load_bookings() if b.get('user_id') == user_id]})
+
+
 @booking_bp.route('/api/bookings/cancel/<booking_id>', methods=['POST'])
 def api_cancel_booking(booking_id):
     """Cancel an existing booking."""
