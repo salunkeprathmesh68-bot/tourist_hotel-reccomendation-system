@@ -1,0 +1,344 @@
+{% extends "base.html" %}
+
+{% block title %}My Bookings | Smart Kolhapur Guide{% endblock %}
+
+{% block content %}
+
+<!-- Header Banner -->
+<section class="place-detail-hero" style="padding: 45px 0 35px;">
+  <div class="container">
+    <div class="detail-hero-content">
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <span class="place-category-badge" style="position: static;">
+          <i class="fa-solid fa-calendar-check" style="color: var(--color-gold-light);"></i> Hotel Reservations
+        </span>
+        <span style="color: var(--color-gold-light); font-size: 0.85rem;">
+          Verified Kolhapur Stays
+        </span>
+      </div>
+      <h1 class="detail-title" style="font-size: 2.2rem;">My Hotel Bookings</h1>
+      <p class="detail-subtitle">
+        Manage your confirmed stays near Kolhapur temples, forts, and wildlife sanctuaries.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="container" style="margin: 40px auto 70px;">
+  
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 2px solid var(--border-color); padding-bottom: 12px; flex-wrap: wrap; gap: 12px;">
+    <h2 style="font-size: 1.5rem; color: var(--color-primary-dark); margin: 0;">
+      <i class="fa-solid fa-hotel" style="color: var(--color-primary);"></i> Active & Past Reservations 
+      <span style="font-size: 0.95rem; color: var(--text-muted); font-weight: normal;">({{ total_bookings }})</span>
+    </h2>
+    <a href="{{ url_for('hotels_page') }}" class="btn btn-primary btn-sm">
+      <i class="fa-solid fa-plus"></i> Book Another Stay
+    </a>
+  </div>
+
+  {% if bookings %}
+  <div style="display: flex; flex-direction: column; gap: 20px;">
+    {% for b in bookings %}
+    <div class="booking-card" id="booking-card-{{ b.id }}" style="background: #fff; border: 1px solid var(--border-color); border-radius: 12px; box-shadow: var(--shadow-sm); overflow: hidden; display: grid; grid-template-columns: 240px 1fr auto; transition: all 0.3s ease;">
+      
+      <!-- Hotel Image -->
+      <div style="position: relative; background: #eee;">
+        <img 
+          src="{{ url_for('static', filename='images/' + (b.hotel_image if b.hotel_image is defined and b.hotel_image else 'default_hotel.svg')) }}" 
+          alt="{{ b.hotel_name }}" 
+          style="width: 100%; height: 100%; object-fit: cover; min-height: 180px;"
+          onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/default_hotel.svg') }}';"
+        >
+        <span style="position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.75); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 600;">
+          Ref: {{ b.id }}
+        </span>
+      </div>
+
+      <!-- Booking Info -->
+      <div style="padding: 20px 24px; display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+            <h3 style="font-size: 1.25rem; color: var(--color-primary-dark); margin: 0;">{{ b.hotel_name }}</h3>
+            {% if b.status == 'Confirmed' %}
+              <span style="background: #E8F5E9; color: #2E7D32; font-size: 0.8rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; border: 1px solid #A5D6A7;">
+                <i class="fa-solid fa-circle-check"></i> Confirmed
+              </span>
+            {% else %}
+              <span style="background: #FFEBEE; color: #C62828; font-size: 0.8rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; border: 1px solid #EF9A9A;">
+                <i class="fa-solid fa-circle-xmark"></i> Cancelled
+              </span>
+            {% endif %}
+          </div>
+
+          <div style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 12px;">
+            <i class="fa-solid fa-location-dot" style="color: var(--color-primary);"></i> {{ b.hotel_location }}
+          </div>
+
+          <!-- Key Details Grid -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; background: var(--bg-subtle); padding: 12px 14px; border-radius: 8px; font-size: 0.82rem; margin-bottom: 12px;">
+            <div>
+              <span style="color: var(--text-muted); display: block;">Check-in</span>
+              <strong><i class="fa-regular fa-calendar" style="color: var(--color-primary);"></i> {{ b.check_in }}</strong>
+            </div>
+            <div>
+              <span style="color: var(--text-muted); display: block;">Check-out</span>
+              <strong><i class="fa-regular fa-calendar" style="color: var(--color-primary);"></i> {{ b.check_out }}</strong>
+            </div>
+            <div>
+              <span style="color: var(--text-muted); display: block;">Duration</span>
+              <strong>{{ b.nights }} Night{% if b.nights > 1 %}s{% endif %} ({{ b.rooms }} Room)</strong>
+            </div>
+            <div>
+              <span style="color: var(--text-muted); display: block;">Staying Near</span>
+              <strong style="color: var(--color-primary);"><i class="fa-solid fa-landmark"></i> {{ b.destination_name }}</strong>
+            </div>
+          </div>
+
+          <div style="font-size: 0.82rem; color: var(--text-dark);">
+            <span>Room Type: <strong>{{ b.room_type }}</strong></span> • 
+            <span>Guests: <strong>{{ b.guests }} Person(s)</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action & Price Column -->
+      <div style="padding: 20px 24px; border-left: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; min-width: 190px; background: #FAFAFA;">
+        <div style="text-align: right;">
+          <div style="font-size: 0.78rem; color: var(--text-muted);">Total Amount</div>
+          <div style="font-size: 1.5rem; font-weight: 800; color: var(--color-primary);">₹{{ b.total_price }}</div>
+          <div style="font-size: 0.72rem; color: #2E7D32;">Taxes & Fees Included</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px; width: 100%; margin-top: 16px;">
+          <button 
+            type="button" 
+            class="btn btn-gold btn-sm" 
+            style="width: 100%; text-align: center; font-weight: 700;"
+            onclick="openNotificationModal('{{ b.id }}')"
+          >
+            <i class="fa-solid fa-envelope-open-text"></i> View Instructions
+          </button>
+
+          <a href="{{ url_for('booking_voucher', booking_id=b.id) }}" target="_blank" class="btn btn-primary btn-sm" style="width: 100%; text-align: center;">
+            <i class="fa-solid fa-receipt"></i> View Receipt
+          </a>
+          
+          {% if b.status == 'Confirmed' %}
+          <button 
+            type="button" 
+            class="btn btn-outline btn-sm" 
+            style="width: 100%; color: #C62828; border-color: #EF9A9A;"
+            onclick="cancelBooking('{{ b.id }}')"
+          >
+            <i class="fa-solid fa-ban"></i> Cancel Stay
+          </button>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="text-align: center; padding: 60px 20px; background: #fff; border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
+    <div style="font-size: 3rem; color: var(--color-gold-dark); margin-bottom: 12px;">
+      <i class="fa-solid fa-bed"></i>
+    </div>
+    <h3 style="font-size: 1.35rem; margin-bottom: 6px;">No hotel bookings found</h3>
+    <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 20px;">You haven't reserved any stays yet. Explore hotels near Mahalaxmi Temple, Panhala Fort, or Rankala Lake.</p>
+    <a href="{{ url_for('hotels_page') }}" class="btn btn-primary">
+      <i class="fa-solid fa-wand-magic-sparkles"></i> Find & Book Hotels
+    </a>
+  </div>
+  {% endif %}
+
+</div>
+
+<!-- =========================================================================
+     Interactive Sent Gmail & SMS Instructions Preview Modal
+     ========================================================================= -->
+<div id="notificationModalOverlay" class="voice-modal-overlay" style="z-index: 10010;">
+  <div class="voice-modal-card" style="max-width: 620px; text-align: left; padding: 0; overflow: hidden; border-radius: 16px; border: 1px solid #D4AF37;">
+    
+    <!-- Modal Header (Gmail Style) -->
+    <div style="background: #EA4335; color: #fff; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <i class="fa-solid fa-envelope-open-text" style="font-size: 1.3rem;"></i>
+        <div>
+          <h4 style="margin: 0; font-size: 1.1rem; color: #fff;">Gmail & SMS Booking Instructions</h4>
+          <span style="font-size: 0.76rem; color: #FFE8E6;">Official Smart Kolhapur Guide Stay & Tourist Guidelines</span>
+        </div>
+      </div>
+      <button type="button" onclick="closeNotificationModal()" style="background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer;">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Modal Content -->
+    <div style="padding: 24px; max-height: 75vh; overflow-y: auto;" id="notifModalBody">
+      <div style="text-align: center; padding: 30px;">
+        <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: var(--color-primary);"></i>
+        <p style="margin-top: 10px; color: var(--text-muted);">Loading dispatched instructions...</p>
+      </div>
+    </div>
+
+    <div style="background: #F9F9F9; padding: 14px 24px; border-top: 1px solid #EEE; display: flex; justify-content: space-between; align-items: center;">
+      <button type="button" class="btn btn-outline btn-sm" onclick="resendNotification()">
+        <i class="fa-solid fa-paper-plane"></i> Re-send to My Gmail & SMS
+      </button>
+      <button type="button" class="btn btn-primary btn-sm" onclick="closeNotificationModal()">
+        Close Preview
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let currentViewingBookingId = null;
+
+async function cancelBooking(bookingId) {
+  if (!confirm(`Are you sure you want to cancel booking reference ${bookingId}?`)) {
+    return;
+  }
+
+  try {
+    const res = await fetch(`/api/bookings/cancel/${bookingId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      alert(data.message);
+      window.location.reload();
+    } else {
+      alert(data.message || "Failed to cancel booking.");
+    }
+  } catch (e) {
+    console.error(e);
+    alert("Network error. Please try again.");
+  }
+}
+
+async function openNotificationModal(bookingId) {
+  if (!bookingId) return;
+  currentViewingBookingId = bookingId;
+  const overlay = document.getElementById('notificationModalOverlay');
+  const body = document.getElementById('notifModalBody');
+  overlay.classList.add('active');
+
+  body.innerHTML = `
+    <div style="text-align: center; padding: 30px;">
+      <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: var(--color-primary);"></i>
+      <p style="margin-top: 10px; color: var(--text-muted);">Fetching dispatched stay instructions...</p>
+    </div>
+  `;
+
+  try {
+    const res = await fetch(`/api/booking/notification/${bookingId}`);
+    const data = await res.json();
+    if (res.ok && data.status === 'success') {
+      const n = data.notification;
+      const t = n.travel_instructions || {};
+      
+      body.innerHTML = `
+        <!-- Email Metadata Header -->
+        <div style="background: #FAF7F2; border: 1px solid #EAE0D5; border-radius: 8px; padding: 14px 16px; margin-bottom: 18px; font-size: 0.84rem;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+            <div><strong>From:</strong> Smart Kolhapur Guide &lt;bookings@kolhapur.gov.in&gt;</div>
+            <span style="background: #E8F5E9; color: #2E7D32; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 12px; border: 1px solid #A5D6A7;">
+              <i class="fa-solid fa-circle-check"></i> Dispatched
+            </span>
+          </div>
+          <div><strong>To Guest Gmail:</strong> <span style="color: #7A1C28; font-weight: 700;">${n.recipient_email}</span></div>
+          <div><strong>To Hotel Desk:</strong> <span style="color: #4A0D16; font-weight: 600;">${n.hotel_desk_email || 'reception@hotel.kolhapur.in'}</span></div>
+          <div><strong>SMS Sent To:</strong> <span style="color: #1565C0; font-weight: 700;">${n.recipient_phone}</span></div>
+          <div style="margin-top: 4px;"><strong>Subject:</strong> ${n.subject}</div>
+        </div>
+
+        <!-- 1-Click Instant Action Bridges -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px;">
+          <a href="${n.gmail_compose_url}" target="_blank" class="btn btn-sm" style="background: #EA4335; color: #fff; text-align: center; text-decoration: none; padding: 10px; font-weight: 600; border-radius: 6px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <i class="fa-solid fa-envelope"></i> Open in Gmail App
+          </a>
+          <a href="${n.whatsapp_share_url}" target="_blank" class="btn btn-sm" style="background: #25D366; color: #fff; text-align: center; text-decoration: none; padding: 10px; font-weight: 600; border-radius: 6px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <i class="fa-brands fa-whatsapp"></i> Send via WhatsApp
+          </a>
+        </div>
+
+        <!-- Stay Summary Card -->
+        <div style="border: 1px solid #D4AF37; border-radius: 10px; overflow: hidden; margin-bottom: 18px;">
+          <div style="background: linear-gradient(135deg, #7A1C28, #5A111D); color: #fff; padding: 12px 16px; font-size: 0.95rem; font-weight: 700; display: flex; justify-content: space-between;">
+            <span><i class="fa-solid fa-hotel"></i> Stay Confirmation: ${n.hotel_name}</span>
+            <span style="font-size: 0.8rem; color: #EBD99F;">Ref: ${n.booking_id}</span>
+          </div>
+          <div style="padding: 14px 16px; font-size: 0.85rem; background: #fff;">
+            <div><strong>Location:</strong> ${n.hotel_location || 'Kolhapur'}</div>
+            <div><strong>Hotel Direct Phone:</strong> <a href="tel:${n.hotel_contact}" style="color: #7A1C28; font-weight: 700;"><i class="fa-solid fa-phone"></i> ${n.hotel_contact}</a></div>
+            <div style="margin-top: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: #FFF9E6; padding: 10px 12px; border-radius: 6px;">
+              <div>Check-in: <strong>${n.check_in} (After 12 PM)</strong></div>
+              <div>Check-out: <strong>${n.check_out} (Before 11 AM)</strong></div>
+              <div>Rooms: <strong>${n.rooms} (${n.room_type})</strong></div>
+              <div>Total Tariff: <strong style="color: #7A1C28;">₹${n.total_price}</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tourist Destination Instructions & Travel Tips -->
+        <div style="background: #F4EBE1; border-left: 4px solid #7A1C28; border-radius: 6px; padding: 14px 16px; margin-bottom: 18px;">
+          <h5 style="margin: 0 0 8px; color: #7A1C28; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-landmark"></i> ${t.title || 'Kolhapur Travel Instructions'}
+          </h5>
+          <div style="font-size: 0.83rem; line-height: 1.5; color: #333;">
+            <div style="margin-bottom: 6px;">⏰ <strong>Visiting / Darshan Timings:</strong> ${t.timings || 'General daytime visiting hours.'}</div>
+            <div style="margin-bottom: 6px;">👗 <strong>Attire & Rules:</strong> ${t.attire_rules || 'Modest clothing recommended.'}</div>
+            <div style="margin-bottom: 6px;">💡 <strong>Darshan & Tour Tips:</strong> ${t.darshan_tips || 'Visit MTDC counter for local guides.'}</div>
+            <div>🍲 <strong>Recommended Food:</strong> ${t.local_cuisine || 'Authentic Kolhapuri Misal & Thali.'}</div>
+          </div>
+        </div>
+
+        <!-- SMS Text Body Preview Box -->
+        <div style="background: #E3F2FD; border: 1px dashed #1E88E5; border-radius: 8px; padding: 12px 14px; font-size: 0.8rem; color: #0D47A1; margin-bottom: 14px;">
+          <strong><i class="fa-solid fa-mobile-screen"></i> Instant SMS Delivered:</strong><br>
+          <span style="font-family: monospace; display: block; margin-top: 4px; line-height: 1.4;">${n.sms_body}</span>
+        </div>
+
+        <button type="button" class="btn btn-outline btn-sm" style="width: 100%;" onclick="copyInstructionsText(\`${n.plain_text_body.replace(/`/g, '\\`').replace(/\\/g, '\\\\')}\`)">
+          <i class="fa-regular fa-copy"></i> Copy Full Stay Instructions & Voucher Text
+        </button>
+      `;
+    } else {
+      body.innerHTML = `<p style="color: red; padding: 20px;">Could not load notification details.</p>`;
+    }
+  } catch (err) {
+    console.error(err);
+    body.innerHTML = `<p style="color: red; padding: 20px;">Network error.</p>`;
+  }
+}
+
+function copyInstructionsText(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    alert("Full booking details and tourist instructions copied to clipboard!");
+  }).catch(() => {
+    alert("Copied to clipboard!");
+  });
+}
+
+function closeNotificationModal() {
+  document.getElementById('notificationModalOverlay').classList.remove('active');
+}
+
+async function resendNotification() {
+  if (!currentViewingBookingId) return;
+  try {
+    const res = await fetch(`/api/booking/resend-notification/${currentViewingBookingId}`, { method: 'POST' });
+    const data = await res.json();
+    alert(data.message || 'Instructions resent successfully!');
+  } catch (err) {
+    alert('Failed to resend notification.');
+  }
+}
+</script>
+
+{% endblock %}

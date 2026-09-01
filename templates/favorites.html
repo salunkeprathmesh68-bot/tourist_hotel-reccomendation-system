@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block title %}My Saved Favorites | Smart Kolhapur Guide{% endblock %}
+
+{% block content %}
+
+<!-- Header Banner -->
+<section class="place-detail-hero" style="padding: 45px 0 35px;">
+  <div class="container">
+    <div class="detail-hero-content">
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <span class="place-category-badge" style="position: static;">
+          <i class="fa-solid fa-heart" style="color: #E76F51;"></i> Saved Collection
+        </span>
+        <span style="color: var(--color-gold-light); font-size: 0.85rem;">
+          Personal Travel Wishlist
+        </span>
+      </div>
+      <h1 class="detail-title" style="font-size: 2.2rem;">Saved Favorites & Bookmarks</h1>
+      <p class="detail-subtitle">
+        Welcome, <strong>{{ user.name }}</strong>! Here are your bookmarked Kolhapur tourist attractions and preferred hotels.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="container" style="margin: 40px auto 70px;">
+  
+  <!-- Saved Tourist Places Section -->
+  <div style="margin-bottom: 50px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">
+      <h2 style="font-size: 1.6rem; color: var(--color-primary-dark); margin: 0;">
+        <i class="fa-solid fa-map-location-dot" style="color: var(--color-primary);"></i> Saved Destinations 
+        <span style="font-size: 1rem; color: var(--text-muted); font-weight: normal;">({{ saved_places|length }})</span>
+      </h2>
+      <a href="{{ url_for('index') }}" class="btn btn-outline btn-sm">
+        <i class="fa-solid fa-plus"></i> Explore More Destinations
+      </a>
+    </div>
+
+    {% if saved_places %}
+    <div class="places-grid">
+      {% for place in saved_places %}
+      <article class="place-card" id="fav-place-card-{{ place.id }}">
+        <div class="place-card-image">
+          <img 
+            src="{{ url_for('static', filename='images/' + place.image_filename) }}" 
+            alt="{{ place.name }}"
+            loading="lazy"
+            onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/default_place.svg') }}';"
+          >
+          <span class="place-category-badge">{{ place.category }}</span>
+          
+          <!-- Remove Favorite Button -->
+          <button 
+            class="card-fav-btn active" 
+            onclick="toggleFavorite('{{ place.id }}', 'place', this, 'fav-place-card-{{ place.id }}')"
+            title="Remove from favorites"
+            aria-label="Remove from favorites"
+          >
+            <i class="fa-solid fa-heart"></i>
+          </button>
+        </div>
+
+        <div class="place-card-content">
+          <h3 class="place-title">{{ place.name }}</h3>
+          <div class="place-tagline">{{ place.tagline }}</div>
+          <p class="place-desc">{{ place.short_description }}</p>
+
+          <div class="place-card-actions">
+            <a href="{{ url_for('place_detail', place_id=place.id) }}" class="btn btn-primary btn-sm btn-flex-1">
+              <i class="fa-solid fa-circle-info"></i> Details
+            </a>
+            <a 
+              href="https://www.google.com/maps/search/?api=1&query={{ place.latitude }},{{ place.longitude }}" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="btn btn-outline btn-sm"
+            >
+              <i class="fa-solid fa-location-arrow"></i> Map
+            </a>
+            <a href="{{ url_for('hotels_page', destination=place.id) }}" class="btn btn-gold btn-sm" title="Find hotels near this place">
+              <i class="fa-solid fa-hotel"></i> Stays
+            </a>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 45px 20px; background: #fff; border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
+      <div style="font-size: 2.4rem; color: var(--color-gold-dark); margin-bottom: 10px;">
+        <i class="fa-regular fa-heart"></i>
+      </div>
+      <h3 style="font-size: 1.25rem; margin-bottom: 6px;">No saved destinations yet</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;">Browse destinations on the homepage and click the heart icon to save places here.</p>
+      <a href="{{ url_for('index') }}" class="btn btn-primary btn-sm">
+        <i class="fa-solid fa-compass"></i> Discover Kolhapur Destinations
+      </a>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Saved Hotels Section -->
+  <div>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">
+      <h2 style="font-size: 1.6rem; color: var(--color-primary-dark); margin: 0;">
+        <i class="fa-solid fa-hotel" style="color: var(--color-primary);"></i> Saved Hotels & Resorts 
+        <span style="font-size: 1rem; color: var(--text-muted); font-weight: normal;">({{ saved_hotels|length }})</span>
+      </h2>
+      <a href="{{ url_for('hotels_page') }}" class="btn btn-outline btn-sm">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> Hotel Recommendation Portal
+      </a>
+    </div>
+
+    {% if saved_hotels %}
+    <div class="hotel-results-list">
+      {% for hotel in saved_hotels %}
+      <article class="hotel-card" id="fav-hotel-card-{{ hotel.id }}">
+        <div class="hotel-card-image">
+          <img 
+            src="{{ url_for('static', filename='images/' + hotel.image_filename) }}" 
+            alt="{{ hotel.name }}"
+            loading="lazy"
+            onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/default_hotel.svg') }}';"
+          >
+          <!-- Remove Favorite Button -->
+          <button 
+            class="card-fav-btn active" 
+            onclick="toggleFavorite('{{ hotel.id }}', 'hotel', this, 'fav-hotel-card-{{ hotel.id }}')"
+            title="Remove from favorites"
+            aria-label="Remove from favorites"
+          >
+            <i class="fa-solid fa-heart"></i>
+          </button>
+        </div>
+
+        <div class="hotel-card-details">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <h3 class="hotel-name">{{ hotel.name }}</h3>
+              <div style="display: flex; align-items: center; gap: 4px; color: #2E7D32; font-weight: 700; font-size: 0.95rem;">
+                <i class="fa-solid fa-star" style="color: #FFB703;"></i> {{ hotel.rating }}
+              </div>
+            </div>
+
+            <div class="hotel-location">
+              <i class="fa-solid fa-location-dot" style="color: var(--color-primary);"></i>
+              <span>{{ hotel.location }}</span>
+            </div>
+
+            <p style="font-size: 0.85rem; color: var(--text-dark); line-height: 1.5; margin-bottom: 12px;">
+              {{ hotel.description }}
+            </p>
+
+            <div class="hotel-facilities-tags">
+              {% for fac in hotel.facilities %}
+              <span class="facility-tag">{{ fac }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="hotel-card-action">
+          <div class="hotel-price">₹{{ hotel.price_per_night }}</div>
+          <div class="hotel-price-sub">per night (taxes incl.)</div>
+
+          <div style="font-size: 0.78rem; color: var(--text-dark); margin-bottom: 12px;">
+            <i class="fa-solid fa-phone" style="color: var(--color-primary);"></i> {{ hotel.contact_number }}
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+            <a 
+              href="https://www.google.com/maps/search/?api=1&query={{ hotel.latitude }},{{ hotel.longitude }}" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="btn btn-primary btn-sm"
+            >
+              <i class="fa-solid fa-location-arrow"></i> View on Map
+            </a>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 45px 20px; background: #fff; border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
+      <div style="font-size: 2.4rem; color: var(--color-gold-dark); margin-bottom: 10px;">
+        <i class="fa-solid fa-hotel"></i>
+      </div>
+      <h3 style="font-size: 1.25rem; margin-bottom: 6px;">No saved hotels yet</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;">Use the Hotel Recommendation portal and click the heart icon on any stay to bookmark it.</p>
+      <a href="{{ url_for('hotels_page') }}" class="btn btn-primary btn-sm">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> Open Hotel Recommendation Engine
+      </a>
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+
+{% endblock %}

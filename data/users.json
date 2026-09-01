@@ -1,0 +1,62 @@
+[
+  {
+    "id": "usr_demo123",
+    "name": "Kolhapur Traveler",
+    "email": "demo@kolhapur.com",
+    "password_hash": "scrypt:32768:8:1$P2RsjmKj8WOqOx4C$7dee6750b584891f2826121eacfb0aaa0168204c84543f63af5406ea8875eee61a3b5fdb2cc1c4fa9638e25aadc754c0573e4e51e96c6367142b1a3756a690d6",
+    "favorites_places": [
+      "mahalaxmi-temple",
+      "panhala-fort",
+      "jyotiba-temple"
+    ],
+    "favorites_hotels": [
+      "panhala-heritage-resort"
+    ],
+    "created_at": "2026-08-26T18:00:00Z"
+  },
+  {
+    "id": "usr_a00f51a9",
+    "name": "Pooja Patil",
+    "email": "testuser_a1169580@kolhapur.com",
+    "password_hash": "scrypt:32768:8:1$2ZxsRS7N7VL7thN1$345db575c8478420facda12a5799042736360f7a611658e3b3c5e1baf65603a1bea7649ed94fab355c3d6518bb23b97c4a9c92f57493dfe8efedc0a021cb586a",
+    "favorites_places": [],
+    "favorites_hotels": [],
+    "created_at": "2026-08-26T14:11:23.774094Z"
+  },
+  {
+    "id": "usr_d713b0c8",
+    "name": "Pooja Patil",
+    "email": "testuser_06a1262c@kolhapur.com",
+    "password_hash": "scrypt:32768:8:1$Kw4tEeWlbWRiDXhy$a6252ba1b7811ce7a8db2875a02540ffa34b07e4cbbc1ca57fb7cc381bbd42bea31d91aa095de0f50aa15e3661d533dcd0367b5021ddd773612d061c8501a29d",
+    "favorites_places": [],
+    "favorites_hotels": [],
+    "created_at": "2026-08-26T14:11:54.217362Z"
+  },
+  {
+    "id": "usr_c26ce3fe",
+    "name": "salunke prathmesh",
+    "email": "salunkeprathmesh68@gmail.com",
+    "password_hash": "scrypt:32768:8:1$qkCC0YulmlKUEmyU$4254c2d7b5ca0b409f88b9303eb80e926e0164690fde63d022e20c9d35321adb60befa1881c9c042addd546cfe5a541dc1e1b49a848bbd9791a17a1bc8ecd3be",
+    "favorites_places": [],
+    "favorites_hotels": [],
+    "created_at": "2026-08-27T16:44:46.833018Z"
+  },
+  {
+    "id": "usr_7da4e0b8",
+    "name": "Pooja Patil",
+    "email": "testuser_56f5038e@kolhapur.com",
+    "password_hash": "scrypt:32768:8:1$k06gEtomlLNJDHCa$038c7a0892cbbe17b7beec66ccf98fdef2d8a643943a4128f6e50845350c361ac43a443c40eac7edd2370928efd3506b8a22e5815a930604a98cf3f33ac339f6",
+    "favorites_places": [],
+    "favorites_hotels": [],
+    "created_at": "2026-08-30T14:11:20.286552Z"
+  },
+  {
+    "id": "usr_cd564e6f",
+    "name": "Pooja Patil",
+    "email": "testuser_c9f6644a@kolhapur.com",
+    "password_hash": "scrypt:32768:8:1$LpZLFq0e0sXjn2Ab$0d5964171a0ec9c9390334cb0fc21c0660c88695e0d9d11d9e9ecf8fcdd346fbd97a84a4dfa153b9f81d0d71574a4ce9a8d965ff11350e11f8db014cc4edd8dd",
+    "favorites_places": [],
+    "favorites_hotels": [],
+    "created_at": "2026-08-30T14:12:11.071258Z"
+  }
+]

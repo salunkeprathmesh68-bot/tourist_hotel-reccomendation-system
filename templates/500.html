@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Server Error - Smart Kolhapur Guide{% endblock %}
+
+{% block content %}
+<div class="container" style="text-align: center; padding: 80px 20px;">
+  <div style="font-size: 4rem; color: #D32F2F; margin-bottom: 16px;">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+  </div>
+  <h1 style="font-size: 2.2rem; color: var(--color-primary-dark); margin-bottom: 10px;">500 - Application Notice</h1>
+  <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto 24px; font-size: 1rem;">
+    A momentary error occurred while processing your request. Please return to the homepage or try again.
+  </p>
+  <a href="{{ url_for('index') }}" class="btn btn-primary">
+    <i class="fa-solid fa-house"></i> Return to Homepage
+  </a>
+</div>
+{% endblock %}

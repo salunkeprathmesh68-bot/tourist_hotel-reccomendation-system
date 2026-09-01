@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Smart Kolhapur Guide | Tourist Explorer & Hotel Recommendations{% endblock %}</title>
+  
+  <!-- Meta description -->
+  <meta name="description" content="Intelligent tourist portal and hotel recommendation system for Kolhapur District, Maharashtra, India.">
+  
+  <!-- Google Fonts: Playfair Display + Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Leaflet.js Interactive Maps CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+  <!-- Site Header & Navigation -->
+  <header class="site-header">
+    <div class="container">
+      <nav class="navbar">
+        <a href="{{ url_for('index') }}" class="brand-logo">
+          <div class="brand-emblem">
+            <i class="fa-solid fa-om"></i>
+          </div>
+          <div class="brand-text">
+            <h1>Smart Kolhapur Guide</h1>
+            <span>Dakshin Kashi • Tourism & Stays</span>
+          </div>
+        </a>
+
+        <ul class="nav-menu">
+          <li>
+            <a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint == 'index' %}active{% endif %}">
+              <i class="fa-solid fa-map-location-dot"></i>
+              <span>Destinations</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('hotels_page') }}" class="nav-link {% if request.endpoint and 'hotels' in request.endpoint %}active{% endif %}">
+              <i class="fa-solid fa-hotel"></i>
+              <span>Hotel Finder</span>
+            </a>
+          </li>
+          
+          {% if session.user_id %}
+          <li>
+            <a href="{{ url_for('my_bookings') }}" class="nav-link {% if request.endpoint == 'my_bookings' %}active{% endif %}">
+              <i class="fa-solid fa-calendar-check" style="color: var(--color-gold-light);"></i>
+              <span>My Bookings</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('my_favorites') }}" class="nav-link {% if request.endpoint == 'my_favorites' %}active{% endif %}">
+              <i class="fa-solid fa-heart" style="color: #E76F51;"></i>
+              <span>My Favorites</span>
+            </a>
+          </li>
+          {% endif %}
+
+          <li>
+            <a href="{{ url_for('about') }}" class="nav-link {% if request.endpoint == 'about' %}active{% endif %}">
+              <i class="fa-solid fa-graduation-cap"></i>
+              <span>About / Viva</span>
+            </a>
+          </li>
+
+          {% if session.user_id %}
+          <li>
+            <span class="user-greeting" title="{{ session.email }}">
+              <i class="fa-solid fa-circle-user"></i>
+              <span>Hi, {{ session.name.split(' ')[0] }}</span>
+            </span>
+          </li>
+          <li>
+            <a href="{{ url_for('logout') }}" class="btn btn-outline btn-sm" style="color: #fff; border-color: rgba(255,255,255,0.4);" title="Log out of your account">
+              <i class="fa-solid fa-right-from-bracket"></i>
+              <span>Logout</span>
+            </a>
+          </li>
+          {% else %}
+          <li>
+            <a href="{{ url_for('login') }}" class="nav-link {% if request.endpoint == 'login' %}active{% endif %}">
+              <i class="fa-solid fa-right-to-bracket"></i>
+              <span>Log In</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('signup') }}" class="nav-btn">
+              <i class="fa-solid fa-user-plus"></i>
+              <span>Sign Up</span>
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Flash Messages Alert Banner -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+      <div class="flash-alert flash-{{ category }}">
+        <div>
+          {% if category == 'success' %}
+            <i class="fa-solid fa-circle-check" style="margin-right: 8px;"></i>
+          {% elif category == 'danger' %}
+            <i class="fa-solid fa-circle-xmark" style="margin-right: 8px;"></i>
+          {% elif category == 'warning' %}
+            <i class="fa-solid fa-triangle-exclamation" style="margin-right: 8px;"></i>
+          {% else %}
+            <i class="fa-solid fa-circle-info" style="margin-right: 8px;"></i>
+          {% endif %}
+          {{ message }}
+        </div>
+        <button class="flash-close-btn" onclick="this.parentElement.style.display='none';" aria-label="Close message">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Main Content Area -->
+  <main>
+    {% if error_title %}
+    <div class="container" style="padding: 80px 20px; text-align: center;">
+      <div class="stat-icon" style="font-size: 3.5rem; color: var(--color-primary);"><i class="fa-solid fa-circle-exclamation"></i></div>
+      <h2 style="font-size: 2rem; margin: 16px 0;">{{ error_title }}</h2>
+      <p style="color: var(--text-muted); margin-bottom: 24px;">{{ error_message }}</p>
+      <a href="{{ url_for('index') }}" class="btn btn-primary"><i class="fa-solid fa-house"></i> Return to Homepage</a>
+    </div>
+    {% else %}
+      {% block content %}{% endblock %}
+    {% endif %}
+  </main>
+
+  <!-- Voice Assistant Floating Trigger Button -->
+  <button id="floatingVoiceBtn" class="voice-fab" title="Talk to Kolhapur Voice Assistant" aria-label="Activate Voice Assistant">
+    <i class="fa-solid fa-microphone"></i>
+  </button>
+
+  <!-- Voice Assistant Interactive Modal -->
+  <div id="voiceModalOverlay" class="voice-modal-overlay">
+    <div class="voice-modal-card">
+      <div id="voiceWave" class="voice-wave-container">
+        <i class="fa-solid fa-microphone-lines"></i>
+      </div>
+      <h3 id="voiceStatusTitle" class="voice-status-title">Listening...</h3>
+      
+      <div id="voiceTranscript" class="voice-transcript-box">
+        "Say something like 'Tell me about Panhala Fort'..."
+      </div>
+
+      <div class="voice-suggestions-list">
+        <strong style="color: var(--color-primary-dark);"><i class="fa-regular fa-lightbulb"></i> Try asking:</strong>
+        <div>• <em>"Tell me about Mahalaxmi Temple"</em></div>
+        <div>• <em>"Show me temples in Kolhapur"</em></div>
+        <div>• <em>"Recommend hotels near Rankala Lake"</em></div>
+        <div>• <em>"Show wildlife safaris"</em></div>
+      </div>
+
+      <button id="voiceCloseBtn" class="voice-close-btn">
+        <i class="fa-solid fa-xmark"></i> Close Assistant
+      </button>
+    </div>
+  </div>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h4>Smart Kolhapur Guide</h4>
+          <p class="footer-desc">
+            An intelligent tourism and multi-criteria hotel recommendation system for Kolhapur District, Maharashtra. Engineered with Flask, Python, Haversine geospatial scoring, and Web Speech API.
+          </p>
+          <div style="margin-top: 14px; color: var(--color-gold-light); font-size: 0.85rem;">
+            <i class="fa-solid fa-phone"></i> Tourist Helpline: 1800-22-9930 (Toll Free)
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h5>Quick Explore</h5>
+          <ul class="footer-links">
+            <li><a href="{{ url_for('index') }}"><i class="fa-solid fa-chevron-right"></i> All Destinations</a></li>
+            <li><a href="{{ url_for('hotels_page') }}"><i class="fa-solid fa-chevron-right"></i> Hotel Recommendation</a></li>
+            <li><a href="{{ url_for('about') }}"><i class="fa-solid fa-chevron-right"></i> Project Architecture</a></li>
+            <li><a href="{{ url_for('about') }}#scoring-formula"><i class="fa-solid fa-chevron-right"></i> Scoring Formula</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Academic Project</h5>
+          <p style="font-size: 0.85rem; line-height: 1.5; color: rgba(255,255,255,0.75);">
+            Second Year B.Tech CSE<br>
+            <strong>Specialization: Data Science</strong><br>
+            Mini-Project Demo & Viva Kit<br>
+            Kolhapur, Maharashtra
+          </p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 Smart Kolhapur Guide. Built for Academic Presentation & Tourism Promotion.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Leaflet.js Interactive Maps JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- Scripts -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/voice_assistant.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/map_explorer.js') }}"></script>
+</body>
+</html>

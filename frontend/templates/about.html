@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}Academic Documentation & Scoring Formula | Smart Kolhapur Guide{% endblock %}
+
+{% block content %}
+
+<!-- Hero Header -->
+<section class="place-detail-hero" style="padding: 50px 0 40px;">
+  <div class="container">
+    <div class="detail-hero-content">
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <span class="place-category-badge" style="position: static;">Academic Viva & Project Documentation</span>
+        <span style="color: var(--color-gold-light); font-size: 0.85rem;">Second Year B.Tech CSE (Data Science)</span>
+      </div>
+      <h1 class="detail-title" style="font-size: 2.4rem;">Project Architecture & Data Science Methodology</h1>
+      <p class="detail-subtitle">
+        Comprehensive breakdown of system architecture, geospatial scoring, multi-criteria recommendation algorithms, and speech synthesis pipelines.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="container" style="margin-bottom: 60px;">
+  <div style="display: grid; grid-template-columns: 1fr; gap: 30px;">
+    
+    <!-- 1. Executive Summary & Tech Stack -->
+    <div class="detail-main-card">
+      <h2 class="detail-section-title">1. Project Overview & Technology Stack</h2>
+      <p class="detail-text">
+        <strong>Smart Kolhapur Guide</strong> is a lightweight, high-performance web application designed to promote cultural heritage, pilgrimage tourism, and eco-tourism in Kolhapur district, Maharashtra. It combines real-time client-side search, a browser-native voice assistant, and a multi-criteria hotel recommendation algorithm.
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 20px;">
+        <div style="background: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 16px;">
+          <h4 style="color: var(--color-primary-dark); margin-bottom: 6px;"><i class="fa-brands fa-python" style="color: var(--color-primary);"></i> Backend Layer</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Python 3 + Flask framework. Stateless RESTful JSON endpoints with in-memory dataset indexing.</p>
+        </div>
+
+        <div style="background: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 16px;">
+          <h4 style="color: var(--color-primary-dark); margin-bottom: 6px;"><i class="fa-solid fa-code" style="color: var(--color-primary);"></i> Frontend Layer</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Semantic HTML5, CSS3 with responsive Grid/Flexbox, and pure Vanilla JavaScript (zero bulky frontend frameworks).</p>
+        </div>
+
+        <div style="background: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 16px;">
+          <h4 style="color: var(--color-primary-dark); margin-bottom: 6px;"><i class="fa-solid fa-database" style="color: var(--color-primary);"></i> Structured Data Layer</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">JSON datasets (<code>tourist_places.json</code> with {{ places_count }} destinations, <code>hotels.json</code> with {{ hotels_count }} stays).</p>
+        </div>
+
+        <div style="background: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 16px;">
+          <h4 style="color: var(--color-primary-dark); margin-bottom: 6px;"><i class="fa-solid fa-microphone-lines" style="color: var(--color-primary);"></i> Voice Engine</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">W3C Web Speech API (<code>SpeechRecognition</code> & <code>SpeechSynthesis</code>) running 100% client-side with zero paid keys.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Data Science Recommendation Algorithm (The Viva Focus) -->
+    <div class="detail-main-card" id="scoring-formula">
+      <h2 class="detail-section-title">2. Recommendation Engine: Mathematical Formulation</h2>
+      <p class="detail-text">
+        The hotel recommendation engine uses a <strong>Multi-Criteria Decision Making (MCDM)</strong> weighted sum model that evaluates four key dimensional vectors:
+      </p>
+
+      <!-- Step A: Haversine Distance -->
+      <div style="background: var(--bg-main); border-left: 4px solid var(--color-primary); padding: 20px; border-radius: var(--radius-sm); margin-bottom: 24px;">
+        <h3 style="font-size: 1.15rem; color: var(--color-primary-dark); margin-bottom: 8px;">
+          A. Geospatial Proximity Calculation (Haversine Formula)
+        </h3>
+        <p style="font-size: 0.9rem; color: var(--text-dark); margin-bottom: 12px;">
+          To compute the true great-circle spherical distance \(d\) between the hotel coordinates \((\phi_1, \lambda_1)\) and the selected tourist destination \((\phi_2, \lambda_2)\):
+        </p>
+        <div style="background: #fff; border: 1px solid var(--border-color); padding: 14px; border-radius: var(--radius-sm); font-family: monospace; font-size: 0.95rem; margin-bottom: 10px;">
+          a = sin²(Δφ / 2) + cos(φ1) · cos(φ2) · sin²(Δλ / 2)<br>
+          c = 2 · atan2(√a, √(1 − a))<br>
+          d = R · c &nbsp;&nbsp;(where R = 6371 km)
+        </div>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">
+          <strong>Proximity Sub-Score (\(S_{\text{dist}}\)):</strong> Scaled between 0 and 100 using linear decay over an effective radius of 35 km:
+          <br>
+          \(S_{\text{dist}} = \max\left(0, 100 \times \left(1 - \frac{d}{35}\right)\right)\) (with \(S_{\text{dist}} = 100\) if \(d \le 1.0\text{ km}\)).
+        </p>
+      </div>
+
+      <!-- Step B: Price Affordability Fit -->
+      <div style="background: var(--bg-main); border-left: 4px solid var(--color-gold-dark); padding: 20px; border-radius: var(--radius-sm); margin-bottom: 24px;">
+        <h3 style="font-size: 1.15rem; color: var(--color-primary-dark); margin-bottom: 8px;">
+          B. Budget Fit Sub-Score (\(S_{\text{price}}\))
+        </h3>
+        <p style="font-size: 0.9rem; color: var(--text-dark); margin-bottom: 6px;">
+          Evaluates how closely the hotel price per night \(P\) aligns with user budget \([B_{\min}, B_{\max}]\):
+        </p>
+        <ul style="padding-left: 20px; font-size: 0.88rem; color: var(--text-dark); line-height: 1.7;">
+          <li>If \(B_{\min} \le P \le B_{\max}\): \(S_{\text{price}} = 100 - \left(\frac{P - B_{\min}}{B_{\max} - B_{\min}} \times 25\right)\) (giving 75 to 100 points, rewarding higher affordability).</li>
+          <li>If \(P < B_{\min}\): Awarded top value score of 95.</li>
+          <li>If \(P > B_{\max}\): Progressive penalty applied: \(S_{\text{price}} = \max\left(0, 80 - \frac{P - B_{\max}}{50}\right)\).</li>
+        </ul>
+      </div>
+
+      <!-- Step C: Rating & Facility Overlap -->
+      <div style="background: var(--bg-main); border-left: 4px solid var(--color-success); padding: 20px; border-radius: var(--radius-sm); margin-bottom: 24px;">
+        <h3 style="font-size: 1.15rem; color: var(--color-primary-dark); margin-bottom: 8px;">
+          C. Rating & Facility Overlap Sub-Scores (\(S_{\text{rating}}\) & \(S_{\text{fac}}\))
+        </h3>
+        <ul style="padding-left: 20px; font-size: 0.88rem; color: var(--text-dark); line-height: 1.7;">
+          <li><strong>Rating Score:</strong> \(S_{\text{rating}} = \left(\frac{\text{Rating}}{5.0}\right) \times 100\)</li>
+          <li><strong>Facility Match Score:</strong> Jaccard set intersection ratio: \(S_{\text{fac}} = \frac{|F_{\text{hotel}} \cap F_{\text{req}}|}{|F_{\text{req}}|} \times 100\) (or 100 if no specific facilities requested).</li>
+        </ul>
+      </div>
+
+      <!-- Step D: Composite Total Score -->
+      <div style="background: linear-gradient(135deg, rgba(92, 19, 26, 0.08), rgba(212, 175, 55, 0.15)); border: 2px solid var(--color-gold); padding: 20px; border-radius: var(--radius-sm);">
+        <h3 style="font-size: 1.2rem; color: var(--color-primary-dark); margin-bottom: 8px;">
+          D. Composite Multi-Criteria Score (\(S_{\text{total}}\))
+        </h3>
+        <div style="font-family: monospace; font-size: 1.1rem; font-weight: 700; color: var(--color-primary-dark); margin-bottom: 10px;">
+          S_total = w_dist · S_dist + w_price · S_price + w_rating · S_rating + w_fac · S_fac
+        </div>
+        <p style="font-size: 0.88rem; color: var(--text-dark); margin: 0;">
+          <strong>Dynamic Priority Weight Presets:</strong>
+          <br>• <em>Balanced:</em> \(w = [0.35, 0.25, 0.20, 0.20]\)
+          <br>• <em>Proximity First:</em> \(w = [0.55, 0.15, 0.15, 0.15]\)
+          <br>• <em>Budget First:</em> \(w = [0.15, 0.55, 0.15, 0.15]\)
+          <br>• <em>Rating First:</em> \(w = [0.15, 0.15, 0.55, 0.15]\)
+        </p>
+      </div>
+    </div>
+
+    <!-- 3. Viva / Examination Preparation Kit -->
+    <div class="detail-main-card">
+      <h2 class="detail-section-title">3. College Viva / Mini-Project Defense Q&A</h2>
+      
+      <div style="display: flex; flex-direction: column; gap: 18px; margin-top: 18px;">
+        <div style="background: var(--bg-main); padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+          <h4 style="color: var(--color-primary-dark); margin-bottom: 6px;">
+            Q1: Why did you use Haversine distance instead of Euclidean distance?
+          </h4>
+          <p style="font-size: 0.88rem; color: var(--text-dark); margin: 0;">
+            <strong>Answer:</strong> Earth is an oblate spheroid. Latitude and longitude are angular coordinates on a sphere. Euclidean distance assumes a flat 2D plane and produces significant distortion, whereas the Haversine formula calculates the exact spherical geodesic arc length across Earth's radius (6,371 km).
+          </p>
+        </div>
+
+        <div style="background: var(--bg-main); padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+          <h4 style="color: var(--color-primary-dark); margin-bottom: 6px;">
+            Q2: How does the voice assistant operate without any cloud API keys?
+          </h4>
+          <p style="font-size: 0.88rem; color: var(--text-dark); margin: 0;">
+            <strong>Answer:</strong> It relies entirely on the HTML5 Web Speech API standard built natively into modern browsers. <code>SpeechRecognition</code> converts spoken acoustic audio to text on the client device, and <code>SpeechSynthesis</code> parses string tokens into synthesized speech audio locally.
+          </p>
+        </div>
+
+        <div style="background: var(--bg-main); padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+          <h4 style="color: var(--color-primary-dark); margin-bottom: 6px;">
+            Q3: What makes this project relevant to Data Science?
+          </h4>
+          <p style="font-size: 0.88rem; color: var(--text-dark); margin: 0;">
+            <strong>Answer:</strong> It implements structured feature extraction, non-linear feature normalization, set similarity metrics (Jaccard similarity for facilities), geospatial mathematical modeling, and multi-criteria weighted scoring algorithms (MCDM) to rank heterogeneous entities.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

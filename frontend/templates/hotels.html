@@ -1,0 +1,1078 @@
+{% extends "base.html" %}
+
+{% block title %}Intelligent Hotel Recommendation Engine | Smart Kolhapur Guide{% endblock %}
+
+{% block content %}
+
+<!-- Hero Banner for Hotels -->
+<section class="place-detail-hero" style="padding: 45px 0 35px;">
+  <div class="container">
+    <div class="detail-hero-content">
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <span class="place-category-badge" style="position: static;">
+          <i class="fa-solid fa-chart-line"></i> Data Science Scoring Model
+        </span>
+        <span style="color: var(--color-gold-light); font-size: 0.85rem;">
+          Haversine Distance + Multi-Criteria MCDM
+        </span>
+      </div>
+      <h1 class="detail-title" style="font-size: 2.2rem;">Intelligent Hotel Recommendation Engine</h1>
+      <p class="detail-subtitle">
+        Find the optimal hotel tailored to your preferred tourist attraction, budget window, minimum rating, and required amenities using geospatial scoring.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Recommendation Layout -->
+<div class="container">
+  <div class="recommendation-layout">
+    
+    <!-- Left Filter Form Sidebar -->
+    <aside class="filter-sidebar">
+      <h3>
+        <i class="fa-solid fa-sliders"></i> Preference Filter
+      </h3>
+
+      <form action="{{ url_for('hotels_recommend_post') }}" method="POST">
+        
+        <!-- 1. Preferred Destination / Attraction -->
+        <div class="form-group">
+          <label for="destinationSelect">
+            <i class="fa-solid fa-map-pin" style="color: var(--color-primary);"></i> Near Tourist Attraction:
+          </label>
+          <select name="destination" id="destinationSelect" class="form-control">
+            <option value="">-- Kolhapur City Center (General) --</option>
+            {% for p in places %}
+            <option value="{{ p.id }}" {% if selected_destination == p.id %}selected{% endif %}>
+              {{ p.name }} ({{ p.category }})
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- 2. Priority Optimization -->
+        <div class="form-group">
+          <label for="prioritySelect">
+            <i class="fa-solid fa-scale-balanced" style="color: var(--color-primary);"></i> Optimization Priority:
+          </label>
+          <select name="priority" id="prioritySelect" class="form-control">
+            <option value="balanced" {% if priority == 'balanced' %}selected{% endif %}>Balanced (Distance + Price + Rating)</option>
+            <option value="proximity" {% if priority == 'proximity' %}selected{% endif %}>Proximity First (Closest to Attraction)</option>
+            <option value="budget" {% if priority == 'budget' %}selected{% endif %}>Budget First (Maximum Value / Low Price)</option>
+            <option value="rating" {% if priority == 'rating' %}selected{% endif %}>Highest Rating First</option>
+          </select>
+        </div>
+
+        <!-- 3. Budget Range (Min & Max) -->
+        <div class="form-group">
+          <label>
+            <i class="fa-solid fa-indian-rupee-sign" style="color: var(--color-primary);"></i> Budget Range (per night):
+          </label>
+          
+          <div style="margin-bottom: 10px;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.82rem;">
+              <span>Min Price:</span>
+              <strong id="budgetMinVal">₹{{ budget_min }}</strong>
+            </div>
+            <input 
+              type="range" 
+              name="budget_min" 
+              id="budgetMinInput" 
+              min="500" 
+              max="4000" 
+              step="100" 
+              value="{{ budget_min }}"
+              style="width: 100%; accent-color: var(--color-primary);"
+            >
+          </div>
+
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.82rem;">
+              <span>Max Price:</span>
+              <strong id="budgetMaxVal">₹{{ budget_max }}</strong>
+            </div>
+            <input 
+              type="range" 
+              name="budget_max" 
+              id="budgetMaxInput" 
+              min="1500" 
+              max="8000" 
+              step="100" 
+              value="{{ budget_max }}"
+              style="width: 100%; accent-color: var(--color-primary);"
+            >
+          </div>
+        </div>
+
+        <!-- 4. Minimum Rating Filter -->
+        <div class="form-group">
+          <label for="ratingSelect">
+            <i class="fa-solid fa-star" style="color: var(--color-gold-dark);"></i> Minimum Rating:
+          </label>
+          <select name="min_rating" id="ratingSelect" class="form-control">
+            <option value="0.0" {% if min_rating == 0.0 %}selected{% endif %}>Any Rating (All)</option>
+            <option value="3.5" {% if min_rating == 3.5 %}selected{% endif %}>★ 3.5 & Above (Good)</option>
+            <option value="4.0" {% if min_rating == 4.0 %}selected{% endif %}>★ 4.0 & Above (Very Good)</option>
+            <option value="4.5" {% if min_rating == 4.5 %}selected{% endif %}>★ 4.5 & Above (Excellent / Luxury)</option>
+          </select>
+        </div>
+
+        <!-- 5. Required Facilities -->
+        <div class="form-group">
+          <label>
+            <i class="fa-solid fa-bell-concierge" style="color: var(--color-primary);"></i> Required Facilities:
+          </label>
+          <div class="checkbox-grid">
+            {% for fac in all_facilities %}
+            <label class="checkbox-label">
+              <input 
+                type="checkbox" 
+                name="facilities" 
+                value="{{ fac }}" 
+                {% if fac in selected_facilities %}checked{% endif %}
+              >
+              <span>{{ fac }}</span>
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 10px;">
+          <i class="fa-solid fa-magnifying-glass-chart"></i> Calculate & Rank
+        </button>
+
+        <a href="{{ url_for('hotels_page') }}" class="btn btn-outline btn-sm" style="width: 100%; margin-top: 10px; text-align: center;">
+          <i class="fa-solid fa-rotate-left"></i> Reset Defaults
+        </a>
+      </form>
+    </aside>
+
+    <!-- Right Results Column -->
+    <main class="results-main-column">
+      
+      <!-- Results Header -->
+      <div class="results-header">
+        <div>
+          <div class="results-count">
+            Ranked Recommendations 
+            <span style="font-size: 0.95rem; font-weight: normal; color: var(--text-muted);">
+              ({{ hotels|length }} hotels evaluated)
+            </span>
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">
+            Target Attraction: 
+            <strong style="color: var(--color-primary);">
+              {% if destination %}{{ destination.name }}{% else %}Kolhapur City Center{% endif %}
+            </strong> 
+            • Priority Model: <span style="text-transform: capitalize; font-weight: 600;">{{ priority }}</span>
+          </div>
+        </div>
+
+        <a href="{{ url_for('about') }}#scoring-formula" class="btn btn-outline btn-sm" title="View mathematical scoring details">
+          <i class="fa-solid fa-calculator"></i> Algorithm Notes
+        </a>
+      </div>
+
+      <!-- Relaxed filter alert if applicable -->
+      {% if stats.relaxed_filter %}
+      <div style="background: #FFF3CD; border: 1px solid #FFEEBA; color: #856404; padding: 14px 18px; border-radius: var(--radius-sm); margin-bottom: 20px; font-size: 0.9rem;">
+        <i class="fa-solid fa-triangle-exclamation"></i> <strong>Note:</strong> No hotels strictly satisfied all restrictive filters. Displaying top ranked alternative stays sorted by composite similarity score.
+      </div>
+      {% endif %}
+
+      <!-- Interactive Geospatial Online Map -->
+      <div class="map-view-card">
+        <div class="map-header-bar">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-map-location-dot" style="color: var(--color-primary); font-size: 1.15rem;"></i>
+            <strong style="color: var(--color-primary-dark); font-size: 0.95rem;">
+              Interactive Map: Stays Near {% if target_place %}{{ target_place.name }}{% else %}Kolhapur City{% endif %}
+            </strong>
+          </div>
+          <div class="view-toggle-btns">
+            <button type="button" class="view-toggle-btn active" id="btnMapSplit" onclick="toggleMapView('split')">
+              <i class="fa-solid fa-table-columns"></i> Map + Cards
+            </button>
+            <button type="button" class="view-toggle-btn" id="btnMapOnly" onclick="toggleMapView('map')">
+              <i class="fa-solid fa-map"></i> Map Only
+            </button>
+            <button type="button" class="view-toggle-btn" id="btnCardsOnly" onclick="toggleMapView('cards')">
+              <i class="fa-solid fa-list"></i> Cards Only
+            </button>
+          </div>
+        </div>
+
+        <div id="hotelMapContainer" style="position: relative;">
+          <div id="hotelRecommendationMap" class="map-view-container"></div>
+          <div style="position: absolute; bottom: 12px; left: 12px; z-index: 500; background: rgba(255,255,255,0.92); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; border: 1px solid rgba(0,0,0,0.15); box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+            <i class="fa-solid fa-circle-info" style="color: var(--color-primary);"></i> Click any hotel pin to preview details, route & book!
+          </div>
+        </div>
+      </div>
+
+      <!-- Hotel Results List -->
+      <div class="hotel-results-list">
+        {% for hotel in hotels %}
+        <article class="hotel-card" id="hotel-card-{{ hotel.id }}">
+          
+          <!-- Image & Rank Badge -->
+          <div class="hotel-card-image">
+            <img 
+              src="{{ url_for('static', filename='images/' + hotel.image_filename) }}" 
+              alt="{{ hotel.name }}"
+              loading="lazy"
+              onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/default_hotel.svg') }}';"
+            >
+            <span class="rank-badge">
+              #{{ loop.index }} Match
+            </span>
+            <button 
+              class="card-fav-btn {% if hotel.id in user_favorite_hotels %}active{% endif %}" 
+              onclick="toggleFavorite('{{ hotel.id }}', 'hotel', this)"
+              title="{% if hotel.id in user_favorite_hotels %}Remove from favorites{% else %}Save to favorites{% endif %}"
+              aria-label="Save to favorites"
+            >
+              <i class="fa-solid fa-heart"></i>
+            </button>
+          </div>
+
+          <!-- Hotel Details -->
+          <div class="hotel-card-details">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <h3 class="hotel-name">{{ hotel.name }}</h3>
+                <div style="display: flex; align-items: center; gap: 4px; color: #2E7D32; font-weight: 700; font-size: 0.95rem;">
+                  <i class="fa-solid fa-star" style="color: #FFB703;"></i> {{ hotel.rating }}
+                </div>
+              </div>
+
+              <div class="hotel-location">
+                <i class="fa-solid fa-location-dot" style="color: var(--color-primary);"></i>
+                <span>{{ hotel.location }}</span>
+              </div>
+
+              <p style="font-size: 0.85rem; color: var(--text-dark); line-height: 1.5; margin-bottom: 12px;">
+                {{ hotel.description }}
+              </p>
+
+              <!-- Facilities Badges -->
+              <div class="hotel-facilities-tags">
+                {% for fac in hotel.matched_facilities %}
+                <span class="facility-tag matched" title="Matched requested facility">
+                  <i class="fa-solid fa-check"></i> {{ fac }}
+                </span>
+                {% endfor %}
+
+                {% for fac in hotel.unmatched_facilities %}
+                <span class="facility-tag">
+                  {{ fac }}
+                </span>
+                {% endfor %}
+              </div>
+            </div>
+
+            <!-- Algorithm Component Breakdown Metrics -->
+            <div class="hotel-score-breakdown">
+              <span class="score-pill" title="Proximity Score">
+                <i class="fa-solid fa-route"></i> Dist: <strong>{{ hotel.score_dist }}</strong>
+              </span>
+              <span class="score-pill" title="Price Fit Score">
+                <i class="fa-solid fa-wallet"></i> Price: <strong>{{ hotel.score_price }}</strong>
+              </span>
+              <span class="score-pill" title="Rating Score">
+                <i class="fa-solid fa-star"></i> Rating: <strong>{{ hotel.score_rating }}</strong>
+              </span>
+              <span class="score-pill" title="Facility Overlap Score">
+                <i class="fa-solid fa-list-check"></i> Fac: <strong>{{ hotel.score_fac }}</strong>
+              </span>
+            </div>
+          </div>
+
+          <!-- Right Action & Score Column -->
+          <div class="hotel-card-action">
+            
+            <!-- Circular Total Composite Score Indicator -->
+            <div class="score-ring" title="Calculated Composite Recommendation Score (0-100)">
+              <span class="score-num">{{ hotel.total_score }}</span>
+              <span class="score-label">Score</span>
+            </div>
+
+            <!-- Distance from selected destination -->
+            <div class="hotel-distance-badge">
+              <i class="fa-solid fa-person-walking"></i> {{ hotel.distance_km }} km away
+            </div>
+
+            <!-- Price -->
+            <div class="hotel-price">₹{{ hotel.price_per_night }}</div>
+            <div class="hotel-price-sub">per night (taxes incl.)</div>
+
+            <!-- Phone contact -->
+            <div style="font-size: 0.78rem; color: var(--text-dark); margin-bottom: 12px;">
+              <i class="fa-solid fa-phone" style="color: var(--color-primary);"></i> {{ hotel.contact_number }}
+            </div>
+
+            <!-- Action buttons -->
+            <div style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+              <button 
+                type="button" 
+                class="btn btn-gold btn-sm"
+                onclick="openBookingModal('{{ hotel.id }}', '{{ hotel.name|replace("'", "\\'") }}', {{ hotel.price_per_night }}, '{{ hotel.image_filename }}', '{{ destination.id if destination else (hotel.destination_id if hotel.destination_id else "") }}', '{{ destination.name if destination else "Kolhapur City Center" }}')"
+                style="font-weight: 700;"
+              >
+                <i class="fa-solid fa-calendar-check"></i> Book Stay
+              </button>
+
+              <a 
+                href="{{ hotel.directions_url }}" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="btn btn-primary btn-sm"
+                title="Get turn-by-turn directions in Google Maps"
+              >
+                <i class="fa-solid fa-diamond-turn-right"></i> Directions
+              </a>
+              <a 
+                href="{{ hotel.maps_url }}" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="btn btn-outline btn-sm"
+                title="View hotel coordinates on Google Maps"
+              >
+                <i class="fa-solid fa-map-location-dot"></i> View on Map
+              </a>
+            </div>
+
+          </div>
+        </article>
+        {% else %}
+        <!-- Empty State -->
+        <div style="text-align: center; padding: 60px 20px; background: #fff; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <div style="font-size: 3rem; color: var(--color-gold-dark); margin-bottom: 12px;">
+            <i class="fa-solid fa-hotel"></i>
+          </div>
+          <h3 style="font-size: 1.5rem; margin-bottom: 8px;">No hotels match your specific filter criteria</h3>
+          <p style="color: var(--text-muted); margin-bottom: 20px;">Try widening your budget range or reducing required facility restrictions.</p>
+          <a href="{{ url_for('hotels_page') }}" class="btn btn-primary">
+            <i class="fa-solid fa-rotate-left"></i> Reset Recommendation Filters
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+
+    </main>
+
+  </div>
+</div>
+
+<!-- =========================================================================
+     Interactive Hotel Booking Modal Dialog
+     ========================================================================= -->
+<div id="hotelBookingModalOverlay" class="voice-modal-overlay" style="z-index: 10000;">
+  <div class="voice-modal-card" style="max-width: 580px; text-align: left; padding: 0; overflow: hidden; border-radius: 16px; border: 1px solid #D4AF37;">
+    
+    <!-- Modal Header -->
+    <div style="background: linear-gradient(135deg, #7A1C28, #4A0D16); color: #fff; padding: 20px 24px; border-bottom: 3px solid #D4AF37; display: flex; justify-content: space-between; align-items: flex-start;">
+      <div>
+        <div id="checkoutProgressBadge" style="font-size: 0.76rem; color: var(--color-gold-light); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
+          <span id="stepBadge1" style="color: #FFE082;">Step 1: Stay Details</span> ➔ 
+          <span id="stepBadge2" style="opacity: 0.6;">Step 2: Pay Hotel Bill</span> ➔ 
+          <span id="stepBadge3" style="opacity: 0.6;">Step 3: Confirmed</span>
+        </div>
+        <h3 id="modalHotelName" style="font-size: 1.35rem; color: #fff; margin: 0 0 2px;">Hotel Name</h3>
+        <p id="modalDestInfo" style="font-size: 0.82rem; color: #EBD99F; margin: 0;">Staying near Kolhapur Destination</p>
+      </div>
+      <button type="button" onclick="closeBookingModal()" style="background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer; opacity: 0.8;">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div style="padding: 22px 24px; max-height: 75vh; overflow-y: auto;">
+      
+      <!-- ===================================================================
+           STEP 1: Stay & Guest Details Form
+           =================================================================== -->
+      <div id="step1StayDetails">
+        <form id="hotelBookingFormStep1" onsubmit="goToPaymentStep(event)">
+          <input type="hidden" id="bookHotelId" name="hotel_id" value="">
+          <input type="hidden" id="bookBasePrice" value="2000">
+          <input type="hidden" id="bookDestId" name="destination_id" value="">
+
+          <!-- Guest Details -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="font-size: 0.82rem; font-weight: 600;">Full Name *</label>
+              <input type="text" id="bookGuestName" name="guest_name" class="form-control" style="padding: 9px 12px; font-size: 0.88rem;" value="{{ session.name if session.name else '' }}" placeholder="e.g. Ramesh Patil" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="font-size: 0.82rem; font-weight: 600;">Phone Number *</label>
+              <input type="tel" id="bookGuestPhone" name="guest_phone" class="form-control" style="padding: 9px 12px; font-size: 0.88rem;" placeholder="9359067055" required>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 14px;">
+            <label style="font-size: 0.82rem; font-weight: 600;">Email Address (Gmail) *</label>
+            <input type="email" id="bookGuestEmail" name="guest_email" class="form-control" style="padding: 9px 12px; font-size: 0.88rem;" value="{{ session.email if session.email else '' }}" placeholder="e.g. salunkeprathmesh68@gmail.com" required>
+            <small style="color: var(--text-muted); font-size: 0.75rem;">Stay confirmation & darshan guide will be dispatched here.</small>
+          </div>
+
+          <!-- Dates -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="font-size: 0.82rem; font-weight: 600;"><i class="fa-regular fa-calendar"></i> Check-in Date *</label>
+              <input type="date" id="bookCheckIn" name="check_in" class="form-control" style="padding: 9px 12px; font-size: 0.88rem;" onchange="calculateBookingPrice()" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="font-size: 0.82rem; font-weight: 600;"><i class="fa-regular fa-calendar"></i> Check-out Date *</label>
+              <input type="date" id="bookCheckOut" name="check_out" class="form-control" style="padding: 9px 12px; font-size: 0.88rem;" onchange="calculateBookingPrice()" required>
+            </div>
+          </div>
+
+          <!-- Rooms & Guests -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 14px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="font-size: 0.82rem; font-weight: 600;">Rooms</label>
+              <select id="bookRooms" name="rooms" class="form-control" style="padding: 9px 12px; font-size: 0.88rem;" onchange="calculateBookingPrice()">
+                <option value="1" selected>1 Room</option>
+                <option value="2">2 Rooms</option>
+                <option value="3">3 Rooms</option>
+                <option value="4">4+ Rooms</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="font-size: 0.82rem; font-weight: 600;">Guests</label>
+              <select id="bookGuests" name="guests" class="form-control" style="padding: 9px 12px; font-size: 0.88rem;">
+                <option value="1">1 Person</option>
+                <option value="2" selected>2 Persons</option>
+                <option value="3">3 Persons</option>
+                <option value="4">4 Persons</option>
+                <option value="6">Family (5-6)</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="font-size: 0.82rem; font-weight: 600;">Category</label>
+              <select id="bookRoomType" name="room_type" class="form-control" style="padding: 9px 12px; font-size: 0.88rem;" onchange="calculateBookingPrice()">
+                <option value="Deluxe Heritage Room" selected>Deluxe</option>
+                <option value="Executive View Room">Executive (+15%)</option>
+                <option value="Luxury Royal Suite">Suite (+35%)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Special Requests -->
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label style="font-size: 0.82rem; font-weight: 600;">Special Requests / Temple Darshan Assistance</label>
+            <input type="text" id="bookSpecialReq" name="special_requests" class="form-control" style="padding: 9px 12px; font-size: 0.88rem;" placeholder="e.g. Early check-in, extra bed, high floor room">
+          </div>
+
+          <!-- Price Breakdown Box -->
+          <div style="background: #FFF9E6; border: 1px dashed #D4AF37; border-radius: 10px; padding: 14px 18px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 0.82rem; color: #666;" id="priceCalcDesc">₹2,000 × 1 Night × 1 Room</div>
+              <div style="font-size: 0.75rem; color: #2E7D32;"><i class="fa-solid fa-shield-check"></i> Free Cancellation • Secure Payment</div>
+            </div>
+            <div style="text-align: right;">
+              <span style="font-size: 0.75rem; color: #777; display: block;">Payable Amount</span>
+              <span id="modalTotalPrice" style="font-size: 1.55rem; font-weight: 800; color: #7A1C28;">₹2,000</span>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; padding: 13px; font-size: 1rem; font-weight: 700; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <span>Proceed to Payment</span> <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </form>
+      </div>
+
+      <!-- ===================================================================
+           STEP 2: Hotel Payment Gateway (UPI / Card / Net Banking)
+           =================================================================== -->
+      <div id="step2PaymentGateway" style="display: none;">
+        <!-- Bill Summary Ribbon -->
+        <div style="background: #FAF7F2; border: 1px solid #EAE0D5; border-radius: 8px; padding: 12px 16px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 0.8rem; color: #777;">Total Hotel Tariff to Pay:</div>
+            <div id="payGatewayAmount" style="font-size: 1.45rem; font-weight: 800; color: #7A1C28;">₹2,000</div>
+          </div>
+          <div style="text-align: right; font-size: 0.8rem; color: #555;">
+            <strong id="payGuestNameDisplay">Ramesh Patil</strong><br>
+            <span id="payStaySummaryDisplay">1 Night • 1 Room</span>
+          </div>
+        </div>
+
+        <!-- Payment Method Tabs -->
+        <div style="margin-bottom: 16px;">
+          <label style="font-size: 0.84rem; font-weight: 700; color: #333; margin-bottom: 8px; display: block;">Select Payment Method:</label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+            <button type="button" class="pay-tab-btn active" id="tabBtnUPI" onclick="selectPaymentTab('upi')">
+              <i class="fa-solid fa-qrcode"></i> UPI / QR
+            </button>
+            <button type="button" class="pay-tab-btn" id="tabBtnCard" onclick="selectPaymentTab('card')">
+              <i class="fa-solid fa-credit-card"></i> Card
+            </button>
+            <button type="button" class="pay-tab-btn" id="tabBtnNetBanking" onclick="selectPaymentTab('netbanking')">
+              <i class="fa-solid fa-building-columns"></i> NetBanking
+            </button>
+          </div>
+        </div>
+
+        <!-- Tab 1: UPI & QR Code -->
+        <div id="payContentUPI" class="pay-tab-content">
+          <div style="background: #FFF9E6; border: 1px dashed #D4AF37; border-radius: 8px; padding: 14px; text-align: center; margin-bottom: 14px;">
+            <div style="font-size: 0.82rem; font-weight: 700; color: #4A0D16; margin-bottom: 8px;">
+              <i class="fa-solid fa-mobile-screen"></i> Scan Kolhapur Tourism QR & Pay
+            </div>
+            <!-- Dynamic Simulated QR Code -->
+            <div style="width: 140px; height: 140px; background: #fff; border: 2px solid #333; border-radius: 8px; margin: 0 auto 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+              <i class="fa-solid fa-qrcode" style="font-size: 90px; color: #1B1B1B;"></i>
+              <span style="font-size: 0.65rem; font-weight: bold; color: #7A1C28; margin-top: 2px;">BHIM UPI • GPay</span>
+            </div>
+            <div style="font-size: 0.76rem; color: #555;">UPI ID: <code>kolhapur.stay@upi</code></div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 14px;">
+            <label style="font-size: 0.82rem; font-weight: 600;">Or Enter Your UPI ID (VPA)</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-at field-icon"></i>
+              <input type="text" id="payUPIId" class="form-control" style="padding: 10px 14px 10px 36px; font-size: 0.88rem;" placeholder="e.g. 9359067055@upi or user@okaxis" value="salunkeprathmesh68@okaxis">
+            </div>
+            <div style="display: flex; gap: 6px; margin-top: 6px;">
+              <span class="upi-chip" onclick="document.getElementById('payUPIId').value='salunkeprathmesh68@okaxis'">@okaxis</span>
+              <span class="upi-chip" onclick="document.getElementById('payUPIId').value='salunkeprathmesh68@okhdfcbank'">@okhdfcbank</span>
+              <span class="upi-chip" onclick="document.getElementById('payUPIId').value='salunkeprathmesh68@ybl'">@ybl</span>
+              <span class="upi-chip" onclick="document.getElementById('payUPIId').value='9359067055@paytm'">@paytm</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Credit / Debit Card -->
+        <div id="payContentCard" class="pay-tab-content" style="display: none;">
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label style="font-size: 0.82rem; font-weight: 600;">Card Number</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-credit-card field-icon"></i>
+              <input type="text" id="payCardNum" class="form-control" style="padding: 10px 14px 10px 36px; font-size: 0.88rem;" placeholder="4532 •••• •••• 8920" value="4532 8821 9012 8920" maxlength="19">
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="font-size: 0.82rem; font-weight: 600;">Expiry Date</label>
+              <input type="text" id="payCardExp" class="form-control" style="padding: 9px 12px; font-size: 0.88rem;" placeholder="MM/YY" value="08/29" maxlength="5">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="font-size: 0.82rem; font-weight: 600;">CVV</label>
+              <input type="password" id="payCardCVV" class="form-control" style="padding: 9px 12px; font-size: 0.88rem;" placeholder="•••" value="842" maxlength="3">
+            </div>
+          </div>
+          <div style="font-size: 0.76rem; color: #2E7D32; display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
+            <i class="fa-solid fa-lock"></i> 256-bit SSL Encrypted & RBI Verified Gateway
+          </div>
+        </div>
+
+        <!-- Tab 3: Net Banking -->
+        <div id="payContentNetBanking" class="pay-tab-content" style="display: none;">
+          <div class="form-group" style="margin-bottom: 14px;">
+            <label style="font-size: 0.82rem; font-weight: 600;">Select Your Bank</label>
+            <select id="payNetBankSelect" class="form-control" style="padding: 10px; font-size: 0.88rem;">
+              <option value="State Bank of India (SBI)" selected>State Bank of India (SBI)</option>
+              <option value="HDFC Bank">HDFC Bank</option>
+              <option value="ICICI Bank">ICICI Bank</option>
+              <option value="Bank of Maharashtra">Bank of Maharashtra</option>
+              <option value="Axis Bank">Axis Bank</option>
+              <option value="Kotak Mahindra Bank">Kotak Mahindra Bank</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Action Buttons in Payment Step -->
+        <div style="display: flex; gap: 10px; margin-top: 18px;">
+          <button type="button" class="btn btn-outline btn-sm" style="flex: 1; padding: 12px;" onclick="backToStep1()">
+            <i class="fa-solid fa-arrow-left"></i> Back to Details
+          </button>
+          <button type="button" id="payConfirmBtn" class="btn btn-primary" style="flex: 2; padding: 12px; font-weight: 700; font-size: 0.96rem;" onclick="processPaymentAndConfirm()">
+            <i class="fa-solid fa-lock"></i> Pay & Confirm Booking
+          </button>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           STEP 3: Booking Success Result View (Paid & Confirmed)
+           =================================================================== -->
+      <div id="bookingSuccessBox" style="display: none; text-align: center; padding: 15px 10px;">
+        <div style="width: 64px; height: 64px; background: #E8F5E9; color: #2E7D32; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 12px; box-shadow: 0 4px 12px rgba(46,125,50,0.2);">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <h3 style="font-size: 1.4rem; color: var(--color-primary-dark); margin-bottom: 4px;">Payment Successful & Stay Confirmed!</h3>
+        <p style="font-size: 0.86rem; color: var(--text-muted); margin-bottom: 14px;" id="successMsg">Your payment has been authorized and room guaranteed.</p>
+        
+        <!-- Payment & Booking Metadata Box -->
+        <div style="background: #FAF7F2; border: 1px solid #D4AF37; border-radius: 10px; padding: 14px 18px; font-size: 0.86rem; margin-bottom: 16px; text-align: left;">
+          <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #DDD; padding-bottom: 6px; margin-bottom: 8px;">
+            <span>Booking Ref:</span>
+            <strong id="successRef" style="color: #7A1C28; font-size: 0.95rem;">BK-KOL-XXXX</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+            <span>Transaction ID:</span>
+            <strong id="successTxnId" style="color: #1565C0; font-family: monospace;">TXN-KOL-XXXX</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+            <span>Payment Status:</span>
+            <span style="background: #E8F5E9; color: #2E7D32; font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 0.78rem;">
+              <i class="fa-solid fa-check"></i> PAID (ONLINE)
+            </span>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+            <span>Payment Method:</span>
+            <strong id="successPaymentMethod">UPI / Google Pay</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; border-top: 1px solid #EEE; padding-top: 6px; margin-top: 6px;">
+            <span>Hotel Stay:</span>
+            <strong id="successHotel">Hotel Name</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>Total Paid:</span>
+            <strong id="successPrice" style="color: #7A1C28; font-size: 1.1rem;">₹0</strong>
+          </div>
+        </div>
+
+        <!-- Live Dispatch Status Alerts -->
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; text-align: left;">
+          <div style="background: #E8F5E9; border: 1px solid #A5D6A7; color: #2E7D32; padding: 10px 14px; border-radius: 8px; font-size: 0.84rem; display: flex; align-items: center; gap: 10px;">
+            <i class="fa-solid fa-envelope-circle-check" style="font-size: 1.2rem;"></i>
+            <div>
+              <strong>Payment Receipt & Travel Guide Sent:</strong><br>
+              <span id="successEmailDisplay" style="color: #1B5E20; font-family: monospace; font-weight: bold;">salunkeprathmesh68@gmail.com</span>
+            </div>
+          </div>
+          <div style="background: #E3F2FD; border: 1px solid #90CAF9; color: #1565C0; padding: 10px 14px; border-radius: 8px; font-size: 0.84rem; display: flex; align-items: center; gap: 10px;">
+            <i class="fa-solid fa-comment-sms" style="font-size: 1.2rem;"></i>
+            <div>
+              <strong>Instant SMS Notification Sent:</strong><br>
+              <span id="successPhoneDisplay" style="color: #0D47A1; font-family: monospace; font-weight: bold;">9359067055</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1-Click Action Buttons -->
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <button type="button" class="btn btn-gold" style="width: 100%; font-weight: 700; padding: 11px;" onclick="openNotificationModal(lastConfirmedBookingId)">
+            <i class="fa-solid fa-envelope-open-text"></i> View Sent Gmail & SMS Instructions
+          </button>
+          <div style="display: flex; gap: 10px;">
+            <a id="successReceiptBtn" href="#" target="_blank" class="btn btn-primary btn-flex-1">
+              <i class="fa-solid fa-receipt"></i> View Receipt
+            </a>
+            <a href="{{ url_for('my_bookings') }}" class="btn btn-outline btn-flex-1">
+              <i class="fa-solid fa-calendar-days"></i> My Bookings
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- =========================================================================
+     Interactive Sent Gmail & SMS Instructions Preview Modal
+     ========================================================================= -->
+<div id="notificationModalOverlay" class="voice-modal-overlay" style="z-index: 10010;">
+  <div class="voice-modal-card" style="max-width: 620px; text-align: left; padding: 0; overflow: hidden; border-radius: 16px; border: 1px solid #D4AF37;">
+    
+    <!-- Modal Header (Gmail Style) -->
+    <div style="background: #EA4335; color: #fff; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <i class="fa-solid fa-envelope-open-text" style="font-size: 1.3rem;"></i>
+        <div>
+          <h4 style="margin: 0; font-size: 1.1rem; color: #fff;">Gmail & SMS Booking Confirmation</h4>
+          <span style="font-size: 0.76rem; color: #FFE8E6;">Official Smart Kolhapur Guide Stay & Tourist Guidelines</span>
+        </div>
+      </div>
+      <button type="button" onclick="closeNotificationModal()" style="background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer;">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Modal Content -->
+    <div style="padding: 24px; max-height: 75vh; overflow-y: auto;" id="notifModalBody">
+      <div style="text-align: center; padding: 30px;">
+        <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: var(--color-primary);"></i>
+        <p style="margin-top: 10px; color: var(--text-muted);">Loading dispatched instructions...</p>
+      </div>
+    </div>
+
+    <div style="background: #F9F9F9; padding: 14px 24px; border-top: 1px solid #EEE; display: flex; justify-content: space-between; align-items: center;">
+      <button type="button" class="btn btn-outline btn-sm" onclick="resendNotification()">
+        <i class="fa-solid fa-paper-plane"></i> Re-send to My Gmail & SMS
+      </button>
+      <button type="button" class="btn btn-primary btn-sm" onclick="closeNotificationModal()">
+        Close Preview
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let currentHotelBasePrice = 2000;
+let currentCalculatedTotal = 2000;
+let lastConfirmedBookingId = null;
+let selectedPaymentMethod = 'UPI (Google Pay / PhonePe)';
+
+function openBookingModal(hotelId, hotelName, price, image, destId, destName) {
+  currentHotelBasePrice = price;
+  
+  document.getElementById('bookHotelId').value = hotelId;
+  document.getElementById('bookBasePrice').value = price;
+  document.getElementById('bookDestId').value = destId;
+  document.getElementById('modalHotelName').textContent = hotelName;
+  document.getElementById('modalDestInfo').innerHTML = `<i class="fa-solid fa-landmark"></i> Near ${destName || 'Kolhapur'}`;
+
+  // Default dates: tomorrow and day after
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+  const dayAfter = new Date(today);
+  dayAfter.setDate(today.getDate() + 2);
+
+  const formatD = (d) => d.toISOString().split('T')[0];
+  document.getElementById('bookCheckIn').value = formatD(tomorrow);
+  document.getElementById('bookCheckOut').value = formatD(dayAfter);
+  document.getElementById('bookCheckIn').min = formatD(today);
+  document.getElementById('bookCheckOut').min = formatD(tomorrow);
+
+  // Reset to Step 1
+  backToStep1();
+
+  calculateBookingPrice();
+
+  document.getElementById('hotelBookingModalOverlay').classList.add('active');
+}
+
+function closeBookingModal() {
+  document.getElementById('hotelBookingModalOverlay').classList.remove('active');
+}
+
+function calculateBookingPrice() {
+  const dInStr = document.getElementById('bookCheckIn').value;
+  const dOutStr = document.getElementById('bookCheckOut').value;
+  const rooms = parseInt(document.getElementById('bookRooms').value) || 1;
+  const roomType = document.getElementById('bookRoomType').value;
+  
+  let rate = currentHotelBasePrice;
+  if (roomType.includes("Suite")) {
+    rate = Math.round(rate * 1.35);
+  } else if (roomType.includes("Executive")) {
+    rate = Math.round(rate * 1.15);
+  }
+
+  let nights = 1;
+  if (dInStr && dOutStr) {
+    const d1 = new Date(dInStr);
+    const d2 = new Date(dOutStr);
+    const diff = (d2 - d1) / (1000 * 60 * 60 * 24);
+    if (diff >= 1) {
+      nights = Math.round(diff);
+    }
+  }
+
+  currentCalculatedTotal = rate * nights * rooms;
+  document.getElementById('modalTotalPrice').textContent = '₹' + currentCalculatedTotal.toLocaleString('en-IN');
+  document.getElementById('payGatewayAmount').textContent = '₹' + currentCalculatedTotal.toLocaleString('en-IN');
+  document.getElementById('priceCalcDesc').textContent = `₹${rate.toLocaleString('en-IN')} × ${nights} Night${nights>1?'s':''} × ${rooms} Room${rooms>1?'s':''}`;
+}
+
+function goToPaymentStep(e) {
+  if (e) e.preventDefault();
+  
+  // Validate Step 1 Inputs
+  const name = document.getElementById('bookGuestName').value.trim();
+  const phone = document.getElementById('bookGuestPhone').value.trim();
+  const email = document.getElementById('bookGuestEmail').value.trim();
+
+  if (!name || !phone || !email) {
+    alert("Please fill in your Name, Phone Number, and Email Address.");
+    return;
+  }
+
+  calculateBookingPrice();
+
+  // Populate Bill Summary in Step 2
+  document.getElementById('payGuestNameDisplay').textContent = name;
+  const rooms = document.getElementById('bookRooms').value;
+  document.getElementById('payStaySummaryDisplay').textContent = `${rooms} Room(s) • Total ₹${currentCalculatedTotal.toLocaleString('en-IN')}`;
+
+  // Update Breadcrumb
+  document.getElementById('stepBadge1').style.color = '#fff';
+  document.getElementById('stepBadge1').style.opacity = '0.6';
+  document.getElementById('stepBadge2').style.color = '#FFE082';
+  document.getElementById('stepBadge2').style.opacity = '1.0';
+
+  // Toggle View
+  document.getElementById('step1StayDetails').style.display = 'none';
+  document.getElementById('step2PaymentGateway').style.display = 'block';
+  document.getElementById('bookingSuccessBox').style.display = 'none';
+}
+
+function backToStep1() {
+  document.getElementById('stepBadge1').style.color = '#FFE082';
+  document.getElementById('stepBadge1').style.opacity = '1.0';
+  document.getElementById('stepBadge2').style.color = '#fff';
+  document.getElementById('stepBadge2').style.opacity = '0.6';
+  document.getElementById('stepBadge3').style.color = '#fff';
+  document.getElementById('stepBadge3').style.opacity = '0.6';
+
+  document.getElementById('step1StayDetails').style.display = 'block';
+  document.getElementById('step2PaymentGateway').style.display = 'none';
+  document.getElementById('bookingSuccessBox').style.display = 'none';
+}
+
+function selectPaymentTab(tab) {
+  document.getElementById('tabBtnUPI').classList.remove('active');
+  document.getElementById('tabBtnCard').classList.remove('active');
+  document.getElementById('tabBtnNetBanking').classList.remove('active');
+
+  document.getElementById('payContentUPI').style.display = 'none';
+  document.getElementById('payContentCard').style.display = 'none';
+  document.getElementById('payContentNetBanking').style.display = 'none';
+
+  if (tab === 'upi') {
+    document.getElementById('tabBtnUPI').classList.add('active');
+    document.getElementById('payContentUPI').style.display = 'block';
+    selectedPaymentMethod = 'UPI (Google Pay / PhonePe)';
+  } else if (tab === 'card') {
+    document.getElementById('tabBtnCard').classList.add('active');
+    document.getElementById('payContentCard').style.display = 'block';
+    selectedPaymentMethod = 'Credit / Debit Card';
+  } else if (tab === 'netbanking') {
+    document.getElementById('tabBtnNetBanking').classList.add('active');
+    document.getElementById('payContentNetBanking').style.display = 'block';
+    selectedPaymentMethod = `Net Banking (${document.getElementById('payNetBankSelect').value})`;
+  }
+}
+
+async function processPaymentAndConfirm() {
+  const btn = document.getElementById('payConfirmBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Authorizing Payment with Bank / UPI Gateway...';
+
+  const guestEmail = document.getElementById('bookGuestEmail').value;
+  const guestPhone = document.getElementById('bookGuestPhone').value;
+
+  const payload = {
+    hotel_id: document.getElementById('bookHotelId').value,
+    destination_id: document.getElementById('bookDestId').value,
+    guest_name: document.getElementById('bookGuestName').value,
+    guest_email: guestEmail,
+    guest_phone: guestPhone,
+    check_in: document.getElementById('bookCheckIn').value,
+    check_out: document.getElementById('bookCheckOut').value,
+    rooms: document.getElementById('bookRooms').value,
+    guests: document.getElementById('bookGuests').value,
+    room_type: document.getElementById('bookRoomType').value,
+    special_requests: document.getElementById('bookSpecialReq').value,
+    payment_method: selectedPaymentMethod,
+    payment_status: 'PAID'
+  };
+
+  try {
+    const res = await fetch('/api/bookings/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+    if (res.ok && data.status === 'success') {
+      lastConfirmedBookingId = data.booking_id;
+      
+      // Update breadcrumb
+      document.getElementById('stepBadge2').style.color = '#fff';
+      document.getElementById('stepBadge2').style.opacity = '0.6';
+      document.getElementById('stepBadge3').style.color = '#A5D6A7';
+      document.getElementById('stepBadge3').style.opacity = '1.0';
+
+      document.getElementById('step1StayDetails').style.display = 'none';
+      document.getElementById('step2PaymentGateway').style.display = 'none';
+      document.getElementById('bookingSuccessBox').style.display = 'block';
+
+      document.getElementById('successMsg').textContent = `Payment verified! All stay guidelines and hotel contact details have been sent to your Gmail and phone.`;
+      document.getElementById('successRef').textContent = data.booking_id;
+      document.getElementById('successTxnId').textContent = data.transaction_id || `TXN-KOL-${Math.floor(100000 + Math.random()*900000)}`;
+      document.getElementById('successPaymentMethod').textContent = data.payment_method || selectedPaymentMethod;
+      document.getElementById('successHotel').textContent = data.hotel_name;
+      document.getElementById('successPrice').textContent = '₹' + data.total_price.toLocaleString('en-IN');
+      document.getElementById('successEmailDisplay').textContent = data.user_email || guestEmail;
+      document.getElementById('successPhoneDisplay').textContent = data.user_phone || guestPhone;
+      document.getElementById('successReceiptBtn').href = `/booking/voucher/${data.booking_id}`;
+    } else {
+      alert(data.message || 'Payment or booking processing failed.');
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Network error. Please try again.');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-lock"></i> Pay & Confirm Booking';
+  }
+}
+
+async function openNotificationModal(bookingId) {
+  if (!bookingId) return;
+  lastConfirmedBookingId = bookingId;
+  const overlay = document.getElementById('notificationModalOverlay');
+  const body = document.getElementById('notifModalBody');
+  overlay.classList.add('active');
+
+  body.innerHTML = `
+    <div style="text-align: center; padding: 30px;">
+      <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: var(--color-primary);"></i>
+      <p style="margin-top: 10px; color: var(--text-muted);">Fetching dispatched stay instructions...</p>
+    </div>
+  `;
+
+  try {
+    const res = await fetch(`/api/booking/notification/${bookingId}`);
+    const data = await res.json();
+    if (res.ok && data.status === 'success') {
+      const n = data.notification;
+      const t = n.travel_instructions || {};
+      
+      body.innerHTML = `
+        <!-- Email Metadata Header -->
+        <div style="background: #FAF7F2; border: 1px solid #EAE0D5; border-radius: 8px; padding: 14px 16px; margin-bottom: 18px; font-size: 0.84rem;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+            <div><strong>From:</strong> Smart Kolhapur Guide &lt;bookings@kolhapur.gov.in&gt;</div>
+            <span style="background: #E8F5E9; color: #2E7D32; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 12px; border: 1px solid #A5D6A7;">
+              <i class="fa-solid fa-circle-check"></i> Dispatched
+            </span>
+          </div>
+          <div><strong>To Guest Gmail:</strong> <span style="color: #7A1C28; font-weight: 700;">${n.recipient_email}</span></div>
+          <div><strong>To Hotel Desk:</strong> <span style="color: #4A0D16; font-weight: 600;">${n.hotel_desk_email || 'reception@hotel.kolhapur.in'}</span></div>
+          <div><strong>SMS Sent To:</strong> <span style="color: #1565C0; font-weight: 700;">${n.recipient_phone}</span></div>
+          <div style="margin-top: 4px;"><strong>Subject:</strong> ${n.subject}</div>
+        </div>
+
+        <!-- 1-Click Instant Action Bridges -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px;">
+          <a href="${n.gmail_compose_url}" target="_blank" class="btn btn-sm" style="background: #EA4335; color: #fff; text-align: center; text-decoration: none; padding: 10px; font-weight: 600; border-radius: 6px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <i class="fa-solid fa-envelope"></i> Open in Gmail App
+          </a>
+          <a href="${n.whatsapp_share_url}" target="_blank" class="btn btn-sm" style="background: #25D366; color: #fff; text-align: center; text-decoration: none; padding: 10px; font-weight: 600; border-radius: 6px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <i class="fa-brands fa-whatsapp"></i> Send via WhatsApp
+          </a>
+        </div>
+
+        <!-- Stay Summary Card -->
+        <div style="border: 1px solid #D4AF37; border-radius: 10px; overflow: hidden; margin-bottom: 18px;">
+          <div style="background: linear-gradient(135deg, #7A1C28, #5A111D); color: #fff; padding: 12px 16px; font-size: 0.95rem; font-weight: 700; display: flex; justify-content: space-between;">
+            <span><i class="fa-solid fa-hotel"></i> Stay Confirmation: ${n.hotel_name}</span>
+            <span style="font-size: 0.8rem; color: #EBD99F;">Ref: ${n.booking_id}</span>
+          </div>
+          <div style="padding: 14px 16px; font-size: 0.85rem; background: #fff;">
+            <div><strong>Location:</strong> ${n.hotel_location || 'Kolhapur'}</div>
+            <div><strong>Hotel Direct Phone:</strong> <a href="tel:${n.hotel_contact}" style="color: #7A1C28; font-weight: 700;"><i class="fa-solid fa-phone"></i> ${n.hotel_contact}</a></div>
+            <div style="margin-top: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: #FFF9E6; padding: 10px 12px; border-radius: 6px;">
+              <div>Check-in: <strong>${n.check_in} (After 12 PM)</strong></div>
+              <div>Check-out: <strong>${n.check_out} (Before 11 AM)</strong></div>
+              <div>Rooms: <strong>${n.rooms} (${n.room_type})</strong></div>
+              <div>Total Tariff: <strong style="color: #7A1C28;">₹${n.total_price}</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tourist Destination Instructions & Travel Tips -->
+        <div style="background: #F4EBE1; border-left: 4px solid #7A1C28; border-radius: 6px; padding: 14px 16px; margin-bottom: 18px;">
+          <h5 style="margin: 0 0 8px; color: #7A1C28; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-landmark"></i> ${t.title || 'Kolhapur Travel Instructions'}
+          </h5>
+          <div style="font-size: 0.83rem; line-height: 1.5; color: #333;">
+            <div style="margin-bottom: 6px;">⏰ <strong>Visiting / Darshan Timings:</strong> ${t.timings || 'General daytime visiting hours.'}</div>
+            <div style="margin-bottom: 6px;">👗 <strong>Attire & Rules:</strong> ${t.attire_rules || 'Modest clothing recommended.'}</div>
+            <div style="margin-bottom: 6px;">💡 <strong>Darshan & Tour Tips:</strong> ${t.darshan_tips || 'Visit MTDC counter for local guides.'}</div>
+            <div>🍲 <strong>Recommended Food:</strong> ${t.local_cuisine || 'Authentic Kolhapuri Misal & Thali.'}</div>
+          </div>
+        </div>
+
+        <!-- SMS Text Body Preview Box -->
+        <div style="background: #E3F2FD; border: 1px dashed #1E88E5; border-radius: 8px; padding: 12px 14px; font-size: 0.8rem; color: #0D47A1; margin-bottom: 14px;">
+          <strong><i class="fa-solid fa-mobile-screen"></i> Instant SMS Delivered:</strong><br>
+          <span style="font-family: monospace; display: block; margin-top: 4px; line-height: 1.4;">${n.sms_body}</span>
+        </div>
+
+        <button type="button" class="btn btn-outline btn-sm" style="width: 100%;" onclick="copyInstructionsText(\`${n.plain_text_body.replace(/`/g, '\\`').replace(/\\/g, '\\\\')}\`)">
+          <i class="fa-regular fa-copy"></i> Copy Full Stay Instructions & Voucher Text
+        </button>
+      `;
+    } else {
+      body.innerHTML = `<p style="color: red; padding: 20px;">Could not load notification details.</p>`;
+    }
+  } catch (err) {
+    console.error(err);
+    body.innerHTML = `<p style="color: red; padding: 20px;">Network error.</p>`;
+  }
+}
+
+function copyInstructionsText(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    alert("Full booking details and tourist instructions copied to clipboard!");
+  }).catch(() => {
+    alert("Copied to clipboard!");
+  });
+}
+
+function closeNotificationModal() {
+  document.getElementById('notificationModalOverlay').classList.remove('active');
+}
+
+async function resendNotification() {
+  if (!lastConfirmedBookingId) return;
+  try {
+    const res = await fetch(`/api/booking/resend-notification/${lastConfirmedBookingId}`, { method: 'POST' });
+    const data = await res.json();
+    alert(data.message || 'Instructions resent successfully!');
+  } catch (err) {
+    alert('Failed to resend notification.');
+  }
+}
+
+// Initialize Leaflet Interactive Hotel Recommendation Map
+document.addEventListener('DOMContentLoaded', () => {
+  const destData = {{ target_place|tojson|safe if target_place else 'null' }};
+  const hotelsData = {{ hotels|tojson|safe }};
+  
+  if (typeof initHotelRecommendationMap === 'function') {
+    initHotelRecommendationMap(destData, hotelsData);
+  }
+});
+
+function toggleMapView(mode) {
+  const mapWrap = document.getElementById('hotelMapContainer');
+  const listWrap = document.querySelector('.hotel-results-list');
+  const btnSplit = document.getElementById('btnMapSplit');
+  const btnMap = document.getElementById('btnMapOnly');
+  const btnCards = document.getElementById('btnCardsOnly');
+
+  [btnSplit, btnMap, btnCards].forEach(b => { if(b) b.classList.remove('active'); });
+
+  if (mode === 'split') {
+    if (btnSplit) btnSplit.classList.add('active');
+    if (mapWrap) mapWrap.style.display = 'block';
+    if (listWrap) listWrap.style.display = 'flex';
+  } else if (mode === 'map') {
+    if (btnMap) btnMap.classList.add('active');
+    if (mapWrap) mapWrap.style.display = 'block';
+    if (listWrap) listWrap.style.display = 'none';
+  } else if (mode === 'cards') {
+    if (btnCards) btnCards.classList.add('active');
+    if (mapWrap) mapWrap.style.display = 'none';
+    if (listWrap) listWrap.style.display = 'flex';
+  }
+
+  if (window.invalidateAllMaps) window.invalidateAllMaps();
+}
+</script>
+
+{% endblock %}

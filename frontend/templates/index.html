@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+
+{% block title %}Smart Kolhapur Guide | Explore Heritage, Forts, Temples & Nature{% endblock %}
+
+{% block content %}
+
+<!-- Hero Banner Section -->
+<section class="hero-section">
+  <div class="container">
+    <div class="hero-tagline-badge">
+      <i class="fa-solid fa-om"></i> Dakshin Kashi • Karveer Nagari
+    </div>
+    
+    <h1 class="hero-title">
+      Explore Historic Kolhapur: Land of <span>Ambabai, Forts & Rajarshi Shahu</span>
+    </h1>
+    
+    <p class="hero-desc">
+      Journey through ancient Shakti Peethas, heroic Maratha citadels, royal palaces, and scenic Western Ghats sanctuaries with our smart tourist guide & voice assistant.
+    </p>
+
+    <!-- Search & Voice Trigger Bar -->
+    <div class="hero-search-wrapper">
+      <div class="hero-search-bar">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input 
+          type="text" 
+          id="heroSearchInput" 
+          placeholder="Search places by name, history, or category (e.g. Panhala, Temple, Wildlife)..." 
+          aria-label="Search destinations in Kolhapur"
+        >
+        <button type="button" id="heroMicBtn" class="hero-mic-btn" onclick="if(window.KolhapurVoiceAssistant){window.KolhapurVoiceAssistant.startListening();}" title="Speak to Voice Assistant" aria-label="Microphone Search">
+          <i class="fa-solid fa-microphone"></i>
+        </button>
+      </div>      <!-- Search Prompt Shortcut Pills -->
+      <div class="voice-chips">
+        <span class="voice-chip" data-prompt="Mahalaxmi Temple" title="Tap to search Mahalaxmi Temple">
+          <i class="fa-solid fa-magnifying-glass"></i> "Mahalaxmi Temple"
+        </span>
+        <span class="voice-chip" data-prompt="Panhala Fort" title="Tap to search Panhala Fort">
+          <i class="fa-solid fa-magnifying-glass"></i> "Panhala Fort"
+        </span>
+        <span class="voice-chip" data-prompt="Jyotiba Temple" title="Tap to search Jyotiba Temple">
+          <i class="fa-solid fa-magnifying-glass"></i> "Jyotiba Temple"
+        </span>
+        <span class="voice-chip" data-prompt="Rankala Lake" title="Tap to search Rankala Lake">
+          <i class="fa-solid fa-magnifying-glass"></i> "Rankala Lake"
+        </span>
+        <span class="voice-chip" data-prompt="New Palace" title="Tap to search New Palace">
+          <i class="fa-solid fa-magnifying-glass"></i> "New Palace"
+        </span>
+        <span class="voice-chip" data-prompt="Show temples" title="Tap to filter temples">
+          <i class="fa-solid fa-gopuram"></i> "Show temples"
+        </span>
+        <span class="voice-chip" data-prompt="Hotels near Rankala" title="Tap to find hotels near Rankala Lake">
+          <i class="fa-solid fa-hotel"></i> "Hotels near Rankala"
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Category Filtering Section -->
+<section class="filter-section">
+  <div class="container">
+    <div class="categories-container">
+      {% for cat in categories %}
+      <button class="category-btn {% if cat.id == 'all' %}active{% endif %}" data-category="{{ cat.id }}">
+        <i class="fa-solid {{ cat.icon }}"></i>
+        <span>{{ cat.name }}</span>
+      </button>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Active Filter / Destination Counts Bar -->
+<section class="container" style="margin-top: 24px; margin-bottom: 8px;">
+  <div style="background: var(--bg-card); padding: 14px 20px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+    <div>
+      <p style="font-size: 0.92rem; color: var(--text-muted); margin: 0;">
+        Showing <strong id="visiblePlacesCount" style="color: var(--color-primary);">{{ places|length }}</strong> destinations across Kolhapur
+      </p>
+    </div>
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <a href="{{ url_for('hotels_page') }}" class="btn btn-outline btn-sm">
+        <i class="fa-solid fa-bed"></i> Find Hotels by Destination
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Tourist Places Grid -->
+<section class="container">
+  <div class="places-grid" id="placesGrid">
+    {% for place in places %}
+    <article 
+      class="place-card" 
+      id="place-{{ place.id }}"
+      data-name="{{ place.name }}" 
+      data-category="{{ place.category }}"
+    >
+      <div class="place-card-image">
+        <img 
+          src="{{ url_for('static', filename='images/' + place.image_filename) }}" 
+          alt="{{ place.name }}"
+          loading="lazy"
+          onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/default_place.svg') }}';"
+        >
+        <span class="place-category-badge">{{ place.category }}</span>
+        <button 
+          class="card-fav-btn {% if place.id in user_favorite_places %}active{% endif %}" 
+          onclick="toggleFavorite('{{ place.id }}', 'place', this)"
+          title="{% if place.id in user_favorite_places %}Remove from favorites{% else %}Save to favorites{% endif %}"
+          aria-label="Save to favorites"
+        >
+          <i class="fa-solid fa-heart"></i>
+        </button>
+      </div>
+
+      <div class="place-card-content">
+        <h3 class="place-title">{{ place.name }}</h3>
+        <div class="place-tagline">{{ place.tagline }}</div>
+        <p class="place-desc">{{ place.short_description }}</p>
+
+        <div class="place-meta">
+          <div class="place-meta-item" title="Best time to visit">
+            <i class="fa-regular fa-calendar-check"></i>
+            <span>{{ place.best_time_to_visit.split('(')[0] }}</span>
+          </div>
+          <div class="place-meta-item" title="Entry Fee">
+            <i class="fa-solid fa-ticket"></i>
+            <span>{{ place.entry_fee.split('(')[0] }}</span>
+          </div>
+        </div>
+
+        <div class="place-card-actions">
+          <a href="{{ url_for('place_detail', place_id=place.id) }}" class="btn btn-primary btn-sm btn-flex-1">
+            <i class="fa-solid fa-circle-info"></i> Details
+          </a>
+          <button 
+            type="button" 
+            class="btn btn-gold btn-sm" 
+            onclick="speakTouristPlace('{{ place.name|replace("'", "\\'") }}', '{{ place.short_description|replace("'", "\\'") }}', '{{ place.id }}')"
+            title="Listen to Voice Guide for {{ place.name }}"
+          >
+            <i class="fa-solid fa-volume-high"></i> Voice
+          </button>
+          <a 
+            href="https://www.google.com/maps/search/?api=1&query={{ place.latitude }},{{ place.longitude }}" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="btn btn-outline btn-sm"
+            title="Open coordinates in Google Maps"
+          >
+            <i class="fa-solid fa-location-arrow"></i> Map
+          </a>
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+
+  <!-- Empty state message if search has no results -->
+  <div id="noPlacesFoundMsg" style="display: none; text-align: center; padding: 60px 20px; background: #fff; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 50px;">
+    <div style="font-size: 3rem; color: var(--color-gold-dark); margin-bottom: 12px;">
+      <i class="fa-solid fa-compass"></i>
+    </div>
+    <h3 style="font-size: 1.5rem; margin-bottom: 8px;">No matching destinations found</h3>
+    <p style="color: var(--text-muted); margin-bottom: 20px;">Try searching for another keyword or reset the category filters.</p>
+    <button class="btn btn-primary" onclick="document.getElementById('heroSearchInput').value=''; document.querySelector('.category-btn[data-category=\'all\']').click();">
+      <i class="fa-solid fa-rotate-left"></i> View All Destinations
+    </button>
+  </div>
+</section>
+
+<!-- Interactive District Tourism & Hotels Map Explorer -->
+<section class="container" style="margin-top: 30px; margin-bottom: 40px;">
+  <div class="map-view-card">
+    <div class="map-header-bar">
+      <div>
+        <h3 style="margin: 0; font-size: 1.25rem; color: var(--color-primary-dark); display: flex; align-items: center; gap: 8px;">
+          <i class="fa-solid fa-map-location-dot" style="color: var(--color-primary);"></i> Kolhapur District Tourism & Stays Map Explorer
+        </h3>
+        <p style="margin: 4px 0 0; font-size: 0.85rem; color: var(--text-muted);">
+          Interactive geographic map showing all 14 tourist destinations and 18 hotels across Kolhapur district
+        </p>
+      </div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button type="button" class="map-filter-chip active" onclick="filterDistrictMapLayer('all')">
+          <i class="fa-solid fa-layer-group"></i> All Markers
+        </button>
+        <button type="button" class="map-filter-chip" onclick="filterDistrictMapLayer('places')">
+          <i class="fa-solid fa-monument"></i> Attractions Only
+        </button>
+        <button type="button" class="map-filter-chip" onclick="filterDistrictMapLayer('hotels')">
+          <i class="fa-solid fa-bed"></i> Hotels Only
+        </button>
+      </div>
+    </div>
+    <div id="districtExploreMap" class="map-view-container large"></div>
+  </div>
+</section>
+
+<!-- Kolhapur Highlights & Statistics Section -->
+<section class="highlights-section">
+  <div class="container">
+    <div style="text-align: center; max-width: 650px; margin: 0 auto 36px;">
+      <h2 style="font-size: 2.2rem; margin-bottom: 8px;">Kolhapur at a Glance</h2>
+      <p style="color: var(--text-muted);">Key heritage, geographic, and cultural highlights of Kolhapur District</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="stat-icon"><i class="fa-solid fa-gopuram"></i></div>
+        <div class="stat-number">7th C.</div>
+        <div class="stat-label">Ancient Shakti Peetha Heritage</div>
+      </div>
+
+      <div class="stat-box">
+        <div class="stat-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <div class="stat-number">14 km</div>
+        <div class="stat-label">Panhala Fort Perimeter</div>
+      </div>
+
+      <div class="stat-box">
+        <div class="stat-icon"><i class="fa-solid fa-tree"></i></div>
+        <div class="stat-number">351 km²</div>
+        <div class="stat-label">Radhanagari Wildlife Reserve</div>
+      </div>
+
+      <div class="stat-box">
+        <div class="stat-icon"><i class="fa-solid fa-utensils"></i></div>
+        <div class="stat-number">World Famous</div>
+        <div class="stat-label">Kolhapuri Misal & Tambda Rassa</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const placesData = {{ places|tojson|safe }};
+  fetch('/api/hotels')
+    .then(r => r.json())
+    .then(hotelsData => {
+      if (typeof initDistrictExploreMap === 'function') {
+        initDistrictExploreMap(placesData, hotelsData);
+      }
+    })
+    .catch(e => console.error("District map fetch error:", e));
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,298 @@
+[
+  {
+    "id": "mahalaxmi-temple",
+    "name": "Shri Mahalaxmi Temple (Ambabai Mandir)",
+    "category": "religion",
+    "tagline": "The sacred ancient Shakti Peetha of Goddess Mahalaxmi",
+    "short_description": "Ancient 7th-century temple dedicated to Goddess Ambabai, one of the 51 revered Shakti Peethas in India, renowned for its Hemadpanthi architecture and Kirnotsav festival.",
+    "description": "The Shri Mahalaxmi Temple, also affectionately known as Ambabai Mandir, is one of the most prominent pilgrimage centers in Maharashtra. Built in the 7th century during the Chalukya dynasty, the temple complex showcases exquisite Hemadpanthi stone carvings. The sanctum sanctorum houses a 3-foot tall gemstone idol of Goddess Mahalaxmi weighing about 40 kg. A remarkable architectural phenomenon known as 'Kirnotsav' (Sun Ray Festival) occurs twice a year (November and January), during which the rays of the setting sun fall directly on the deity's feet, chest, and face through the temple entrance.",
+    "historical_background": "Originally constructed during the reign of Chalukya King Karandev around 634 CE, the temple was later patronized and renovated by the Shilahara and Yadava dynasties, and later by Chhatrapati Shivaji Maharaj and the Maratha rulers of Kolhapur. It is considered the divine abode where spiritual seekers pray for both material prosperity and supreme liberation.",
+    "best_time_to_visit": "October to March (especially during Navratri & Kirnotsav in Nov/Jan)",
+    "timings": "5:00 AM to 10:30 PM (Daily)",
+    "entry_fee": "Free entry (Special Darshan and VIP passes available at temple trust counter)",
+    "latitude": 16.6946,
+    "longitude": 74.2238,
+    "nearby_attractions": [
+      "Bhavani Mandap",
+      "Rankala Lake",
+      "New Palace",
+      "Town Hall Museum"
+    ],
+    "image_filename": "mahalaxmi_temple.jpg",
+    "cultural_significance": "One of the Maha Shakti Peethas; Kolhapur derives its sacred identity as 'Dakshin Kashi' from this shrine."
+  },
+  {
+    "id": "panhala-fort",
+    "name": "Panhala Fort (Panhalgad)",
+    "category": "history",
+    "tagline": "The grand hilltop citadel of Chhatrapati Shivaji Maharaj",
+    "short_description": "Historic hill fort perched at 2,772 ft with panoramic Sahyadri views, known for Sajja Kothi, Ambarkhana, and Shivaji Maharaj's heroic escape.",
+    "description": "Panhala Fort, strategically positioned in the Sahyadri mountain range approximately 20 km northwest of Kolhapur, is one of the largest forts in the Deccan region with a perimeter spanning over 14 kilometers. The fort features monumental structures including the Ambarkhana (massive granaries that could store 25,000 khandis of grain), Sajja Kothi (viewing pavilion where Prince Sambhaji was once housed), Teen Darwaza, and Teen Tanki freshwater reservoirs. The lush greenery, misty monsoons, and cool breeze make it both a historical wonder and a refreshing getaway.",
+    "historical_background": "Built between 1178 and 1209 CE by the Shilahara ruler Raja Bhoja II, the fort passed through the hands of the Bahmani Sultanate, Adil Shahi dynasty, and the Maratha Empire. Chhatrapati Shivaji Maharaj spent over 500 days here — the longest time he spent at any single fort except Rajgad. The fort is immortalized by the legendary sacrifice of Shiva Kashid and Baji Prabhu Deshpande during the heroic siege of Panhala in 1660.",
+    "best_time_to_visit": "June to February (Breathtaking during monsoon & winter)",
+    "timings": "6:00 AM to 6:30 PM",
+    "entry_fee": "Free (Nominal vehicle parking fee)",
+    "latitude": 16.8123,
+    "longitude": 74.1082,
+    "nearby_attractions": [
+      "Jyotiba Temple",
+      "Pawankhind",
+      "Waghdare Point",
+      "Rankala Lake"
+    ],
+    "image_filename": "panhala_fort.jpg",
+    "cultural_significance": "Symbol of Maratha valor, military engineering, and strategic Deccan defense."
+  },
+  {
+    "id": "jyotiba-temple",
+    "name": "Shri Jyotiba Temple (Wadi Ratnagiri)",
+    "category": "religion",
+    "tagline": "The vibrant mountain shrine enveloped in pink gulal",
+    "short_description": "Prominent hilltop shrine dedicated to Lord Jyotiba (incarnation of Lord Shiva), situated at 3,124 ft and famed for its grand Chaitra Yatra.",
+    "description": "Located at an altitude of 3,124 feet atop the Ratnagiri hill near Kolhapur, the Jyotiba Temple is dedicated to Lord Jyotiba, revered as the patron deity who defeated the demon Ratnasur. The temple complex is built of fine black basalt stone and features three distinct shrines dedicated to Kedareshwar, Ramling, and Chopadai. During the annual Chaitra Poornima Yatra, lakhs of devotees gather and shower the mountain with tons of pink 'Gulal', turning the entire hill vibrant magenta in a spectacular display of devotion.",
+    "historical_background": "The original temple was constructed by Navji Saya in 1730. Ranoji Shinde constructed the current grand structure in 1730, and the Daulatrav Shinde family later contributed expansions. The deity is regarded as the Guardian Lord (Kshetrapala) of the Kolhapur kingdom and is traditionally visited along with the Mahalaxmi Temple.",
+    "best_time_to_visit": "September to March (Chaitra Purnima Fair in March/April)",
+    "timings": "5:30 AM to 9:30 PM",
+    "entry_fee": "Free",
+    "latitude": 16.8016,
+    "longitude": 74.1784,
+    "nearby_attractions": [
+      "Panhala Fort",
+      "Mahalaxmi Temple",
+      "Rankala Lake"
+    ],
+    "image_filename": "jyotiba_temple.png",
+    "cultural_significance": "Famous for the massive Sasandev (sacred tall wooden flags) and gulal-clad festivities."
+  },
+  {
+    "id": "rankala-lake",
+    "name": "Rankala Lake & Chowpatty",
+    "category": "nature",
+    "tagline": "The scenic historic lakeside hub of evening leisure and Kolhapuri street food",
+    "short_description": "Historic lake built by Chhatrapati Shahu Maharaj, featuring the Sandhya Math, Shalini Palace backdrop, illuminated walkways, and vibrant street delicacies.",
+    "description": "Rankala Lake is the picturesque heart of Kolhapur city. Covering an area of roughly 107 hectares with a perimeter of over 4 km, it is believed to be connected via an underground channel to the Ambabai temple. At the center of the lake lies the Sandhya Math (a submerged stone temple visible during summers), and the Padmaraje Garden along its promenade offers tranquil views of the sunset reflecting against the waters and the royal Shalini Palace. In the evenings, the lakeside Chowpatty comes alive with Kolhapuri misal, bhel, and spicy street snacks.",
+    "historical_background": "Constructed by Maharaja Chhatrapati Shahu Maharaj between 1877 and 1883 by quarrying stone and creating an extensive stone bund to solve water scarcity in the city. The lake's foundation has ancient stone pillars and a large stone Nandi statue guarding its bank.",
+    "best_time_to_visit": "Year-round (Best during sunset between 5:00 PM to 8:00 PM)",
+    "timings": "Open 24 hours (Lakeside garden: 6:00 AM to 9:00 PM)",
+    "entry_fee": "Free entry (Boating: ₹50 - ₹100 per person)",
+    "latitude": 16.6872,
+    "longitude": 74.2144,
+    "nearby_attractions": [
+      "Shalini Palace",
+      "Mahalaxmi Temple",
+      "Bhavani Mandap"
+    ],
+    "image_filename": "rankala_lake.jpg",
+    "cultural_significance": "A beloved social hub reflecting the lifestyle, warmth, and culinary vibrancy of Kolhapur."
+  },
+  {
+    "id": "new-palace",
+    "name": "New Palace (Chhatrapati Shahu Maharaj Museum)",
+    "category": "history",
+    "tagline": "Magnificent Indo-Saracenic royal palace and museum",
+    "short_description": "Stunning 19th-century royal palace housing royal artifacts, weaponry, taxidermy, Durbar hall, and the living legacy of the Kolhapur Maratha dynasty.",
+    "description": "Completed in 1884, the New Palace is an architectural masterpiece designed by British architect Major Mant in an eclectic Indo-Saracenic style, blending black polished stone, Jain domes, Gothic arches, and Rajput minarets. The ground floor houses the Shree Chhatrapati Shahu Museum, which showcases a priceless collection of Maratha royal memorabilia, including silver thrones, jewel-encrusted swords, 19th-century photographs, royal costumes, and hunting trophies. The magnificent central Durbar Hall features Belgian glass chandeliers and stained glass windows depicting scenes from the life of Chhatrapati Shivaji Maharaj.",
+    "historical_background": "Built between 1877 and 1884 under the patronage of Chhatrapati Shahu Maharaj. Part of the palace remains the private residence of the present Chhatrapati of Kolhapur, while the museum wing preserves centuries of Maratha royal heritage.",
+    "best_time_to_visit": "October to March",
+    "timings": "9:30 AM to 5:30 PM (Closed on Mondays)",
+    "entry_fee": "₹50 for Adults, ₹25 for Children",
+    "latitude": 16.7176,
+    "longitude": 74.2335,
+    "nearby_attractions": [
+      "Town Hall Museum",
+      "Rankala Lake",
+      "Mahalaxmi Temple"
+    ],
+    "image_filename": "new_palace.jpg",
+    "cultural_significance": "Tribute to Rajarshi Chhatrapati Shahu Maharaj, visionary social reformer and king of Kolhapur."
+  },
+  {
+    "id": "radhanagari-sanctuary",
+    "name": "Radhanagari Wildlife Sanctuary & Dam",
+    "category": "nature",
+    "tagline": "Lush Western Ghats UNESCO World Heritage bio-hotspot",
+    "short_description": "Dense tropical rainforest sanctuary in the Western Ghats home to Indian Bison (Gaur), leopards, hornbills, and the historic Laxmi Talav Dam.",
+    "description": "Spread across 351 sq km in the southern Sahyadri mountain range, Radhanagari Wildlife Sanctuary is Maharashtra's first declared wildlife sanctuary and a UNESCO World Natural Heritage site. The sanctuary boasts dense semi-evergreen forests, perennial rivers like the Bhogavati and Dudhganga, and diverse fauna including the majestic Indian Gaur (bison), leopards, barking deer, giant squirrels, and over 230 bird species including the Malabar Pied Hornbill. The adjacent Radhanagari Dam (Laxmi Talav) offers panoramic water vistas.",
+    "historical_background": "Recognized by Chhatrapati Shahu Maharaj as a prime conservation forest in 1904, it was officially gazetted as a wildlife sanctuary in 1958. Shahu Maharaj also initiated the engineering wonder Laxmi Dam in 1908 to irrigate Kolhapur's fertile sugarcane belt.",
+    "best_time_to_visit": "October to April (Bison sightings best during winter mornings and early summer)",
+    "timings": "6:00 AM to 6:00 PM (Safari hours: 6:00 AM - 10:00 AM & 3:00 PM - 6:00 PM)",
+    "entry_fee": "₹50 entry + Forest vehicle permit fees",
+    "latitude": 16.4172,
+    "longitude": 73.9983,
+    "nearby_attractions": [
+      "Dajipur Bison Sanctuary",
+      "Rautwadi Waterfall",
+      "Gaganbawda"
+    ],
+    "image_filename": "radhanagari_sanctuary.jpg",
+    "cultural_significance": "A vital ecological jewel safeguarding biodiversity and the originating streams of the Krishna basin."
+  },
+  {
+    "id": "dajipur-bison-sanctuary",
+    "name": "Dajipur Bison Sanctuary & Safari",
+    "category": "adventure",
+    "tagline": "Thrilling jungle safari in the heart of the Indian Bison kingdom",
+    "short_description": "Adventure destination featuring off-road 4x4 safaris, scenic watchtowers, dense plateaus, and close encounters with the magnificent Indian Gaur.",
+    "description": "Dajipur is the premier safari entry point of the Radhanagari ecosystem. Located on the scenic ridge between Kolhapur and the Konkan coastline, it features high-altitude grassy plateaus (sadas), scenic viewpoints like Konkan Darshan, and natural salt licks where large herds of wild Gaurs congregate. Visitors can embark on open-top 4x4 forest department safaris that traverse rocky forest tracks, dense canopy trails, and misty cliff edges overlooking the Konkan valley below.",
+    "historical_background": "Historically preserved as a private hunting and game reserve (Shikargah) by the royal rulers of Kolhapur, it was later converted into an absolute wildlife haven under visionary conservation initiatives.",
+    "best_time_to_visit": "November to May",
+    "timings": "6:00 AM to 5:00 PM",
+    "entry_fee": "₹50 per person + ₹400-₹800 for forest jeep safari",
+    "latitude": 16.3833,
+    "longitude": 73.85,
+    "nearby_attractions": [
+      "Radhanagari Wildlife Sanctuary",
+      "Gaganbawda",
+      "Phonda Ghat"
+    ],
+    "image_filename": "dajipur_sanctuary.jpg",
+    "cultural_significance": "Eco-tourism haven fostering wildlife conservation and sustainable forest exploration."
+  },
+  {
+    "id": "bhavani-mandap",
+    "name": "Bhavani Mandap",
+    "category": "culture",
+    "tagline": "Historic royal court and ceremonial center of Kolhapur",
+    "short_description": "Historic grand hall located near Mahalaxmi Temple, displaying royal Kolhapuri heritage, stuffed panther trophies, and a life-sized statue of Shahu Maharaj.",
+    "description": "Bhavani Mandap is a historic monument located adjacent to the Mahalaxmi Temple. Once the bustling administrative headquarters and court of the Kolhapur principality, this grand structure features 14 square courts. The central hall houses an idol of Tulja Bhavani brought here by Chhatrapati Sambhaji, a bronze life-sized statue of Rajarshi Shahu Maharaj, antique wooden palanquins, and hunting trophies including taxidermy displays of panthers and tigers.",
+    "historical_background": "Constructed in the late 18th century as the royal seat of power before the New Palace was built. It has survived historical battles and stands today as a living center for wrestling (Kusti) culture, cultural performances, and festive ceremonies.",
+    "best_time_to_visit": "Year-round (Best during daytime)",
+    "timings": "7:00 AM to 8:00 PM",
+    "entry_fee": "Free",
+    "latitude": 16.6961,
+    "longitude": 74.2248,
+    "nearby_attractions": [
+      "Mahalaxmi Temple",
+      "Rankala Lake",
+      "Town Hall Museum"
+    ],
+    "image_filename": "bhavani_mandap.jpg",
+    "cultural_significance": "Epicenter of Kolhapur's legendary wrestling tradition and royal ceremonial heritage."
+  },
+  {
+    "id": "shalini-palace",
+    "name": "Shalini Palace",
+    "category": "history",
+    "tagline": "Regal lakeside royal palace built in black Italian marble and stone",
+    "short_description": "Elegant heritage palace situated on the western bank of Rankala Lake, built for Princess Shalini Raje of Kolhapur with intricate stone arches.",
+    "description": "Standing gracefully on the western embankment of Rankala Lake, Shalini Palace was constructed between 1931 and 1934 for Princess Shalini Raje of Kolhapur. The palace was built at a cost of ₹800,000 using black stone and Italian marble. Surrounded by palm trees and manicured gardens, the palace features majestic carved archways, stained glass windows, and grand balconies overlooking the serene waters of Rankala.",
+    "historical_background": "Constructed by the Kolhapur royal family, this palace was Maharashtra's first palace-converted heritage hotel. While currently undergoing preservation, its imposing facade and lakeside grounds remain a favorite tourist attraction.",
+    "best_time_to_visit": "October to March",
+    "timings": "10:00 AM to 6:00 PM (Exterior viewing always open)",
+    "entry_fee": "Free for exterior viewing",
+    "latitude": 16.6888,
+    "longitude": 74.2162,
+    "nearby_attractions": [
+      "Rankala Lake",
+      "Mahalaxmi Temple",
+      "Bhavani Mandap"
+    ],
+    "image_filename": "shalini_palace.jpg",
+    "cultural_significance": "A symbol of 20th-century Maratha royal architecture and serene lakefront luxury."
+  },
+  {
+    "id": "town-hall-museum",
+    "name": "Town Hall Museum & Botanical Gardens",
+    "category": "culture",
+    "tagline": "Victorian neo-Gothic museum preserving archaeological wonders",
+    "short_description": "Neo-Gothic heritage building set inside lush gardens, exhibiting Roman coins, ancient Satavahana pottery, sculptures, and rare weaponry.",
+    "description": "Constructed in 1876, the Kolhapur Town Hall is an imposing neo-Gothic building characterized by its steep pointed roofs, stone arcades, and clock tower. Today, it houses a rich archaeological museum containing excavatory findings from the ancient Brahmapuri mounds of Kolhapur, including 2,000-year-old Satavahana terracotta figures, Roman bronze artifacts (proving Kolhapur's ancient maritime trade with Rome), medieval stone sculptures, weapons, and miniature paintings. The surrounding botanical garden boasts century-old exotic trees.",
+    "historical_background": "Designed by British engineer Charles Mant and built in 1876, the Town Hall served as the civic assembly for Kolhapur before being converted into a government museum to protect the region's rich archaeological finds.",
+    "best_time_to_visit": "Year-round",
+    "timings": "10:30 AM to 5:30 PM (Closed on Mondays)",
+    "entry_fee": "₹15 for Adults, ₹5 for Children",
+    "latitude": 16.7027,
+    "longitude": 74.2232,
+    "nearby_attractions": [
+      "New Palace",
+      "Mahalaxmi Temple",
+      "Bhavani Mandap"
+    ],
+    "image_filename": "town_hall_museum.jpg",
+    "cultural_significance": "Provides tangible archaeological proof of Kolhapur's 2,000-year-old global trade history."
+  },
+  {
+    "id": "kaneri-math",
+    "name": "Siddhagiri Gramjivan Museum (Kaneri Math)",
+    "category": "culture",
+    "tagline": "Life-sized wax & clay sculpture museum of ancient rural India",
+    "short_description": "Vast open-air cultural museum with over 1,000 life-sized figures depicting self-sufficient 12th-century Indian village life and Vedic heritage.",
+    "description": "Spread over 7 acres within the sacred grounds of Kaneri Math, the Siddhagiri Gramjivan Museum is a unique open-air wax and cement sculpture museum. It vividly depicts self-reliant 12th-century Indian village life (Bara Balutedar system) before the advent of modern machinery. Visitors walk through scenes of village artisans, blacksmiths, farmers, Ayurvedic vaidyas, gurukuls, and folk festivities crafted with astonishing lifelike realism.",
+    "historical_background": "Kaneri Math was founded around 1,000 years ago by a Lingayat seer under the patronage of the Kadamba and Rashtrakuta kings. The modern museum concept was conceptualized and realized by the present seer Shri Kadsiddheshwar Swamiji to preserve forgotten rural culture.",
+    "best_time_to_visit": "October to March",
+    "timings": "9:00 AM to 6:00 PM (Daily)",
+    "entry_fee": "₹120 for Adults, ₹60 for Children",
+    "latitude": 16.6111,
+    "longitude": 74.2694,
+    "nearby_attractions": [
+      "Mahalaxmi Temple",
+      "New Palace",
+      "Rankala Lake"
+    ],
+    "image_filename": "kaneri_math.jpg",
+    "cultural_significance": "An educational treasure recreating the ethos of Gram Swaraj and traditional Indian heritage."
+  },
+  {
+    "id": "narsobawadi",
+    "name": "Shri Kshetra Narsobawadi (Nrusinhawadi)",
+    "category": "religion",
+    "tagline": "Sacred confluence of Krishna and Panchaganga rivers",
+    "short_description": "Renowned Dattatreya pilgrimage site at the scenic river sangam, famous for riverbank tranquility, padukas of Narasimha Saraswati, and Kavath Basundi.",
+    "description": "Shri Kshetra Narsobawadi, situated 45 km from Kolhapur at the holy confluence of the Krishna and Panchaganga rivers, is a major pilgrimage center for devotees of Lord Dattatreya. It is sanctified by the 12-year penance of Shri Narasimha Saraswati (the second incarnation of Lord Dattatreya). The sanctum has sacred silver-plated Charan Padukas located directly beneath an ancient Audumbar tree on the river ghats. Devotees also relish the town's renowned fresh milk sweet 'Basundi' and Kavath pedhas.",
+    "historical_background": "Sri Narasimha Saraswati spent 12 years here during the 14th century, blessing the waters and the land. The river ghats were constructed under royal Maratha patronage, and daily palanquin (Palkhi) processions have taken place continuously for over 600 years.",
+    "best_time_to_visit": "October to February (Pleasant river weather)",
+    "timings": "5:00 AM to 10:00 PM",
+    "entry_fee": "Free",
+    "latitude": 16.6811,
+    "longitude": 74.5964,
+    "nearby_attractions": [
+      "Kopeshwar Temple",
+      "Mahalaxmi Temple",
+      "Kaneri Math"
+    ],
+    "image_filename": "narsobawadi.jpg",
+    "cultural_significance": "One of the most sacred pilgrimage sites of the Datta Sampradaya in Maharashtra."
+  },
+  {
+    "id": "kopeshwar-temple",
+    "name": "Kopeshwar Temple (Khidrapur)",
+    "category": "history",
+    "tagline": "Masterpiece of 12th-century stone temple architecture with an open-sky hall",
+    "short_description": "Spectacular 12th-century Shilahara temple on the banks of Krishna river, famous for its 95 intricately carved stone pillars and open Swarga Mandapa.",
+    "description": "Located in Khidrapur along the Maharashtra-Karnataka border, the Kopeshwar Temple is a breathtaking architectural wonder dedicated to Lord Shiva. Built without a cement mortar using interlocking stones, the temple is world-famous for its circular 'Swarga Mandapa' (Heaven's Pavilion), which has a 48-pillar celestial amphitheater with an open-to-the-sky dome that lets in natural sunlight and starlight. The outer walls feature 92 carved elephants on the plinth and hundreds of detailed mythological dancers and celestial deities.",
+    "historical_background": "Built between 1109 and 1178 CE by Shilahara King Gandaraditya and King Vijayaditya, later embellished by the Seuna (Yadava) dynasty. Despite sustaining damage in medieval raids, the intricate stone carvings remain among the finest architectural achievements in India.",
+    "best_time_to_visit": "October to March",
+    "timings": "6:00 AM to 7:00 PM",
+    "entry_fee": "Free",
+    "latitude": 16.6022,
+    "longitude": 74.6908,
+    "nearby_attractions": [
+      "Narsobawadi",
+      "Mahalaxmi Temple",
+      "Kaneri Math"
+    ],
+    "image_filename": "kopeshwar_temple.jpg",
+    "cultural_significance": "A crown jewel of medieval Indian stone craftsmanship, astronomy, and temple geometry."
+  },
+  {
+    "id": "gaganbawda",
+    "name": "Gaganbawda & Gagangiri Maharaj Ashram",
+    "category": "adventure",
+    "tagline": "Misty Sahyadri hill station, twin ghats, and spiritual cave sanctuary",
+    "short_description": "Scenic hill retreat nestled at 2,000 ft in the Sahyadri ghats, featuring Gagangad Fort, panoramic Konkan drop-offs, and Gagangiri Maharaj Ashram.",
+    "description": "Gaganbawda is an idyllic, untouched hill station situated 55 km from Kolhapur on the Sahyadri crest. Perched at 2,000 ft, it is known for its twin mountain passes (Bhuibawda and Karul Ghats) that cascade down to the Konkan coastal plains. The summit of Gagangad Fort hosts the peaceful Ashram of Swami Gagangiri Maharaj, set inside a natural cave where holy meditation and spiritual discourses are held amidst sweeping cloud-covered vistas.",
+    "historical_background": "Gagangad Fort was built during the Bhoja II era and was an important watch-post safeguarding trade routes between the Deccan plateau and Konkan ports. In the 20th century, the revered ascetic Gagangiri Maharaj made the hilltop cave his spiritual hermitage.",
+    "best_time_to_visit": "July to February (Magnificent during monsoon with endless waterfalls and swirling mists)",
+    "timings": "6:00 AM to 6:30 PM",
+    "entry_fee": "Free",
+    "latitude": 16.5458,
+    "longitude": 73.8278,
+    "nearby_attractions": [
+      "Radhanagari Wildlife Sanctuary",
+      "Dajipur Bison Sanctuary",
+      "Panhala Fort"
+    ],
+    "image_filename": "gaganbawda.jpg",
+    "cultural_significance": "A tranquil haven for nature photographers, trekkers, and spiritual seekers."
+  }
+]
