@@ -1,0 +1,221 @@
+Date,Region,Product,Category,Order ID,Customer Type,Campaign,Quantity,Main Rate,Discount Rate,Sales,Profit,Marketing Spend
+2026-01-01,West,Laptop,Electronics,ORD001,New,Social Media,2,70000,0.1,126000.0,18000.0,5000.0
+2026-01-02,South,Mobile,Electronics,ORD002,Returning,Google Ads,3,45000,0.05,128250.0,21000.0,3500.0
+2026-01-03,North,Headphones,Accessories,ORD003,New,Instagram,5,15000,0.15,63750.0,12000.0,1800.0
+2026-01-04,East,Tablet,Electronics,ORD004,Returning,Email,2,40000,0.08,73600.0,13000.0,2500.0
+2026-01-05,West,Smartwatch,Wearable,ORD005,New,Social Media,4,32000,0.12,112640.0,20000.0,2200.0
+2026-01-06,North,Gaming Console,Entertainment,ORD024,Returning,Social Media,2,48000,0.2,76800.0,9216.0,4543.03
+2026-01-06,North,Wireless Earbuds,Accessories,ORD037,Returning,Email,1,12000,0.15,10200.0,2520.0,2523.17
+2026-01-06,North,Headphones,Accessories,ORD064,New,Email,2,15000,0.08,27600.0,8100.0,1636.98
+2026-01-06,East,Mobile,Electronics,ORD069,New,Email,3,45000,0.1,121500.0,27000.0,890.39
+2026-01-07,Central,Mobile,Electronics,ORD021,Returning,Email,1,45000,0.08,41400.0,9900.0,1582.58
+2026-01-07,North,Fitness Band,Wearable,ORD046,Returning,Social Media,4,6000,0.08,22080.0,7680.0,2192.46
+2026-01-08,South,Gaming Console,Entertainment,ORD083,New,Google Ads,1,48000,0.05,45600.0,9600.0,4360.14
+2026-01-08,West,Bluetooth Speaker,Accessories,ORD213,New,Email,2,8000,0.2,12800.0,2880.0,1847.43
+2026-01-09,North,Wireless Earbuds,Accessories,ORD078,Returning,Email,3,12000,0.2,28800.0,5760.0,1641.3
+2026-01-09,South,Gaming Console,Entertainment,ORD118,Returning,Google Ads,1,48000,0.1,43200.0,7200.0,2872.84
+2026-01-10,West,Bluetooth Speaker,Accessories,ORD030,Returning,Google Ads,2,8000,0.12,14080.0,4160.0,3029.25
+2026-01-10,Central,Tablet,Electronics,ORD126,Returning,Google Ads,1,40000,0.2,32000.0,3840.0,4261.22
+2026-01-11,South,Bluetooth Speaker,Accessories,ORD052,Returning,Instagram,2,8000,0.12,14080.0,4160.0,3887.16
+2026-01-11,East,Tablet,Electronics,ORD112,Returning,Google Ads,1,40000,0.12,35200.0,6800.0,4243.54
+2026-01-11,Central,Smartwatch,Wearable,ORD188,Returning,Google Ads,2,32000,0.05,60800.0,17280.0,6330.89
+2026-01-12,East,Gaming Console,Entertainment,ORD138,Returning,Influencer,3,48000,0.05,136800.0,28800.0,6535.32
+2026-01-14,South,Laptop,Electronics,ORD012,Returning,Organic,4,70000,0.2,224000.0,26880.0,260.6
+2026-01-14,North,Smart TV,Electronics,ORD130,Returning,Email,2,55000,0.0,110000.0,28600.0,2168.67
+2026-01-14,North,Tablet,Electronics,ORD160,Returning,Instagram,3,40000,0.1,108000.0,22800.0,4185.49
+2026-01-16,South,Gaming Console,Entertainment,ORD193,Returning,Google Ads,3,48000,0.15,122400.0,14688.0,4067.83
+2026-01-16,West,Wireless Earbuds,Accessories,ORD220,New,Organic,1,12000,0.08,11040.0,3360.0,392.73
+2026-01-17,East,Headphones,Accessories,ORD091,New,Google Ads,2,15000,0.1,27000.0,7500.0,3845.59
+2026-01-17,Central,Smart TV,Electronics,ORD111,Returning,Social Media,3,55000,0.2,132000.0,15840.0,2716.34
+2026-01-17,Central,Smart TV,Electronics,ORD152,Returning,Social Media,1,55000,0.05,52250.0,11550.0,4475.73
+2026-01-17,East,Smart TV,Electronics,ORD204,Returning,Influencer,2,55000,0.1,99000.0,17600.0,6010.04
+2026-01-18,North,Bluetooth Speaker,Accessories,ORD010,Returning,Email,3,8000,0.12,21120.0,6240.0,1024.69
+2026-01-18,East,Laptop,Electronics,ORD033,Returning,Email,1,70000,0.05,66500.0,16100.0,1142.38
+2026-01-18,Central,Mobile,Electronics,ORD044,New,Google Ads,5,45000,0.0,225000.0,67500.0,6017.08
+2026-01-18,South,Smartwatch,Wearable,ORD131,Returning,Influencer,1,32000,0.2,25600.0,3840.0,3780.6
+2026-01-19,South,Fitness Band,Wearable,ORD047,New,Instagram,3,6000,0.05,17100.0,6300.0,3356.24
+2026-01-19,Central,Laptop,Electronics,ORD100,New,Google Ads,1,70000,0.0,70000.0,19600.0,3509.91
+2026-01-20,West,Smartwatch,Wearable,ORD119,Returning,Social Media,5,32000,0.08,147200.0,38400.0,3530.16
+2026-01-20,South,Laptop,Electronics,ORD155,New,Email,1,70000,0.08,64400.0,14000.0,828.41
+2026-01-21,Central,Headphones,Accessories,ORD062,New,Google Ads,2,15000,0.08,27600.0,8100.0,4717.65
+2026-01-21,West,Headphones,Accessories,ORD203,Returning,Google Ads,4,15000,0.05,57000.0,18000.0,5824.19
+2026-01-22,Central,Gaming Console,Entertainment,ORD079,New,Google Ads,2,48000,0.0,96000.0,24000.0,2835.79
+2026-01-22,West,Fitness Band,Wearable,ORD165,Returning,Instagram,1,6000,0.0,6000.0,2400.0,2609.18
+2026-01-23,East,Fitness Band,Wearable,ORD019,New,Social Media,1,6000,0.15,5100.0,1500.0,2343.94
+2026-01-23,West,Mobile,Electronics,ORD140,New,Google Ads,2,45000,0.15,76500.0,13500.0,3025.65
+2026-01-24,East,Gaming Console,Entertainment,ORD170,New,Email,5,48000,0.0,240000.0,60000.0,2143.0
+2026-01-24,South,Headphones,Accessories,ORD183,New,Social Media,3,15000,0.0,45000.0,15750.0,2402.3
+2026-01-25,South,Headphones,Accessories,ORD108,New,Social Media,1,15000,0.15,12750.0,3000.0,4602.42
+2026-01-25,Central,Smartwatch,Wearable,ORD123,Returning,Google Ads,3,32000,0.1,86400.0,21120.0,4321.38
+2026-01-26,North,Wireless Earbuds,Accessories,ORD009,New,Social Media,3,12000,0.0,36000.0,12960.0,2115.34
+2026-01-26,East,Mobile,Electronics,ORD135,Returning,Organic,1,45000,0.1,40500.0,9000.0,614.19
+2026-01-26,Central,Tablet,Electronics,ORD198,Returning,Social Media,2,40000,0.1,72000.0,15200.0,3038.62
+2026-01-28,Central,Mobile,Electronics,ORD133,Returning,Instagram,1,45000,0.12,39600.0,8100.0,1886.42
+2026-01-30,East,Wireless Earbuds,Accessories,ORD063,Returning,Influencer,2,12000,0.08,22080.0,6720.0,5530.38
+2026-01-31,North,Smartwatch,Wearable,ORD056,New,Email,1,32000,0.0,32000.0,10240.0,1988.06
+2026-01-31,East,Bluetooth Speaker,Accessories,ORD061,New,Instagram,1,8000,0.08,7360.0,2400.0,3291.15
+2026-01-31,West,Tablet,Electronics,ORD067,New,Organic,2,40000,0.2,64000.0,7680.0,243.7
+2026-01-31,Central,Mobile,Electronics,ORD086,Returning,Instagram,1,45000,0.2,36000.0,4500.0,2314.27
+2026-01-31,South,Laptop,Electronics,ORD216,Returning,Google Ads,1,70000,0.1,63000.0,12600.0,6456.49
+2026-02-01,Central,Mobile,Electronics,ORD153,New,Social Media,4,45000,0.08,165600.0,39600.0,4432.85
+2026-02-02,West,Headphones,Accessories,ORD105,New,Social Media,1,15000,0.0,15000.0,5250.0,3188.96
+2026-02-02,East,Wireless Earbuds,Accessories,ORD171,Returning,Social Media,1,12000,0.08,11040.0,3360.0,4441.24
+2026-02-03,Central,Wireless Earbuds,Accessories,ORD175,New,Social Media,5,12000,0.2,48000.0,9600.0,2266.6
+2026-02-04,Central,Headphones,Accessories,ORD107,Returning,Influencer,2,15000,0.12,26400.0,6900.0,4624.05
+2026-02-04,Central,Fitness Band,Wearable,ORD177,Returning,Email,1,6000,0.2,4800.0,1200.0,2135.67
+2026-02-05,South,Laptop,Electronics,ORD025,Returning,Influencer,1,70000,0.1,63000.0,12600.0,7580.12
+2026-02-05,East,Tablet,Electronics,ORD036,Returning,Social Media,2,40000,0.0,80000.0,23200.0,2359.77
+2026-02-05,East,Smartwatch,Wearable,ORD094,New,Social Media,1,32000,0.1,28800.0,7040.0,4152.08
+2026-02-05,South,Fitness Band,Wearable,ORD148,New,Google Ads,5,6000,0.15,25500.0,7500.0,6283.9
+2026-02-05,Central,Smartwatch,Wearable,ORD199,New,Email,2,32000,0.12,56320.0,12800.0,1230.5
+2026-02-05,West,Wireless Earbuds,Accessories,ORD205,New,Social Media,5,12000,0.2,48000.0,9600.0,4229.99
+2026-02-06,South,Headphones,Accessories,ORD055,Returning,Social Media,4,15000,0.2,48000.0,9000.0,3400.35
+2026-02-06,East,Mobile,Electronics,ORD070,New,Google Ads,2,45000,0.12,79200.0,16200.0,4881.81
+2026-02-07,South,Bluetooth Speaker,Accessories,ORD084,Returning,Organic,3,8000,0.2,19200.0,4320.0,691.58
+2026-02-07,North,Headphones,Accessories,ORD176,New,Google Ads,2,15000,0.05,28500.0,9000.0,4020.83
+2026-02-07,East,Laptop,Electronics,ORD202,Returning,Instagram,1,70000,0.2,56000.0,6720.0,2892.96
+2026-02-08,East,Fitness Band,Wearable,ORD048,New,Influencer,1,6000,0.15,5100.0,1500.0,5617.88
+2026-02-08,Central,Bluetooth Speaker,Accessories,ORD128,Returning,Instagram,4,8000,0.2,25600.0,5760.0,3320.77
+2026-02-08,East,Gaming Console,Entertainment,ORD145,Returning,Influencer,1,48000,0.05,45600.0,9600.0,5857.38
+2026-02-08,South,Laptop,Electronics,ORD156,Returning,Instagram,3,70000,0.1,189000.0,37800.0,2710.34
+2026-02-09,East,Wireless Earbuds,Accessories,ORD120,Returning,Social Media,2,12000,0.1,21600.0,6240.0,2448.08
+2026-02-09,North,Tablet,Electronics,ORD142,Returning,Influencer,5,40000,0.08,184000.0,42000.0,7232.8
+2026-02-09,South,Laptop,Electronics,ORD169,New,Email,4,70000,0.08,257600.0,56000.0,810.99
+2026-02-09,East,Smartwatch,Wearable,ORD173,Returning,Google Ads,1,32000,0.2,25600.0,3840.0,4549.39
+2026-02-10,North,Smartwatch,Wearable,ORD013,New,Google Ads,3,32000,0.15,81600.0,16320.0,6246.62
+2026-02-10,West,Laptop,Electronics,ORD049,New,Social Media,5,70000,0.05,332500.0,80500.0,4320.19
+2026-02-10,West,Fitness Band,Wearable,ORD093,Returning,Social Media,1,6000,0.1,5400.0,1800.0,3461.16
+2026-02-10,West,Laptop,Electronics,ORD099,Returning,Instagram,1,70000,0.2,56000.0,6720.0,3532.54
+2026-02-10,North,Laptop,Electronics,ORD150,New,Google Ads,1,70000,0.08,64400.0,14000.0,2897.42
+2026-02-11,Central,Fitness Band,Wearable,ORD066,New,Email,3,6000,0.15,15300.0,4500.0,1358.76
+2026-02-11,South,Mobile,Electronics,ORD098,New,Google Ads,1,45000,0.15,38250.0,6750.0,4636.54
+2026-02-11,West,Smartwatch,Wearable,ORD109,Returning,Google Ads,2,32000,0.08,58880.0,15360.0,4501.89
+2026-02-11,West,Mobile,Electronics,ORD187,Returning,Instagram,2,45000,0.12,79200.0,16200.0,4076.42
+2026-02-12,East,Bluetooth Speaker,Accessories,ORD141,New,Social Media,2,8000,0.08,14720.0,4800.0,3604.9
+2026-02-13,Central,Fitness Band,Wearable,ORD023,New,Google Ads,1,6000,0.2,4800.0,1200.0,6189.74
+2026-02-13,North,Smartwatch,Wearable,ORD043,Returning,Influencer,1,32000,0.12,28160.0,6400.0,8492.27
+2026-02-13,West,Wireless Earbuds,Accessories,ORD147,New,Influencer,1,12000,0.1,10800.0,3120.0,4080.6
+2026-02-14,Central,Mobile,Electronics,ORD085,New,Google Ads,3,45000,0.1,121500.0,27000.0,4086.62
+2026-02-14,North,Gaming Console,Entertainment,ORD095,Returning,Instagram,2,48000,0.15,81600.0,9792.0,2986.05
+2026-02-14,Central,Gaming Console,Entertainment,ORD104,New,Organic,1,48000,0.2,38400.0,4608.0,324.67
+2026-02-15,North,Wireless Earbuds,Accessories,ORD016,New,Influencer,2,12000,0.15,20400.0,5040.0,5073.39
+2026-02-15,West,Laptop,Electronics,ORD039,Returning,Instagram,4,70000,0.05,266000.0,64400.0,1653.57
+2026-02-15,South,Headphones,Accessories,ORD042,Returning,Google Ads,1,15000,0.05,14250.0,4500.0,5186.76
+2026-02-15,North,Headphones,Accessories,ORD115,New,Email,4,15000,0.2,48000.0,9000.0,2578.61
+2026-02-16,South,Smart TV,Electronics,ORD124,Returning,Social Media,3,55000,0.0,165000.0,42900.0,2881.8
+2026-02-17,South,Tablet,Electronics,ORD206,New,Influencer,2,40000,0.2,64000.0,7680.0,4193.96
+2026-02-17,West,Tablet,Electronics,ORD214,New,Google Ads,2,40000,0.2,64000.0,7680.0,5616.57
+2026-02-18,East,Mobile,Electronics,ORD143,Returning,Social Media,5,45000,0.2,180000.0,22500.0,4099.5
+2026-02-18,West,Gaming Console,Entertainment,ORD191,Returning,Instagram,1,48000,0.0,48000.0,12000.0,3006.5
+2026-02-19,West,Smart TV,Electronics,ORD082,Returning,Instagram,3,55000,0.05,156750.0,34650.0,2038.27
+2026-02-19,West,Wireless Earbuds,Accessories,ORD174,New,Instagram,2,12000,0.15,20400.0,5040.0,2332.73
+2026-02-20,North,Smartwatch,Wearable,ORD096,New,Social Media,3,32000,0.08,88320.0,23040.0,2206.49
+2026-02-20,East,Bluetooth Speaker,Accessories,ORD132,New,Instagram,2,8000,0.2,12800.0,2880.0,1986.15
+2026-02-20,South,Smart TV,Electronics,ORD139,Returning,Instagram,3,55000,0.15,140250.0,18150.0,3338.31
+2026-02-21,Central,Fitness Band,Wearable,ORD157,New,Instagram,5,6000,0.0,30000.0,12000.0,3463.56
+2026-02-22,South,Headphones,Accessories,ORD045,New,Instagram,1,15000,0.2,12000.0,2250.0,3265.74
+2026-02-22,Central,Gaming Console,Entertainment,ORD051,New,Social Media,1,48000,0.2,38400.0,4608.0,5105.47
+2026-02-22,North,Fitness Band,Wearable,ORD151,New,Google Ads,5,6000,0.2,24000.0,6000.0,5796.76
+2026-02-23,Central,Mobile,Electronics,ORD011,New,Instagram,4,45000,0.08,165600.0,39600.0,3058.85
+2026-02-23,East,Headphones,Accessories,ORD081,New,Social Media,1,15000,0.12,13200.0,3450.0,1977.09
+2026-02-23,Central,Fitness Band,Wearable,ORD201,New,Social Media,1,6000,0.12,5280.0,1680.0,2270.56
+2026-02-24,North,Headphones,Accessories,ORD192,Returning,Instagram,4,15000,0.2,48000.0,9000.0,1906.01
+2026-02-24,South,Bluetooth Speaker,Accessories,ORD219,Returning,Google Ads,4,8000,0.12,28160.0,8320.0,3566.88
+2026-02-25,North,Fitness Band,Wearable,ORD144,New,Google Ads,1,6000,0.0,6000.0,2400.0,4319.14
+2026-02-25,North,Headphones,Accessories,ORD181,New,Email,1,15000,0.15,12750.0,3000.0,1005.25
+2026-02-26,North,Bluetooth Speaker,Accessories,ORD057,Returning,Organic,1,8000,0.15,6800.0,1840.0,505.64
+2026-02-27,South,Gaming Console,Entertainment,ORD053,Returning,Social Media,1,48000,0.2,38400.0,4608.0,4556.62
+2026-02-27,South,Laptop,Electronics,ORD054,Returning,Google Ads,5,70000,0.2,280000.0,33600.0,5179.63
+2026-02-27,Central,Bluetooth Speaker,Accessories,ORD075,Returning,Social Media,4,8000,0.1,28800.0,8960.0,4876.45
+2026-02-27,North,Smartwatch,Wearable,ORD114,Returning,Google Ads,3,32000,0.0,96000.0,30720.0,4319.3
+2026-02-28,South,Gaming Console,Entertainment,ORD068,Returning,Google Ads,2,48000,0.05,91200.0,19200.0,5124.23
+2026-02-28,Central,Fitness Band,Wearable,ORD077,Returning,Influencer,2,6000,0.08,11040.0,3840.0,5679.18
+2026-02-28,South,Gaming Console,Entertainment,ORD149,Returning,Instagram,4,48000,0.12,168960.0,24960.0,2601.91
+2026-02-28,North,Mobile,Electronics,ORD163,New,Instagram,2,45000,0.05,85500.0,22500.0,3354.42
+2026-02-28,West,Tablet,Electronics,ORD211,Returning,Google Ads,5,40000,0.12,176000.0,34000.0,4529.31
+2026-03-01,West,Gaming Console,Entertainment,ORD020,New,Instagram,2,48000,0.08,88320.0,16320.0,4121.91
+2026-03-01,Central,Smart TV,Electronics,ORD027,Returning,Instagram,3,55000,0.1,148500.0,26400.0,4186.9
+2026-03-01,East,Tablet,Electronics,ORD080,New,Google Ads,1,40000,0.1,36000.0,7600.0,3807.38
+2026-03-01,East,Mobile,Electronics,ORD159,Returning,Google Ads,4,45000,0.08,165600.0,39600.0,4933.19
+2026-03-01,North,Laptop,Electronics,ORD166,Returning,Google Ads,2,70000,0.05,133000.0,32200.0,3118.92
+2026-03-01,Central,Fitness Band,Wearable,ORD168,Returning,Instagram,1,6000,0.15,5100.0,1500.0,3739.54
+2026-03-02,East,Bluetooth Speaker,Accessories,ORD032,New,Influencer,1,8000,0.15,6800.0,1840.0,8420.83
+2026-03-02,East,Laptop,Electronics,ORD178,Returning,Influencer,2,70000,0.12,123200.0,22400.0,5522.11
+2026-03-03,Central,Smart TV,Electronics,ORD065,Returning,Influencer,3,55000,0.05,156750.0,34650.0,6794.25
+2026-03-03,Central,Gaming Console,Entertainment,ORD071,New,Influencer,2,48000,0.05,91200.0,19200.0,7218.28
+2026-03-03,South,Laptop,Electronics,ORD117,New,Social Media,1,70000,0.15,59500.0,9100.0,3448.02
+2026-03-03,Central,Smartwatch,Wearable,ORD190,Returning,Social Media,2,32000,0.08,58880.0,15360.0,3117.22
+2026-03-04,East,Tablet,Electronics,ORD034,New,Google Ads,4,40000,0.0,160000.0,46400.0,4272.52
+2026-03-04,North,Mobile,Electronics,ORD189,Returning,Social Media,2,45000,0.0,90000.0,27000.0,2642.33
+2026-03-05,North,Laptop,Electronics,ORD022,Returning,Email,2,70000,0.0,140000.0,39200.0,2366.93
+2026-03-05,East,Tablet,Electronics,ORD089,New,Instagram,3,40000,0.12,105600.0,20400.0,3682.14
+2026-03-05,South,Headphones,Accessories,ORD136,Returning,Influencer,1,15000,0.1,13500.0,3750.0,6359.61
+2026-03-05,West,Bluetooth Speaker,Accessories,ORD180,New,Social Media,2,8000,0.1,14400.0,4480.0,3581.47
+2026-03-06,East,Headphones,Accessories,ORD134,New,Social Media,3,15000,0.08,41400.0,12150.0,4103.88
+2026-03-06,South,Smartwatch,Wearable,ORD215,Returning,Social Media,3,32000,0.1,86400.0,21120.0,1925.74
+2026-03-07,North,Smartwatch,Wearable,ORD072,Returning,Email,1,32000,0.2,25600.0,3840.0,1738.34
+2026-03-07,East,Wireless Earbuds,Accessories,ORD125,Returning,Email,3,12000,0.05,34200.0,11160.0,1691.59
+2026-03-07,West,Mobile,Electronics,ORD164,Returning,Social Media,1,45000,0.15,38250.0,6750.0,3067.0
+2026-03-07,North,Smart TV,Electronics,ORD200,Returning,Instagram,2,55000,0.2,88000.0,10560.0,2260.78
+2026-03-07,Central,Smartwatch,Wearable,ORD207,New,Social Media,1,32000,0.2,25600.0,3840.0,2308.37
+2026-03-08,West,Mobile,Electronics,ORD101,New,Social Media,2,45000,0.0,90000.0,27000.0,2315.87
+2026-03-08,West,Smart TV,Electronics,ORD167,New,Instagram,1,55000,0.08,50600.0,9900.0,3050.07
+2026-03-09,East,Mobile,Electronics,ORD113,New,Google Ads,3,45000,0.2,108000.0,13500.0,3143.3
+2026-03-09,South,Smart TV,Electronics,ORD196,Returning,Social Media,1,55000,0.2,44000.0,5280.0,2143.88
+2026-03-10,South,Bluetooth Speaker,Accessories,ORD092,Returning,Google Ads,1,8000,0.08,7360.0,2400.0,6021.28
+2026-03-10,West,Smartwatch,Wearable,ORD110,Returning,Influencer,3,32000,0.12,84480.0,19200.0,4751.84
+2026-03-11,West,Headphones,Accessories,ORD122,New,Google Ads,2,15000,0.15,25500.0,6000.0,4458.56
+2026-03-11,West,Fitness Band,Wearable,ORD212,New,Google Ads,2,6000,0.08,11040.0,3840.0,3514.6
+2026-03-12,South,Mobile,Electronics,ORD040,New,Social Media,4,45000,0.1,162000.0,36000.0,2207.61
+2026-03-12,North,Smart TV,Electronics,ORD182,New,Organic,2,55000,0.05,104500.0,23100.0,341.76
+2026-03-12,South,Gaming Console,Entertainment,ORD210,Returning,Google Ads,1,48000,0.08,44160.0,8160.0,3462.26
+2026-03-14,West,Smartwatch,Wearable,ORD127,Returning,Google Ads,3,32000,0.05,91200.0,25920.0,2799.31
+2026-03-14,East,Headphones,Accessories,ORD161,Returning,Google Ads,3,15000,0.0,45000.0,15750.0,5911.17
+2026-03-14,East,Mobile,Electronics,ORD195,Returning,Social Media,1,45000,0.05,42750.0,11250.0,2961.89
+2026-03-15,South,Tablet,Electronics,ORD026,Returning,Influencer,1,40000,0.12,35200.0,6800.0,7862.17
+2026-03-15,West,Bluetooth Speaker,Accessories,ORD058,New,Organic,1,8000,0.08,7360.0,2400.0,222.95
+2026-03-15,East,Smartwatch,Wearable,ORD090,New,Email,1,32000,0.2,25600.0,3840.0,1241.89
+2026-03-15,South,Tablet,Electronics,ORD097,New,Google Ads,3,40000,0.2,96000.0,11520.0,4598.55
+2026-03-15,North,Wireless Earbuds,Accessories,ORD129,Returning,Influencer,2,12000,0.12,21120.0,5760.0,3679.5
+2026-03-16,Central,Mobile,Electronics,ORD007,New,Social Media,1,45000,0.12,39600.0,8100.0,3846.86
+2026-03-16,South,Mobile,Electronics,ORD074,New,Google Ads,1,45000,0.05,42750.0,11250.0,2756.92
+2026-03-16,West,Fitness Band,Wearable,ORD197,Returning,Influencer,2,6000,0.12,10560.0,3360.0,5383.6
+2026-03-16,North,Smartwatch,Wearable,ORD217,New,Instagram,1,32000,0.2,25600.0,3840.0,3608.27
+2026-03-17,West,Mobile,Electronics,ORD035,Returning,Instagram,1,45000,0.0,45000.0,13500.0,4001.19
+2026-03-17,Central,Wireless Earbuds,Accessories,ORD050,New,Social Media,4,12000,0.05,45600.0,14880.0,3655.01
+2026-03-18,Central,Smart TV,Electronics,ORD008,New,Google Ads,1,55000,0.2,44000.0,5280.0,2526.0
+2026-03-18,North,Fitness Band,Wearable,ORD018,Returning,Google Ads,2,6000,0.08,11040.0,3840.0,3377.28
+2026-03-18,South,Smartwatch,Wearable,ORD038,New,Social Media,1,32000,0.15,27200.0,5440.0,3643.46
+2026-03-19,Central,Smart TV,Electronics,ORD041,Returning,Instagram,2,55000,0.12,96800.0,15400.0,3026.11
+2026-03-19,West,Headphones,Accessories,ORD102,Returning,Social Media,3,15000,0.12,39600.0,10350.0,3826.83
+2026-03-19,West,Gaming Console,Entertainment,ORD172,Returning,Social Media,3,48000,0.0,144000.0,36000.0,4091.49
+2026-03-20,East,Gaming Console,Entertainment,ORD031,New,Google Ads,2,48000,0.0,96000.0,24000.0,2887.72
+2026-03-20,North,Smart TV,Electronics,ORD060,New,Google Ads,2,55000,0.2,88000.0,10560.0,4653.81
+2026-03-20,North,Headphones,Accessories,ORD137,New,Email,2,15000,0.0,30000.0,10500.0,1818.67
+2026-03-21,Central,Laptop,Electronics,ORD076,New,Social Media,2,70000,0.2,112000.0,13440.0,3125.95
+2026-03-22,South,Fitness Band,Wearable,ORD029,Returning,Social Media,3,6000,0.0,18000.0,7200.0,2578.4
+2026-03-22,North,Laptop,Electronics,ORD186,Returning,Google Ads,2,70000,0.0,140000.0,39200.0,3974.95
+2026-03-23,North,Wireless Earbuds,Accessories,ORD059,Returning,Google Ads,2,12000,0.12,21120.0,5760.0,2962.58
+2026-03-23,Central,Mobile,Electronics,ORD087,Returning,Google Ads,2,45000,0.08,82800.0,19800.0,2775.83
+2026-03-23,North,Smartwatch,Wearable,ORD106,New,Google Ads,1,32000,0.2,25600.0,3840.0,4316.13
+2026-03-23,South,Fitness Band,Wearable,ORD121,Returning,Google Ads,3,6000,0.1,16200.0,5400.0,3859.5
+2026-03-23,North,Laptop,Electronics,ORD154,Returning,Social Media,1,70000,0.08,64400.0,14000.0,4514.95
+2026-03-23,North,Mobile,Electronics,ORD194,Returning,Instagram,1,45000,0.05,42750.0,11250.0,3309.31
+2026-03-24,East,Fitness Band,Wearable,ORD208,New,Google Ads,1,6000,0.0,6000.0,2400.0,3453.76
+2026-03-26,Central,Smart TV,Electronics,ORD103,New,Influencer,1,55000,0.12,48400.0,7700.0,8450.16
+2026-03-26,North,Fitness Band,Wearable,ORD146,Returning,Social Media,1,6000,0.2,4800.0,1200.0,3378.51
+2026-03-26,North,Bluetooth Speaker,Accessories,ORD185,New,Social Media,2,8000,0.08,14720.0,4800.0,4507.52
+2026-03-27,North,Smart TV,Electronics,ORD073,New,Email,1,55000,0.08,50600.0,9900.0,1375.48
+2026-03-27,East,Smartwatch,Wearable,ORD184,Returning,Email,2,32000,0.12,56320.0,12800.0,1957.39
+2026-03-28,West,Mobile,Electronics,ORD006,Returning,Social Media,1,45000,0.0,45000.0,13500.0,4100.78
+2026-03-28,South,Fitness Band,Wearable,ORD015,Returning,Email,3,6000,0.05,17100.0,6300.0,2279.24
+2026-03-28,North,Wireless Earbuds,Accessories,ORD179,New,Social Media,1,12000,0.2,9600.0,1920.0,5021.89
+2026-03-28,East,Gaming Console,Entertainment,ORD209,New,Email,2,48000,0.12,84480.0,12480.0,829.58
+2026-03-29,Central,Mobile,Electronics,ORD014,Returning,Instagram,1,45000,0.1,40500.0,9000.0,2524.53
+2026-03-29,West,Bluetooth Speaker,Accessories,ORD088,Returning,Email,1,8000,0.08,7360.0,2400.0,1944.05
+2026-03-30,East,Smartwatch,Wearable,ORD017,Returning,Instagram,1,32000,0.05,30400.0,8640.0,2165.89
+2026-03-30,East,Bluetooth Speaker,Accessories,ORD028,Returning,Google Ads,1,8000,0.0,8000.0,3040.0,3852.34
+2026-03-30,South,Fitness Band,Wearable,ORD162,New,Influencer,2,6000,0.2,9600.0,2400.0,5767.49
+2026-03-30,North,Bluetooth Speaker,Accessories,ORD218,New,Google Ads,4,8000,0.15,27200.0,7360.0,4258.95
+2026-03-31,East,Fitness Band,Wearable,ORD116,New,Social Media,2,6000,0.2,9600.0,2400.0,3494.88
+2026-03-31,North,Fitness Band,Wearable,ORD158,Returning,Organic,1,6000,0.1,5400.0,1800.0,708.38
