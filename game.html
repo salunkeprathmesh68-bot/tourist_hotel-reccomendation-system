@@ -785,7 +785,7 @@
       <!-- Mini Legend -->
       <div class="legend-bar">
         <div class="legend-item"><span class="dot robot"></span> Robot</div>
-        <div class="legend-item"><span class="dot energy"></span> +30% Energy</div>
+        <div class="legend-item"><span class="dot energy"></span> +10% Energy</div>
         <div class="legend-item"><span class="dot hazard"></span> -15% Hazard</div>
         <div class="legend-item"><span class="dot exit"></span> Exit</div>
         <div class="legend-item"><span class="dot wall"></span> Wall</div>
@@ -1138,12 +1138,12 @@
       // Energy check
       else if (grid[nextY][nextX] === 'E') {
         grid[nextY][nextX] = '.';
-        robot.battery = Math.min(robot.maxBattery, robot.battery + 30);
+        robot.battery = Math.min(robot.maxBattery, robot.battery + 10); // EXACTLY +10% Recharge
         robot.score += 100;
         robot.energyCount++;
         soundEnergy();
         vibrate([30, 30, 60]);
-        statusText.innerText = "Energy Cell harvested! +30% Power, +100 Score!";
+        statusText.innerText = "Energy Cell harvested! +10% Battery, +100 Score!";
         statusText.style.borderLeftColor = 'var(--green)';
       } else {
         statusText.innerText = `Scouting sector... Power -2%. Mind your path!`;
@@ -1465,7 +1465,7 @@
         • <strong>50 Sectors Campaign</strong>: Choose any unlocked level from the Level Selector!<br>
         • <strong>Move with D-Pad, Swipes, or WASD</strong>.<br>
         • Every move drains <strong>-2% Battery</strong> (Mindful path planning is essential).<br>
-        • Collect <strong>Energy Cells (E)</strong> for <strong>+30% Power</strong> & <strong>+100 Pts</strong>.<br>
+        • Collect <strong>Energy Cells (E)</strong> for <strong>+10% Battery</strong> & <strong>+100 Pts</strong>.<br>
         • Avoid <strong>High-Voltage Hazards (▲)</strong>: <strong>-15% Damage</strong>.<br>
         • <strong>⏱️ Competition Timer</strong>: Speed bonus <strong>+10 Pts/sec</strong> remaining!<br>
         • Earn up to <strong>⭐⭐⭐ 3 Stars</strong> based on remaining battery and speed!
