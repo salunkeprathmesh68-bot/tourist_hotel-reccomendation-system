@@ -1064,7 +1064,6 @@
         <button class="jukebox-btn" id="btn-open-search-menu">🎵 गाणे निवडा (Full Songs)</button>
         <button class="jukebox-btn-sec" id="btn-play-pause-stream-menu" title="Play/Pause">▶️</button>
         <button class="jukebox-btn-sec" id="btn-stop-music-menu" title="गाणे बंद करा (Stop)">⏹️</button>
-        <button class="jukebox-btn-sec" id="btn-toggle-video-menu" title="Video दाखवा/लपवा">📺</button>
         <div class="audio-wave" id="audio-wave-menu" style="display:none;">
           <span></span><span></span><span></span><span></span>
         </div>
@@ -1174,7 +1173,6 @@
         <button class="jukebox-btn" id="btn-open-search-game">🎵 गाणे निवडा (Full Songs)</button>
         <button class="jukebox-btn-sec" id="btn-play-pause-stream-game" title="Play/Pause">⏸️</button>
         <button class="jukebox-btn-sec" id="btn-stop-music-game" title="गाणे बंद करा (Stop)">⏹️</button>
-        <button class="jukebox-btn-sec" id="btn-toggle-video-game" title="Video दाखवा/लपवा">📺</button>
         <div class="audio-wave" id="audio-wave-game" style="display:none;">
           <span></span><span></span><span></span><span></span>
         </div>
@@ -1246,15 +1244,10 @@
     </div>
   </div>
 
-      <!-- Floating Full Song Mini Player Dock (Draggable / Minimizable) -->
-  <div id="fullSongPlayerDock" style="display:none; position:fixed; bottom:14px; right:14px; z-index:9999; width:280px; background:rgba(15,23,42,0.95); border:2px solid var(--cyan); border-radius:12px; box-shadow:0 0 25px rgba(0,243,255,0.4); overflow:hidden; font-family:sans-serif; backdrop-filter:blur(8px);">
-    <div style="background:#0b1120; padding:6px 10px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(0,243,255,0.3);">
-      <span style="font-size:0.75rem; font-weight:800; color:var(--cyan); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:170px;" id="dock-song-title">🎵 Gulabi Sadi (Full Song)</span>
-      <div style="display:flex; gap:6px;">
-        <button id="btn-dock-minimize" style="background:transparent; border:none; color:#cbd5e1; font-size:0.85rem; cursor:pointer;" title="व्हिडिओ लहान/मोठा करा">🔽</button>
-        <button id="btn-dock-close" style="background:transparent; border:none; color:var(--red); font-size:0.95rem; cursor:pointer; font-weight:bold;" title="गाणे बंद करा">✕</button>
-      </div>
-    </div>
+      <!-- Hidden Backend Full Song Audio Engine (Pure Audio in Background - No Video/Logo on screen) -->
+  <div id="fullSongBackendWrap" style="position:fixed; left:-9999px; top:-9999px; width:1px; height:1px; opacity:0; pointer-events:none; visibility:hidden; overflow:hidden;">
+    <iframe id="fullSongFrame" width="1" height="1" src="" frameborder="0" allow="autoplay; encrypted-media"></iframe>
+  </div>
     <div id="dock-video-wrapper" style="width:100%; height:158px; background:#000;">
       <iframe id="fullSongFrame" width="100%" height="158" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border:none; display:block;"></iframe>
     </div>
@@ -3545,8 +3538,7 @@
     let currentPlayingType = 'none'; // 'youtube' or 'audio' or 'none'
     let currentFullVideoId = null;
     let fullSongTitle = "गुलाबी साडी (Full Song)";
-    let isVideoDockMinimized = false;
-
+    
     const musicSearchModal = document.getElementById('musicSearchModal');
     const songQueryInput = document.getElementById('songQueryInput');
     const btnExecuteSearch = document.getElementById('btn-execute-search');
@@ -3555,22 +3547,15 @@
     const btnCloseMusicSearch = document.getElementById('btn-close-music-search');
     const localSongFallback = document.getElementById('localSongFallback');
 
-    const fullSongPlayerDock = document.getElementById('fullSongPlayerDock');
-    const fullSongFrame = document.getElementById('fullSongFrame');
-    const dockSongTitle = document.getElementById('dock-song-title');
-    const btnDockMinimize = document.getElementById('btn-dock-minimize');
-    const btnDockClose = document.getElementById('btn-dock-close');
-    const dockVideoWrapper = document.getElementById('dock-video-wrapper');
-
+        const fullSongFrame = document.getElementById('fullSongFrame');
+                
     const btnOpenSearchGame = document.getElementById('btn-open-search-game');
     const btnOpenSearchMenu = document.getElementById('btn-open-search-menu');
     const btnPlayPauseStreamGame = document.getElementById('btn-play-pause-stream-game');
     const btnPlayPauseStreamMenu = document.getElementById('btn-play-pause-stream-menu');
     const btnStopMusicGame = document.getElementById('btn-stop-music-game');
     const btnStopMusicMenu = document.getElementById('btn-stop-music-menu');
-    const btnToggleVideoGame = document.getElementById('btn-toggle-video-game');
-    const btnToggleVideoMenu = document.getElementById('btn-toggle-video-menu');
-
+        
     const titleNowPlayingGame = document.getElementById('jukebox-now-playing-game');
     const titleNowPlayingMenu = document.getElementById('jukebox-now-playing-menu');
     const waveGame = document.getElementById('audio-wave-game');
@@ -3629,12 +3614,6 @@
       try { bgmAudio.pause(); } catch(e) {}
       stopBGM();
 
-      // Show floating dock with video player
-      if (fullSongPlayerDock) fullSongPlayerDock.style.display = 'block';
-      if (dockSongTitle) dockSongTitle.innerText = `🎵 ${title}`;
-      if (dockVideoWrapper) dockVideoWrapper.style.display = 'block';
-      if (btnDockMinimize) btnDockMinimize.innerText = '🔽';
-      isVideoDockMinimized = false;
 
       // Load official embed with autoplay & jsapi
       if (fullSongFrame) {
@@ -3687,9 +3666,6 @@
         try { bgmAudio.pause(); } catch(e) {}
         stopBGM();
 
-        if (fullSongPlayerDock) fullSongPlayerDock.style.display = 'block';
-        if (dockSongTitle) dockSongTitle.innerText = `🔍 ${query}`;
-        if (dockVideoWrapper) dockVideoWrapper.style.display = 'block';
 
         if (fullSongFrame) {
           fullSongFrame.src = `https://www.youtube-nocookie.com/embed?listType=search&list=${encodeURIComponent(query)}&autoplay=1&enablejsapi=1&playsinline=1`;
@@ -3780,8 +3756,7 @@
         fullSongFrame.src = "";
       }
 
-      if (fullSongPlayerDock) fullSongPlayerDock.style.display = 'none';
-      updatePlayerUI("गाणे बंद आहे", false);
+            updatePlayerUI("गाणे बंद आहे", false);
       renderFullSongCards(FULL_SONGS_CATALOG);
 
       if (statusText) {
@@ -3791,26 +3766,7 @@
 
     if (btnStopMusicGame) btnStopMusicGame.onclick = stopFullMusic;
     if (btnStopMusicMenu) btnStopMusicMenu.onclick = stopFullMusic;
-    if (btnDockClose) btnDockClose.onclick = stopFullMusic;
-
-    // 8. TOGGLE VIDEO VISIBILITY (📺)
-    function toggleVideoVisibility() {
-      if (!fullSongPlayerDock) return;
-      if (fullSongPlayerDock.style.display === 'none' && currentFullVideoId) {
-        fullSongPlayerDock.style.display = 'block';
-        if (dockVideoWrapper) dockVideoWrapper.style.display = 'block';
-        isVideoDockMinimized = false;
-        if (btnDockMinimize) btnDockMinimize.innerText = '🔽';
-      } else if (dockVideoWrapper) {
-        isVideoDockMinimized = !isVideoDockMinimized;
-        dockVideoWrapper.style.display = isVideoDockMinimized ? 'none' : 'block';
-        if (btnDockMinimize) btnDockMinimize.innerText = isVideoDockMinimized ? '🔼' : '🔽';
-      }
-    }
-
-    if (btnToggleVideoGame) btnToggleVideoGame.onclick = toggleVideoVisibility;
-    if (btnToggleVideoMenu) btnToggleVideoMenu.onclick = toggleVideoVisibility;
-    if (btnDockMinimize) btnDockMinimize.onclick = toggleVideoVisibility;
+    
 
     // 9. VOLUME CONTROLS
     function setFullMusicVolume(val) {
@@ -3833,8 +3789,7 @@
           currentFullVideoId = null;
           fullSongTitle = file.name;
 
-          if (fullSongPlayerDock) fullSongPlayerDock.style.display = 'none';
-          if (fullSongFrame) fullSongFrame.src = "";
+                    if (fullSongFrame) fullSongFrame.src = "";
 
           bgmAudio.pause();
           bgmAudio.src = localUrl;
