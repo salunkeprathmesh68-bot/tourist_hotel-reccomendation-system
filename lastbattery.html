@@ -599,6 +599,78 @@
     .dot.drone { background: #ef4444; box-shadow: 0 0 8px #ef4444; }
     .dot.key { background: #eab308; box-shadow: 0 0 8px #eab308; }
 
+    
+    /* MUSIC JUKEBOX BAR */
+    .music-jukebox-bar {
+      width: 100%;
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
+      border: 1px solid rgba(0, 243, 255, 0.4);
+      border-radius: 10px;
+      padding: 6px 10px;
+      margin: 5px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    .jukebox-btn {
+      background: linear-gradient(135deg, #00f3ff, #0088ff);
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-weight: 800;
+      font-size: 0.74rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      transition: all 0.1s;
+    }
+
+    .jukebox-btn:active {
+      transform: scale(0.95);
+    }
+
+    .jukebox-btn-sec {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      padding: 6px 9px;
+      font-weight: 800;
+      font-size: 0.74rem;
+      cursor: pointer;
+    }
+
+    .jukebox-title {
+      font-size: 0.72rem;
+      color: var(--cyan);
+      font-family: monospace;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+      text-align: center;
+      padding: 0 4px;
+    }
+
+    .jukebox-vol-wrap {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .jukebox-slider {
+      width: 55px;
+      accent-color: var(--cyan);
+      cursor: pointer;
+    }
+
     /* Message ticker */
     .status-ticker {
       font-size: 0.74rem;
@@ -866,6 +938,16 @@
           🌫️ <strong>Cyber Fog</strong> (अंधार) • 🌀 <strong>Warp Portals</strong> (@) • ⚡ <strong>Inverted Gyros</strong> (?) • 🔋 <strong>+10% Battery</strong>
         </div>
       </div>
+            <!-- Custom Song Jukebox in Menu -->
+      <div class="music-jukebox-bar">
+        <input type="file" id="customSongInputMenu" accept="audio/*" style="display:none;">
+        <button class="jukebox-btn" id="btn-pick-song-menu">📂 Choose Song (गाणे निवडा)</button>
+        <button class="jukebox-btn-sec" id="btn-play-pause-menu">▶️ Play</button>
+        <span class="jukebox-title" id="jukebox-title-menu">Default Cyber Synth</span>
+        <div class="jukebox-vol-wrap">
+          <input type="range" id="jukebox-vol-menu" min="0" max="1" step="0.05" value="0.7" class="jukebox-slider">
+        </div>
+      </div>
       <div class="menu-btn-group">
         <button class="btn-main" id="btn-play-game">
           <span>▶️</span> Start Mission
@@ -936,8 +1018,8 @@
           <span class="hud-val" id="val-sector">1 / 50</span>
         </div>
         <div class="hud-item" style="text-align: center;">
-          <span class="hud-label">⏱️ Time Left</span>
-          <span class="hud-val" id="val-timer" style="color: var(--yellow);">00:45</span>
+          <span class="hud-label">👟 Moves</span>
+          <span class="hud-val" id="val-moves" style="color: var(--yellow);">0</span>
         </div>
         <div class="hud-item" style="text-align: right;">
           <span class="hud-label">Score</span>
@@ -961,6 +1043,17 @@
       </div>
 
       <!-- Status Message -->
+            <!-- Custom Song Jukebox in Game -->
+      <div class="music-jukebox-bar">
+        <input type="file" id="customSongInputGame" accept="audio/*" style="display:none;">
+        <button class="jukebox-btn" id="btn-pick-song-game">🎵 Song (गाणे)</button>
+        <button class="jukebox-btn-sec" id="btn-play-pause-game">⏸️</button>
+        <span class="jukebox-title" id="jukebox-title-game">Default Cyber Synth</span>
+        <div class="jukebox-vol-wrap">
+          <span style="font-size:0.65rem;">🔊</span>
+          <input type="range" id="jukebox-vol-game" min="0" max="1" step="0.05" value="0.7" class="jukebox-slider">
+        </div>
+      </div>
       <div class="status-ticker" id="status-text">
         System Online. Navigate Scout-X to exit (X)!
       </div>
@@ -1974,9 +2067,7 @@
     let lastHeading = { dx: 1, dy: 0 };
     let isGameOver = false;
     let levelCompleted = false;
-    let timeLeft = 45;
-    let timerInterval = null;
-    let isFogEnabled = true;
+        let isFogEnabled = true;
     let scrambleMovesLeft = 0;
     let hazardsActive = true;
     let hazardInterval = null;
@@ -2004,7 +2095,9 @@
 
     // UI Elements
     const valSector = document.getElementById('val-sector');
-    const valTimer = document.getElementById('val-timer');
+    const valMoves = document.getElementById('val-moves');
+    const bgmAudio = document.getElementById('bgmAudio');
+    let customSongLoaded = false;
     const valScore = document.getElementById('val-score');
     const valKey = document.getElementById('val-key');
     const valBatteryPct = document.getElementById('val-battery-pct');
@@ -2201,17 +2294,10 @@
       };
     });
 
-    // TIMER
-    function updateTimerHUD() {
-      const minutes = Math.floor(timeLeft / 60);
-      const seconds = timeLeft % 60;
-      valTimer.innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-      if (timeLeft <= 10) {
-        valTimer.style.color = 'var(--red)';
-        valTimer.style.fontWeight = '900';
-      } else {
-        valTimer.style.color = 'var(--yellow)';
-        valTimer.style.fontWeight = '700';
+    // MOVES HUD
+    function updateMovesHUD() {
+      if (valMoves) {
+        valMoves.innerText = robot.moves;
       }
     }
 
@@ -2266,7 +2352,6 @@
 
     // LOAD LEVEL
     function loadLevel(idx) {
-      clearInterval(timerInterval);
       clearInterval(hazardInterval);
       scrambleMovesLeft = 0;
       shieldMovesLeft = 0;
@@ -2312,8 +2397,7 @@
       levelCompleted = false;
       isGameOver = false;
       robot.battery = 100;
-      timeLeft = levelData.timeLimit || 45;
-      isFogEnabled = true;
+            isFogEnabled = true;
 
       const btnFog = document.getElementById('btn-fog');
       if (btnFog) btnFog.innerText = "🌫️ Fog: ON";
@@ -2346,18 +2430,17 @@
       statusText.innerText = `⚡ ${levelData.title}. [${notes.join(' | ')}] Plan path with care!`;
       statusText.style.borderLeftColor = 'var(--cyan)';
 
-      updateTimerHUD();
+      updateMovesHUD();
       updateHUD();
       startBGM();
 
       // Countdown timer
       timerInterval = setInterval(() => {
         if (isGameOver || levelCompleted) {
-          clearInterval(timerInterval);
-          return;
+              return;
         }
         timeLeft--;
-        updateTimerHUD();
+        updateMovesHUD();
 
         if (timeLeft <= 10 && timeLeft > 0) {
           playBeep(800, 'square', 0.05);
@@ -2365,8 +2448,7 @@
         }
 
         if (timeLeft <= 0) {
-          clearInterval(timerInterval);
-          handleTimeExpired();
+              handleTimeExpired();
         }
       }, 1000);
     }
@@ -2479,6 +2561,7 @@
       robot.battery = Math.max(0, robot.battery - 2); // 2% drain per step
       soundMove();
       vibrate(20);
+      updateMovesHUD();
 
       // Patrol Drones Move
       moveDrones();
@@ -2689,7 +2772,6 @@
 
     function handleTimeExpired() {
       isGameOver = true;
-      clearInterval(timerInterval);
       clearInterval(hazardInterval);
       soundGameOver();
       vibrate([100, 100, 300]);
@@ -2714,7 +2796,6 @@
 
     function handleGameOver() {
       isGameOver = true;
-      clearInterval(timerInterval);
       clearInterval(hazardInterval);
       soundGameOver();
       vibrate([100, 100, 200]);
@@ -2739,7 +2820,6 @@
 
     function handleSectorWin() {
       levelCompleted = true;
-      clearInterval(timerInterval);
       clearInterval(hazardInterval);
       soundWin();
       vibrate([40, 40, 80, 40, 120]);
@@ -2752,16 +2832,15 @@
         addParticle(cx, cy, col, 1, 2.5);
       }
 
-      // Calculate Stars
+      // Calculate Stars (Based purely on battery remaining & smart pathing)
       let stars = 1;
-      if (robot.battery >= 70 && timeLeft >= 10) stars = 3;
-      else if (robot.battery >= 45) stars = 2;
+      if (robot.battery >= 60) stars = 3;
+      else if (robot.battery >= 35) stars = 2;
 
       saveLevelStars(currentLevelIdx + 1, stars);
 
-      const timeBonus = timeLeft * 10;
       const batteryBonus = robot.battery * 5;
-      robot.score += 200 + batteryBonus + timeBonus;
+      robot.score += 250 + batteryBonus;
       updateHUD();
       saveHighScore(robot.score);
 
@@ -2773,7 +2852,7 @@
       modalMessage.innerHTML = `
         Extraction portal reached successfully!<br>
         ⚡ Battery Bonus: <strong>+${batteryBonus} pts</strong><br>
-        ⏱️ Speed Bonus (${timeLeft}s left): <strong>+${timeBonus} pts</strong>
+        👟 Total Moves Taken: <strong>${robot.moves} steps</strong>
       `;
 
       modalStats.innerHTML = `
@@ -3103,14 +3182,12 @@
     };
 
     document.getElementById('btn-game-to-menu').onclick = () => {
-      clearInterval(timerInterval);
       clearInterval(hazardInterval);
       stopBGM();
       showScreen('menu');
     };
 
     document.getElementById('btn-game-to-levels').onclick = () => {
-      clearInterval(timerInterval);
       clearInterval(hazardInterval);
       stopBGM();
       showScreen('levels');
@@ -3218,8 +3295,108 @@
 
     document.getElementById('btn-menu-mobile').onclick = showMobileModal;
 
+    
+    // =========================================================
+    // CUSTOM SONG JUKEBOX ENGINE
+    // =========================================================
+    function handleSongSelection(file) {
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      bgmAudio.src = url;
+      bgmAudio.volume = parseFloat(document.getElementById('jukebox-vol-game')?.value || 0.7);
+      bgmAudio.play().then(() => {
+        customSongLoaded = true;
+        stopBGM(); // Stop synthetic procedural BGM so only user's song plays
+        updateJukeboxUI(file.name, true);
+        statusText.innerText = `🎵 Playing Song: ${file.name}`;
+      }).catch(err => {
+        console.log("Audio play error:", err);
+      });
+    }
+
+    function updateJukeboxUI(trackName, isPlaying) {
+      const displayName = trackName.length > 20 ? trackName.substring(0, 18) + '...' : trackName;
+      const titleMenu = document.getElementById('jukebox-title-menu');
+      const titleGame = document.getElementById('jukebox-title-game');
+      const btnMenu = document.getElementById('btn-play-pause-menu');
+      const btnGame = document.getElementById('btn-play-pause-game');
+
+      if (titleMenu) titleMenu.innerText = displayName;
+      if (titleGame) titleGame.innerText = displayName;
+      if (btnMenu) btnMenu.innerText = isPlaying ? '⏸️ Pause' : '▶️ Play';
+      if (btnGame) btnGame.innerText = isPlaying ? '⏸️' : '▶️';
+    }
+
+    function toggleSongPlayback() {
+      if (customSongLoaded && bgmAudio.src) {
+        if (bgmAudio.paused) {
+          bgmAudio.play();
+          updateJukeboxUI(bgmAudio.dataset.title || "Custom Song", true);
+        } else {
+          bgmAudio.pause();
+          updateJukeboxUI(bgmAudio.dataset.title || "Custom Song", false);
+        }
+      } else {
+        // Toggle procedural synth BGM
+        musicEnabled = !musicEnabled;
+        if (musicEnabled) {
+          startBGM();
+          updateJukeboxUI("Default Cyber Synth", true);
+        } else {
+          stopBGM();
+          updateJukeboxUI("Music Paused", false);
+        }
+      }
+    }
+
+    // Wiring file pickers
+    const inputMenu = document.getElementById('customSongInputMenu');
+    const inputGame = document.getElementById('customSongInputGame');
+    const btnPickMenu = document.getElementById('btn-pick-song-menu');
+    const btnPickGame = document.getElementById('btn-pick-song-game');
+
+    if (btnPickMenu && inputMenu) {
+      btnPickMenu.onclick = () => inputMenu.click();
+      inputMenu.onchange = (e) => {
+        if (e.target.files && e.target.files[0]) {
+          bgmAudio.dataset.title = e.target.files[0].name;
+          handleSongSelection(e.target.files[0]);
+        }
+      };
+    }
+
+    if (btnPickGame && inputGame) {
+      btnPickGame.onclick = () => inputGame.click();
+      inputGame.onchange = (e) => {
+        if (e.target.files && e.target.files[0]) {
+          bgmAudio.dataset.title = e.target.files[0].name;
+          handleSongSelection(e.target.files[0]);
+        }
+      };
+    }
+
+    // Play/Pause buttons
+    const btnPlayMenu = document.getElementById('btn-play-pause-menu');
+    const btnPlayGame = document.getElementById('btn-play-pause-game');
+    if (btnPlayMenu) btnPlayMenu.onclick = toggleSongPlayback;
+    if (btnPlayGame) btnPlayGame.onclick = toggleSongPlayback;
+
+    // Volume sliders
+    const volMenu = document.getElementById('jukebox-vol-menu');
+    const volGame = document.getElementById('jukebox-vol-game');
+
+    function syncVolume(val) {
+      bgmAudio.volume = val;
+      if (volMenu) volMenu.value = val;
+      if (volGame) volGame.value = val;
+    }
+
+    if (volMenu) volMenu.oninput = (e) => syncVolume(e.target.value);
+    if (volGame) volGame.oninput = (e) => syncVolume(e.target.value);
+
     // INITIALIZE TO MAIN MENU
     showScreen('menu');
   </script>
+  <audio id="bgmAudio" loop></audio>
 </body>
 </html>
