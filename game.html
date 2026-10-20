@@ -3546,9 +3546,9 @@
     // =========================================================
     // MUSIC JUKEBOX ENGINE (LIVE TYPE-AHEAD SUGGESTIONS & FULL SONGS)
     // =========================================================
-    // Dual-Engine Music Catalog: directAudio plays in <50ms with ZERO DELAY!
+    // Dual-Engine Music Catalog: 24 Tracks with directAudio (starts in <50ms, zero lag!)
     const MUSIC_CATALOG = [
-      // MARATHI SUPERHITS (Instant Zero-Delay Audio)
+      // MARATHI SUPERHITS (Instant Direct Audio)
       {
         trackName: "Gulabi Sadi",
         artistName: "Sanju Rathod • Full 3:43 min",
@@ -3585,6 +3585,7 @@
         trackName: "Chandra",
         artistName: "Shreya Ghoshal & Ajay-Atul (Chandramukhi) • Full 3:30 min",
         category: "marathi",
+        directAudio: "audio/chandra.m4a",
         videoId: "D-wsXp_wC2Q",
         thumb: "https://i.ytimg.com/vi/D-wsXp_wC2Q/mqdefault.jpg"
       },
@@ -3592,6 +3593,7 @@
         trackName: "Dolby Walya",
         artistName: "Ajay-Atul (Jaundya Na Balasaheb) • Full 4:20 min",
         category: "marathi",
+        directAudio: "audio/dolby_walya.m4a",
         videoId: "Z6U3tVjHcUI",
         thumb: "https://i.ytimg.com/vi/Z6U3tVjHcUI/mqdefault.jpg"
       },
@@ -3599,6 +3601,7 @@
         trackName: "Deva Shree Ganesha",
         artistName: "Ajay-Atul (Agneepath) • Full 5:56 min",
         category: "marathi",
+        directAudio: "audio/deva_shree_ganesha.m4a",
         videoId: "RYqJ5w-GrfM",
         thumb: "https://i.ytimg.com/vi/RYqJ5w-GrfM/mqdefault.jpg"
       },
@@ -3606,11 +3609,12 @@
         trackName: "Non-Stop Marathi DJ Mashup",
         artistName: "High Energy Dance Remix • 30:00 min (Non-Stop DJ)",
         category: "dj",
+        directAudio: "audio/marathi_dj.m4a",
         videoId: "SecdlLzQLd0",
         thumb: "https://i.ytimg.com/vi/SecdlLzQLd0/mqdefault.jpg"
       },
 
-      // BOLLYWOOD HITS
+      // BOLLYWOOD HITS (Instant Direct Audio)
       {
         trackName: "Kesariya",
         artistName: "Arijit Singh (Brahmāstra) • Full 4:28 min",
@@ -3620,23 +3624,10 @@
         thumb: "https://i.ytimg.com/vi/BddP6PYo2gs/mqdefault.jpg"
       },
       {
-        trackName: "Tauba Tauba",
-        artistName: "Karan Aujla (Bad Newz) • Full 3:28 min",
-        category: "bollywood",
-        videoId: "d_4x7wGqWzE",
-        thumb: "https://i.ytimg.com/vi/d_4x7wGqWzE/mqdefault.jpg"
-      },
-      {
-        trackName: "Chaleya",
-        artistName: "Arijit Singh & Anirudh (Jawan) • Full 3:20 min",
-        category: "bollywood",
-        videoId: "VAdGW7QDJUI",
-        thumb: "https://i.ytimg.com/vi/VAdGW7QDJUI/mqdefault.jpg"
-      },
-      {
         trackName: "Apna Bana Le",
         artistName: "Arijit Singh (Bhediya) • Full 4:21 min",
         category: "bollywood",
+        directAudio: "audio/apna_bana_le.m4a",
         videoId: "ElZfdU54Cp8",
         thumb: "https://i.ytimg.com/vi/ElZfdU54Cp8/mqdefault.jpg"
       },
@@ -3644,11 +3635,12 @@
         trackName: "Tum Hi Ho",
         artistName: "Arijit Singh (Aashiqui 2) • Full 4:22 min",
         category: "bollywood",
+        directAudio: "audio/tum_hi_ho.m4a",
         videoId: "Umqb9KENgmk",
         thumb: "https://i.ytimg.com/vi/Umqb9KENgmk/mqdefault.jpg"
       },
 
-      // SOUTH & ACTION
+      // SOUTH & ACTION (Instant Direct Audio)
       {
         trackName: "The Monster Song (KGF 2)",
         artistName: "Ravi Basrur & Adithi Sagar • Full 3:30 min",
@@ -3661,6 +3653,7 @@
         trackName: "Pushpa Pushpa (Pushpa 2)",
         artistName: "Devi Sri Prasad • Full 4:15 min",
         category: "south",
+        directAudio: "audio/pushpa_pushpa.m4a",
         videoId: "wQksDYahKZs",
         thumb: "https://i.ytimg.com/vi/wQksDYahKZs/mqdefault.jpg"
       },
@@ -3668,18 +3661,12 @@
         trackName: "Illuminati (Aavesham)",
         artistName: "Sushin Shyam & Dabzee • Full 3:20 min",
         category: "south",
+        directAudio: "audio/illuminati.m4a",
         videoId: "yH7eDWTH5iM",
         thumb: "https://i.ytimg.com/vi/yH7eDWTH5iM/mqdefault.jpg"
       },
-      {
-        trackName: "Naatu Naatu (RRR)",
-        artistName: "M.M. Keeravaani (Oscar Winner) • Full 3:36 min",
-        category: "south",
-        videoId: "OsU0CGZoV8E",
-        thumb: "https://i.ytimg.com/vi/OsU0CGZoV8E/mqdefault.jpg"
-      },
 
-      // PHONK & EDM
+      // PHONK & EDM (Instant Direct Audio)
       {
         trackName: "Gaming Phonk (Bass Drift)",
         artistName: "Drift Phonk Gaming • Full 3:00 min",
@@ -3689,18 +3676,12 @@
         thumb: "https://i.ytimg.com/vi/Pnq1_3BXIqA/mqdefault.jpg"
       },
 
-      // PUNJABI HITS
-      {
-        trackName: "295",
-        artistName: "Sidhu Moose Wala • Full 4:30 min",
-        category: "punjabi",
-        videoId: "n_FCrCQ6-9U",
-        thumb: "https://i.ytimg.com/vi/n_FCrCQ6-9U/mqdefault.jpg"
-      },
+      // PUNJABI HITS (Instant Direct Audio)
       {
         trackName: "Softly",
         artistName: "Karan Aujla & Ikky • Full 2:35 min",
         category: "punjabi",
+        directAudio: "audio/softly.m4a",
         videoId: "cWMxCE2HTag",
         thumb: "https://i.ytimg.com/vi/cWMxCE2HTag/mqdefault.jpg"
       },
@@ -3708,6 +3689,7 @@
         trackName: "Winning Speech",
         artistName: "Karan Aujla • Full 3:20 min",
         category: "punjabi",
+        directAudio: "audio/winning_speech.m4a",
         videoId: "vsWxs1tuwDk",
         thumb: "https://i.ytimg.com/vi/vsWxs1tuwDk/mqdefault.jpg"
       },
@@ -3715,15 +3697,17 @@
         trackName: "Lover",
         artistName: "Diljit Dosanjh • Full 3:12 min",
         category: "punjabi",
+        directAudio: "audio/lover.m4a",
         videoId: "mH_LFkWxpI0",
         thumb: "https://i.ytimg.com/vi/mH_LFkWxpI0/mqdefault.jpg"
       },
 
-      // ENGLISH POP & GLOBAL
+      // ENGLISH POP & GLOBAL (Instant Direct Audio)
       {
         trackName: "Believer",
         artistName: "Imagine Dragons • Full 3:24 min",
         category: "english",
+        directAudio: "audio/believer.m4a",
         videoId: "7wtfhZwyrcc",
         thumb: "https://i.ytimg.com/vi/7wtfhZwyrcc/mqdefault.jpg"
       },
@@ -3731,6 +3715,7 @@
         trackName: "Starboy",
         artistName: "The Weeknd ft. Daft Punk • Full 3:50 min",
         category: "english",
+        directAudio: "audio/starboy.m4a",
         videoId: "34Na4j8AVgA",
         thumb: "https://i.ytimg.com/vi/34Na4j8AVgA/mqdefault.jpg"
       },
@@ -3738,6 +3723,7 @@
         trackName: "Blinding Lights",
         artistName: "The Weeknd • Full 3:20 min",
         category: "english",
+        directAudio: "audio/blinding_lights.m4a",
         videoId: "4NRXx6U8ABQ",
         thumb: "https://i.ytimg.com/vi/4NRXx6U8ABQ/mqdefault.jpg"
       },
@@ -3745,6 +3731,7 @@
         trackName: "Shape of You",
         artistName: "Ed Sheeran • Full 3:53 min",
         category: "english",
+        directAudio: "audio/shape_of_you.m4a",
         videoId: "JGwWNGJdvx8",
         thumb: "https://i.ytimg.com/vi/JGwWNGJdvx8/mqdefault.jpg"
       },
@@ -3752,6 +3739,7 @@
         trackName: "Levitating",
         artistName: "Dua Lipa • Full 3:23 min",
         category: "english",
+        directAudio: "audio/levitating.m4a",
         videoId: "TUVcZfQe-Kw",
         thumb: "https://i.ytimg.com/vi/TUVcZfQe-Kw/mqdefault.jpg"
       },
@@ -3759,6 +3747,7 @@
         trackName: "Faded",
         artistName: "Alan Walker • Full 3:32 min",
         category: "english",
+        directAudio: "audio/faded.m4a",
         videoId: "60ItHLz5WEA",
         thumb: "https://i.ytimg.com/vi/60ItHLz5WEA/mqdefault.jpg"
       }
