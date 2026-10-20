@@ -355,6 +355,51 @@
       transform: scale(0.98);
     }
 
+    /* 50 Levels Select Grid */
+    .level-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      max-height: 250px;
+      overflow-y: auto;
+      padding: 6px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 8px;
+      margin-bottom: 14px;
+    }
+
+    .lvl-btn {
+      padding: 8px 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #1e293b;
+      color: #64748b;
+      cursor: not-allowed;
+      transition: all 0.15s;
+    }
+
+    .lvl-btn.unlocked {
+      background: rgba(0, 243, 255, 0.15);
+      border-color: var(--cyan);
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .lvl-btn.unlocked:hover, .lvl-btn.unlocked:active {
+      background: var(--cyan);
+      color: #000;
+      transform: scale(1.05);
+    }
+
+    .lvl-btn.current {
+      background: var(--green);
+      color: #000;
+      border-color: var(--green);
+      box-shadow: 0 0 10px var(--green);
+    }
+
     /* Desktop instruction hint */
     .desktop-hint {
       display: none;
@@ -433,6 +478,7 @@
       </div>
       <div class="action-tools">
         <button class="tool-btn" id="btn-restart">🔄 Restart</button>
+        <button class="tool-btn" id="btn-levels" style="border-color: var(--cyan); color: var(--cyan);">🗺️ 50 Sectors</button>
         <button class="tool-btn" id="btn-phone">📱 Mobile Link</button>
         <button class="tool-btn" id="btn-sound">🔊 Sound: ON</button>
         <button class="tool-btn" id="btn-info">❓ Rules</button>
@@ -522,51 +568,807 @@
 
     // Level Layouts with Time Limits for Competition
     const LEVELS = [
-      {
-        title: "Sector Alpha - Training Ground",
-        timeLimit: 45, // 45 seconds
-        grid: [
-          "##########",
-          "#R...E...#",
-          "#..##....#",
-          "#........#",
-          "#.....E.X#",
-          "##########"
-        ]
-      },
-      {
-        title: "Sector Beta - Power Grid",
-        timeLimit: 60, // 60 seconds
-        grid: [
-          "###############",
-          "#R..#...E.....#",
-          "#.###.#####.#.#",
-          "#...#...#...#.#",
-          "###.###.#.###.#",
-          "#.....E.#...E.#",
-          "#.#####.#####.#",
-          "#.......#....X#",
-          "###############"
-        ]
-      },
-      {
-        title: "Sector Gamma - The Core Meltdown",
-        timeLimit: 75, // 75 seconds
-        grid: [
-          "###################",
-          "#R...E....#...E...#",
-          "#.###.###.#.###.#.#",
-          "#...#...#...#...#.#",
-          "###.#.#.#####.#.#.#",
-          "#...#.#...E...#.#.#",
-          "#.###.#######.#.#.#",
-          "#...^...#.....#..E#",
-          "#.#####.#####.###.#",
-          "#..E..........#..X#",
-          "###################"
-        ]
-      }
-    ];
+  {
+    "level": 1,
+    "title": "Sector 1: Sub-Station #1",
+    "timeLimit": 46,
+    "grid": [
+      "#############",
+      "#R#E#E#.....#",
+      "#.#.#.#.#####",
+      "#...#.....E.#",
+      "#.#####.#.#.#",
+      "#.E....E#.#X#",
+      "#############"
+    ]
+  },
+  {
+    "level": 2,
+    "title": "Sector 2: Power Grid #2",
+    "timeLimit": 47,
+    "grid": [
+      "#############",
+      "#R....E....E#",
+      "#E#.#.#.###.#",
+      "#.#.#.#...#.#",
+      "###.#.#.#.#.#",
+      "#..E#.#.#.#X#",
+      "#############"
+    ]
+  },
+  {
+    "level": 3,
+    "title": "Sector 3: Capacitor Array #3",
+    "timeLimit": 48,
+    "grid": [
+      "#############",
+      "#R..#.#..E..#",
+      "#.###.#.#####",
+      "#.......#..X#",
+      "###E#####.###",
+      "#......E..E.#",
+      "#############"
+    ]
+  },
+  {
+    "level": 4,
+    "title": "Sector 4: Voltage Relay #4",
+    "timeLimit": 49,
+    "grid": [
+      "#############",
+      "#R^...E...#X#",
+      "###.###.###.#",
+      "#.....#..E..#",
+      "#E#.#.#.#.###",
+      "#.#.#E#.#...#",
+      "#############"
+    ]
+  },
+  {
+    "level": 5,
+    "title": "Sector 5: Thermal Duct #5",
+    "timeLimit": 50,
+    "grid": [
+      "#############",
+      "#R...^E.....#",
+      "#.#.#.#.#.###",
+      "#.#E#.#.#E..#",
+      "#...#.#####.#",
+      "#.#.#..E..#X#",
+      "#############"
+    ]
+  },
+  {
+    "level": 6,
+    "title": "Sector 6: Quantum Vault #6",
+    "timeLimit": 51,
+    "grid": [
+      "#############",
+      "#R..^.....#X#",
+      "#.#.#E#####.#",
+      "#.#.#....E..#",
+      "#.#####.#####",
+      "#....E#....E#",
+      "#############"
+    ]
+  },
+  {
+    "level": 7,
+    "title": "Sector 7: Battery Depot #7",
+    "timeLimit": 52,
+    "grid": [
+      "#############",
+      "#R..........#",
+      "#.#######.###",
+      "#...E...#E#X#",
+      "#.#.###^###.#",
+      "#.#..E#E....#",
+      "#############"
+    ]
+  },
+  {
+    "level": 8,
+    "title": "Sector 8: Reactor Core #8",
+    "timeLimit": 53,
+    "grid": [
+      "#############",
+      "#R.^.^E....E#",
+      "#E#E#######.#",
+      "#.#.......#.#",
+      "#.#.###.#.#.#",
+      "#.....#.#.#X#",
+      "#############"
+    ]
+  },
+  {
+    "level": 9,
+    "title": "Sector 9: Cooling Matrix #9",
+    "timeLimit": 54,
+    "grid": [
+      "#############",
+      "#R#.#.#E..#X#",
+      "#^#.#.###.#.#",
+      "#...E...^E..#",
+      "#.#####.###.#",
+      "#.E...#...#.#",
+      "#############"
+    ]
+  },
+  {
+    "level": 10,
+    "title": "Sector 10: Omega Chamber #10",
+    "timeLimit": 55,
+    "grid": [
+      "#############",
+      "#R...^^.#..X#",
+      "#.#.#.#.#E###",
+      "#.#.#.#.#..E#",
+      "###E#####.###",
+      "#......E...E#",
+      "#############"
+    ]
+  },
+  {
+    "level": 11,
+    "title": "Sector 11: Sub-Station #11",
+    "timeLimit": 56,
+    "grid": [
+      "###############",
+      "#R....#.#...#.#",
+      "#.#^###.#.###.#",
+      "#^#..E....#X..#",
+      "#.###.#.#.###.#",
+      "#.#.#.#E..#.#.#",
+      "#.#.#######.#.#",
+      "#E.....E.....E#",
+      "###############"
+    ]
+  },
+  {
+    "level": 12,
+    "title": "Sector 12: Power Grid #12",
+    "timeLimit": 57,
+    "grid": [
+      "###############",
+      "#R.^..#...E.#X#",
+      "#.##^##.#####.#",
+      "#...E....E#.#.#",
+      "#..##.#.#.#.#.#",
+      "#.E.#.#.#...E.#",
+      "#.###.#.#.#.###",
+      "#.#...#.#.#...#",
+      "###############"
+    ]
+  },
+  {
+    "level": 13,
+    "title": "Sector 13: Capacitor Array #13",
+    "timeLimit": 58,
+    "grid": [
+      "###############",
+      "#R....E....E^E#",
+      "#.###.###.#.###",
+      "#.#.....#.#...#",
+      "#.###.#####^###",
+      "#.#..E..#.#.E.#",
+      "#.#.#.#.#.###.#",
+      "#.#.#.#.....#X#",
+      "###############"
+    ]
+  },
+  {
+    "level": 14,
+    "title": "Sector 14: Voltage Relay #14",
+    "timeLimit": 59,
+    "grid": [
+      "###############",
+      "#R#.......#.#X#",
+      "#.#.#######.#.#",
+      "#.#...#^#E....#",
+      "#.#.###.###.###",
+      "#...#^..#E#.E.#",
+      "#.##.##.#.###.#",
+      "#.E......E....#",
+      "###############"
+    ]
+  },
+  {
+    "level": 15,
+    "title": "Sector 15: Thermal Duct #15",
+    "timeLimit": 60,
+    "grid": [
+      "###############",
+      "#R..^.....#X.E#",
+      "#.###.#######.#",
+      "#...#^..E.#...#",
+      "###.#########.#",
+      "#..E#.#E#...#.#",
+      "###.#.#.#.###.#",
+      "#.....^E.....E#",
+      "###############"
+    ]
+  },
+  {
+    "level": 16,
+    "title": "Sector 16: Quantum Vault #16",
+    "timeLimit": 61,
+    "grid": [
+      "###############",
+      "#R^^#.......#X#",
+      "#.#.#.#######.#",
+      "#.#.E.....#...#",
+      "#.#..#^####E###",
+      "#.#....E......#",
+      "#.###.#.#######",
+      "#.#E..#...E...#",
+      "###############"
+    ]
+  },
+  {
+    "level": 17,
+    "title": "Sector 17: Battery Depot #17",
+    "timeLimit": 62,
+    "grid": [
+      "###############",
+      "#R...^#.#.E.#.#",
+      "#.#.#E#.###.#.#",
+      "#E#.#.........#",
+      "###.#.#########",
+      "#...#.....#^#X#",
+      "###.#.#####.#.#",
+      "#...#E^...E...#",
+      "###############"
+    ]
+  },
+  {
+    "level": 18,
+    "title": "Sector 18: Reactor Core #18",
+    "timeLimit": 63,
+    "grid": [
+      "###############",
+      "#R...^#.E.#...#",
+      "#.#.###.#...###",
+      "#.#.E...#.....#",
+      "#.#.#.###.#.###",
+      "#.#.#.^E..#.#X#",
+      "#E..#.#.#####.#",
+      "#.#.#^#...E...#",
+      "###############"
+    ]
+  },
+  {
+    "level": 19,
+    "title": "Sector 19: Cooling Matrix #19",
+    "timeLimit": 64,
+    "grid": [
+      "###############",
+      "#R....#.#.#.#X#",
+      "###.#E#.#E..#.#",
+      "#...#...#^#..E#",
+      "#.###E#.#.###.#",
+      "#.#...#E^...#.#",
+      "#####.#.###.#.#",
+      "#..^..#.#..E..#",
+      "###############"
+    ]
+  },
+  {
+    "level": 20,
+    "title": "Sector 20: Omega Chamber #20",
+    "timeLimit": 65,
+    "grid": [
+      "###############",
+      "#R..#.#.E^#...#",
+      "#.###.#.###.###",
+      "#...E......^..#",
+      "#.###.#########",
+      "#.#....E....E^#",
+      "#.#####.#.#.#.#",
+      "#.#E.^..#.#.#X#",
+      "###############"
+    ]
+  },
+  {
+    "level": 21,
+    "title": "Sector 21: Sub-Station #21",
+    "timeLimit": 66,
+    "grid": [
+      "###############",
+      "#R....#..^...^#",
+      "#.#.#E..#.###.#",
+      "#.#.#.#.#...#E#",
+      "#.###.#.#######",
+      "#...#..E..#.#X#",
+      "#.#E###.#.#^#.#",
+      "#.#.#...#.E..^#",
+      "###############"
+    ]
+  },
+  {
+    "level": 22,
+    "title": "Sector 22: Power Grid #22",
+    "timeLimit": 67,
+    "grid": [
+      "###############",
+      "#R..E.#E..#...#",
+      "#.#.###.#..E###",
+      "#^..E...#^#...#",
+      "#.###.#.###E#.#",
+      "#.#...#..^..#X#",
+      "###.#.#.###.###",
+      "#...#.#...#^..#",
+      "###############"
+    ]
+  },
+  {
+    "level": 23,
+    "title": "Sector 23: Capacitor Array #23",
+    "timeLimit": 68,
+    "grid": [
+      "###############",
+      "#R....E.^.....#",
+      "#.###.#.#.#####",
+      "#...#E#.#E#E#X#",
+      "###.#.###.#.#.#",
+      "#...#^..#...E.#",
+      "###.###########",
+      "#^...........^#",
+      "###############"
+    ]
+  },
+  {
+    "level": 24,
+    "title": "Sector 24: Voltage Relay #24",
+    "timeLimit": 69,
+    "grid": [
+      "###############",
+      "#R#.^..E.^....#",
+      "#^#.#####E#.###",
+      "#...E.#.#.#..X#",
+      "###^#.#.#####.#",
+      "#...#..E....E.#",
+      "#.#.###.#.###.#",
+      "#.#...#.#...#.#",
+      "###############"
+    ]
+  },
+  {
+    "level": 25,
+    "title": "Sector 25: Thermal Duct #25",
+    "timeLimit": 70,
+    "grid": [
+      "###############",
+      "#R....#.^.....#",
+      "###.###.#######",
+      "#E#.E..^..^...#",
+      "#.#.#.###.#####",
+      "#^^.#..E#.#..X#",
+      "#.#.###.###.###",
+      "#.#E..#...E...#",
+      "###############"
+    ]
+  },
+  {
+    "level": 26,
+    "title": "Sector 26: Quantum Vault #26",
+    "timeLimit": 66,
+    "grid": [
+      "#################",
+      "#R#.#..E..#.#...#",
+      "#.#.#.#.#.#.#.###",
+      "#...E.#^..E....E#",
+      "###.###########^#",
+      "#...E...#.....#X#",
+      "#.###.#.###.###.#",
+      "#.#...#.E..^....#",
+      "#################"
+    ]
+  },
+  {
+    "level": 27,
+    "title": "Sector 27: Battery Depot #27",
+    "timeLimit": 67,
+    "grid": [
+      "#################",
+      "#R..#.#.......#.#",
+      "#.###.#.#######.#",
+      "#...E....E......#",
+      "###.#.#.###.#####",
+      "#..^#.#.....#.#X#",
+      "###.#.#.#E#E#.#.#",
+      "#...#.#.#E..^^.E#",
+      "#################"
+    ]
+  },
+  {
+    "level": 28,
+    "title": "Sector 28: Reactor Core #28",
+    "timeLimit": 68,
+    "grid": [
+      "#################",
+      "#R......E.#E^...#",
+      "#.#########.###.#",
+      "#...#.#.#.....#X#",
+      "#.###.#.###.#####",
+      "#..E.....E^..^..#",
+      "###.#.#.#####.###",
+      "#.E.#.......#...#",
+      "#################"
+    ]
+  },
+  {
+    "level": 29,
+    "title": "Sector 29: Cooling Matrix #29",
+    "timeLimit": 69,
+    "grid": [
+      "#################",
+      "#R...^..#.#.#.#X#",
+      "#.#E#####...#^#.#",
+      "#.#.#...#.#.#..E#",
+      "#.###.###.#.#.#.#",
+      "#.....#....E..#.#",
+      "#.#####.###.#.###",
+      "#E.....E#.E^#...#",
+      "#################"
+    ]
+  },
+  {
+    "level": 30,
+    "title": "Sector 30: Omega Chamber #30",
+    "timeLimit": 70,
+    "grid": [
+      "#################",
+      "#R#.#..^.E.....E#",
+      "#.#.#.#^#####.#.#",
+      "#....E#.#.#.#...#",
+      "#.#.#.###.#.###.#",
+      "#.#E#...#.....#.#",
+      "#E###.##..#.###^#",
+      "#...#....^#.#X.E#",
+      "#################"
+    ]
+  },
+  {
+    "level": 31,
+    "title": "Sector 31: Sub-Station #31",
+    "timeLimit": 71,
+    "grid": [
+      "#################",
+      "#R^E#..E..#.#E.X#",
+      "#.###.###.#.#.###",
+      "#...E...#^E.....#",
+      "#.#.#############",
+      "#.#.............#",
+      "#.#######.##....#",
+      "#.#.^..^...E#.#.#",
+      "#################"
+    ]
+  },
+  {
+    "level": 32,
+    "title": "Sector 32: Power Grid #32",
+    "timeLimit": 72,
+    "grid": [
+      "#################",
+      "#R^.............#",
+      "#.#.#E#######.###",
+      "#.#.#.#.#.#.#...#",
+      "#.#E##..#.#.#####",
+      "#^..^..E....E..^#",
+      "#.###.###.#.###.#",
+      "#.#...#E....#X.E#",
+      "#################"
+    ]
+  },
+  {
+    "level": 33,
+    "title": "Sector 33: Capacitor Array #33",
+    "timeLimit": 73,
+    "grid": [
+      "#################",
+      "#R..#....E..#X^.#",
+      "#.###.#.###.###.#",
+      "#....E..E.#^.E^.#",
+      "#.###.########..#",
+      "#.........#...#.#",
+      "#####.###.#.###.#",
+      "#.....#.^.....#E#",
+      "#################"
+    ]
+  },
+  {
+    "level": 34,
+    "title": "Sector 34: Voltage Relay #34",
+    "timeLimit": 74,
+    "grid": [
+      "#################",
+      "#R....#.....#...#",
+      "#.#^#^#.#####.#.#",
+      "#^..#E......#E#X#",
+      "#.#.#...#####.###",
+      "#.#E#.#..E....#.#",
+      "#.##..#.#.###.#.#",
+      "#.#..^#.#E..#...#",
+      "#################"
+    ]
+  },
+  {
+    "level": 35,
+    "title": "Sector 35: Thermal Duct #35",
+    "timeLimit": 75,
+    "grid": [
+      "#################",
+      "#R....^..E......#",
+      "#.#.###E#########",
+      "#.#...#.#...#.^.#",
+      "#.#######...#.#^#",
+      "#..E.....E#..E#X#",
+      "#.#########.#.###",
+      "#....^..^.#.#...#",
+      "#################"
+    ]
+  },
+  {
+    "level": 36,
+    "title": "Sector 36: Quantum Vault #36",
+    "timeLimit": 76,
+    "grid": [
+      "#################",
+      "#R#....E#....E.X#",
+      "#.#E###^#E#######",
+      "#...#.#...^...^.#",
+      "#.###.#.#########",
+      "#..^.E..........#",
+      "#^#.##.E#########",
+      "#.#.#...........#",
+      "#################"
+    ]
+  },
+  {
+    "level": 37,
+    "title": "Sector 37: Battery Depot #37",
+    "timeLimit": 77,
+    "grid": [
+      "#################",
+      "#R...^..........#",
+      "#.###########.###",
+      "#...E.^..E..#..^#",
+      "#.###.#.#.#.#####",
+      "#.#...#..^.^E...#",
+      "#E#####.#.###...#",
+      "#.....#.#E..#.#X#",
+      "#################"
+    ]
+  },
+  {
+    "level": 38,
+    "title": "Sector 38: Reactor Core #38",
+    "timeLimit": 78,
+    "grid": [
+      "#################",
+      "#R....#.......#^#",
+      "#.#.#.#.#######.#",
+      "#.#.#E..^.^E#X.E#",
+      "#.#.#^#.###^###.#",
+      "#.#.#.#..E#.#...#",
+      "#E###.#.#.###.#.#",
+      "#.#...#.#....E..#",
+      "#################"
+    ]
+  },
+  {
+    "level": 39,
+    "title": "Sector 39: Cooling Matrix #39",
+    "timeLimit": 79,
+    "grid": [
+      "#################",
+      "#R.........E....#",
+      "#.###E#########.#",
+      "#...^...^E#...#.#",
+      "###.#####.#.#####",
+      "#...^..E#^..E^..#",
+      "###.#.###.#.#.#.#",
+      "#...#.#...#.#.#X#",
+      "#################"
+    ]
+  },
+  {
+    "level": 40,
+    "title": "Sector 40: Omega Chamber #40",
+    "timeLimit": 80,
+    "grid": [
+      "#################",
+      "#R^.^.E....E..#.#",
+      "#.###.#.###.###.#",
+      "#...#E#..^....^.#",
+      "#.#####.###.#E#.#",
+      "#.E.#...#^..#.#.#",
+      "#..####.###.#^###",
+      "#...#.....#.#..X#",
+      "#################"
+    ]
+  },
+  {
+    "level": 41,
+    "title": "Sector 41: Sub-Station #41",
+    "timeLimit": 76,
+    "grid": [
+      "###################",
+      "#R.....E..........#",
+      "#.#####.#.#########",
+      "#.#.#...#.#.#.#.#.#",
+      "#.#.#.#.###.#...#.#",
+      "#..E#E#..E.^......#",
+      "#.###.#####.#.###.#",
+      "#...#.....#.#E^^#^#",
+      "#.###.#######.#####",
+      "#.#.........#....X#",
+      "###################"
+    ]
+  },
+  {
+    "level": 42,
+    "title": "Sector 42: Power Grid #42",
+    "timeLimit": 77,
+    "grid": [
+      "###################",
+      "#R.....E.^..#.#..^#",
+      "#.###.#.#####.#.###",
+      "#.E.#.#....E....#.#",
+      "###.#####.###.###.#",
+      "#.......#...#..E..#",
+      "#.#.###.#.###.#^###",
+      "#.#.#...#...#.#...#",
+      "#.##.####.###.#.#.#",
+      "#.....#.....#^#E#X#",
+      "###################"
+    ]
+  },
+  {
+    "level": 43,
+    "title": "Sector 43: Capacitor Array #43",
+    "timeLimit": 78,
+    "grid": [
+      "###################",
+      "#R...^....#...#..^#",
+      "#.#.#######.###.###",
+      "#.#.#.#^#...#..E..#",
+      "#^###.#.#.###.#.###",
+      "#.....#^.E....#...#",
+      "###.###.#####.#.###",
+      "#.#E........#.#.#X#",
+      "#E#.###########.#.#",
+      "#...........E.#..E#",
+      "###################"
+    ]
+  },
+  {
+    "level": 44,
+    "title": "Sector 44: Voltage Relay #44",
+    "timeLimit": 79,
+    "grid": [
+      "###################",
+      "#R#..^....#^..#.#X#",
+      "#.#.#####.#.#E#.#.#",
+      "#....E..#.....#...#",
+      "#.#####.#.#####.###",
+      "#.....#..E.....E..#",
+      "###^#...#####.#####",
+      "#...#.#...#.......#",
+      "#.#.#.###.###.###.#",
+      "#..E#...#..^#..^#.#",
+      "###################"
+    ]
+  },
+  {
+    "level": 45,
+    "title": "Sector 45: Thermal Duct #45",
+    "timeLimit": 80,
+    "grid": [
+      "###################",
+      "#R...^.E.^...^....#",
+      "#.#^#.#.###.#######",
+      "#.#.#.#.#..E......#",
+      "###.#.#####.#######",
+      "#...#..E#.......#.#",
+      "###.#.###.###.#.#.#",
+      "#...#.#X#E#...#.^.#",
+      "#E#.#.#.#.#####.###",
+      "#.#.#.#.....#.....#",
+      "###################"
+    ]
+  },
+  {
+    "level": 46,
+    "title": "Sector 46: Quantum Vault #46",
+    "timeLimit": 81,
+    "grid": [
+      "###################",
+      "#R......#.#...#.#X#",
+      "#.#.#####.#.###...#",
+      "#.#..E..^.#.......#",
+      "###^###.#####.#.#.#",
+      "#...#E#..E.....E..#",
+      "#.#.#.#.#####.#####",
+      "#.#^#.^..^..#...E.#",
+      "###.#######..##.#.#",
+      "#.........#^..#.#.#",
+      "###################"
+    ]
+  },
+  {
+    "level": 47,
+    "title": "Sector 47: Battery Depot #47",
+    "timeLimit": 82,
+    "grid": [
+      "###################",
+      "#R..#..E....#...#X#",
+      "#.###.#####.#.###.#",
+      "#.#.#.^.#...E.....#",
+      "#.#^#.#.#.##E##.#.#",
+      "#...E.#.#.....#E#.#",
+      "#.#.#^###.#########",
+      "#^#.#.....#.......#",
+      "#.#^###.###.#######",
+      "#.#...#..........^#",
+      "###################"
+    ]
+  },
+  {
+    "level": 48,
+    "title": "Sector 48: Reactor Core #48",
+    "timeLimit": 83,
+    "grid": [
+      "###################",
+      "#R.........^#.....#",
+      "#..#.########.#####",
+      "#E...E..^..E...^.E#",
+      "#.#########.#.###.#",
+      "#.....^.....#.#..^#",
+      "###.#.###.#######.#",
+      "#...#...#E....#..^#",
+      "###.###.#.#.#.###.#",
+      "#.....#.#.#.#.#X.E#",
+      "###################"
+    ]
+  },
+  {
+    "level": 49,
+    "title": "Sector 49: Cooling Matrix #49",
+    "timeLimit": 84,
+    "grid": [
+      "###################",
+      "#R.....E..#^....E.#",
+      "#.###^#..##.#####.#",
+      "#.#.#......E#.#.#.#",
+      "#.#^###.#.#.#.#.###",
+      "#.^E#...#.#.^.....#",
+      "#.###########^#####",
+      "#.......#...#E..^.#",
+      "#.#######.###.###.#",
+      "#...........#....X#",
+      "###################"
+    ]
+  },
+  {
+    "level": 50,
+    "title": "Sector 50: The Omega Core (Final Protocol)",
+    "timeLimit": 85,
+    "grid": [
+      "###################",
+      "#R..#..^...E......#",
+      "#.###E###.#.#####^#",
+      "#.......#.#^..E...#",
+      "###^#######.#.###.#",
+      "#.......#...#...#.#",
+      "#.#E#####.#.#####.#",
+      "#.#...^.#.#.E.^.#.#",
+      "#.#.#######.#.#.###",
+      "#.#....^#...#.#..X#",
+      "###################"
+    ]
+  }
+];
 
     // Game State
     let currentLevelIdx = 0;
@@ -801,6 +1603,10 @@
       updateHUD();
       saveHighScore(robot.score);
 
+      // Save unlocked level progression
+      maxUnlockedLevel = Math.max(maxUnlockedLevel, currentLevelIdx + 2);
+      localStorage.setItem('last_battery_max_unlocked', maxUnlockedLevel.toString());
+
       if (currentLevelIdx < LEVELS.length - 1) {
         modalTitle.innerText = `SECTOR ${currentLevelIdx + 1} CLEARED!`;
         modalTitle.style.color = "var(--green)";
@@ -1033,23 +1839,70 @@
       gameModal.style.display = 'flex';
     };
 
-    const btnSound = document.getElementById('btn-sound');
-    btnSound.onclick = () => {
+    let maxUnlockedLevel = parseInt(localStorage.getItem('last_battery_max_unlocked') || '1', 10);
+
+    function showLevelSelectModal() {
+      modalTitle.innerText = "TACTICAL SECTOR MAP (1 - 50)";
+      modalTitle.style.color = "var(--cyan)";
+
+      let gridHtml = '<div class="level-grid">';
+      for (let i = 0; i < LEVELS.length; i++) {
+        const lvlNum = i + 1;
+        const isCurrent = (i === currentLevelIdx);
+        const isUnlocked = (lvlNum <= maxUnlockedLevel);
+        const cls = isCurrent ? 'lvl-btn current' : (isUnlocked ? 'lvl-btn unlocked' : 'lvl-btn');
+        const icon = isCurrent ? '⭐' : (isUnlocked ? '✓' : '🔒');
+        gridHtml += `<button class="${cls}" data-lvl="${i}" ${isUnlocked ? '' : 'disabled'}>${lvlNum} ${icon}</button>`;
+      }
+      gridHtml += '</div>';
+
+      modalMessage.innerHTML = `
+        <div style="font-size:0.8rem; color:var(--muted); margin-bottom:8px;">
+          Choose any unlocked sector to deploy:
+        </div>
+        ${gridHtml}
+        <div style="font-size:0.75rem; color:var(--muted); text-align:left;">
+          ⭐ Current &nbsp;|&nbsp; ✓ Unlocked (${Math.min(50, maxUnlockedLevel)}/50) &nbsp;|&nbsp; 🔒 Locked
+        </div>
+      `;
+      statScore.innerText = robot.score;
+      statBattery.innerText = `${robot.battery}%`;
+      statMoves.innerText = robot.moves;
+      statHigh.innerText = getHighScore();
+      modalBtn.innerText = "CLOSE";
+      modalBtn.onclick = () => { gameModal.style.display = 'none'; };
+      gameModal.style.display = 'flex';
+
+      document.querySelectorAll('.level-grid button.unlocked, .level-grid button.current').forEach(btn => {
+        btn.onclick = () => {
+          const targetLvl = parseInt(btn.getAttribute('data-lvl'), 10);
+          gameModal.style.display = 'none';
+          loadLevel(targetLvl);
+        };
+      });
+    }
+
+    document.getElementById('btn-levels').onclick = () => {
+      showLevelSelectModal();
+    };
+
+    document.getElementById('btn-sound').onclick = () => {
       soundEnabled = !soundEnabled;
-      btnSound.innerText = soundEnabled ? "🔊 Sound: ON" : "🔇 Sound: OFF";
+      document.getElementById('btn-sound').innerText = soundEnabled ? "🔊 Sound: ON" : "🔇 Sound: OFF";
     };
 
     document.getElementById('btn-info').onclick = () => {
-      modalTitle.innerText = "MISSION RULES & COMPETITION";
+      modalTitle.innerText = "50 SECTORS - TACTICAL GUIDE";
       modalTitle.style.color = "var(--yellow)";
       modalMessage.innerHTML = `
-        <strong>Scout-X Survival Manual:</strong><br><br>
-        • Move with <strong>D-Pad, Swipes, or WASD</strong>.<br>
-        • Every move consumes only <strong>-2% Battery</strong>.<br>
-        • Collect <strong>Energy Cells (E)</strong> for <strong>+30% Battery</strong> & <strong>+100 Pts</strong>.<br>
+        <strong>Scout-X Survival Manual (50 Levels):</strong><br><br>
+        • <strong>50 Progressive Sectors</strong>: From easy training corridors to extreme labyrinth cores!<br>
+        • Move with <strong>D-Pad, Swipes, or WASD / Arrows</strong>.<br>
+        • Battery drains by <strong>-2% per step</strong> (pure mind & route planning).<br>
+        • Collect <strong>Energy Cells (E)</strong> for <strong>+30% Power</strong> & <strong>+100 Pts</strong>.<br>
         • Avoid <strong>High-Voltage Hazards (▲)</strong>: <strong>-15% Damage</strong>.<br>
-        • <strong>⏱️ Competition Timer</strong>: Reach the <strong>Exit (X)</strong> before time runs out!<br>
-        • <strong>⚡ Speed Bonus</strong>: Earn <strong>+10 Bonus Points</strong> for every second remaining!
+        • <strong>⏱️ Competition Timer</strong>: Speed bonus <strong>+10 Pts/sec</strong> remaining!<br>
+        • Progress is <strong>auto-saved</strong>. Click <strong>🗺️ 50 Sectors</strong> to jump to any unlocked level!
       `;
       statScore.innerText = robot.score;
       statBattery.innerText = `${robot.battery}%`;
