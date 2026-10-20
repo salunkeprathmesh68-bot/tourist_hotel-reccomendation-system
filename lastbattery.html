@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Last Battery - Robot Survival Game</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: rgba(16, 24, 40, 0.95);
+      --cyan: #00f3ff;
+      --green: #00ff88;
+      --yellow: #ffcc00;
+      --red: #ff3366;
+      --gray: #334155;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      margin: 0;
+      padding: 0;
+      touch-action: manipulation;
+    }
+
+    body {
+      background: radial-gradient(circle at center, #131d33 0%, #070a12 100%);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Courier New", monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      overflow-x: hidden;
+      padding: 8px 8px 20px 8px;
+    }
+
+    header {
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+      padding: 6px 0;
+      margin-bottom: 6px;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      letter-spacing: 2px;
+      color: var(--cyan);
+      text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .sub-title {
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    /* Container */
+    .game-container {
+      width: 100%;
+      max-width: 480px;
+      background: var(--card-bg);
+      border: 1px solid rgba(0, 243, 255, 0.3);
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Top HUD */
+    .hud {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.85rem;
+    }
+
+    .hud-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hud-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .hud-val {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* Battery Bar */
+    .battery-container {
+      grid-column: span 2;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .battery-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .battery-bar-outer {
+      width: 100%;
+      height: 14px;
+      background: #1e293b;
+      border-radius: 7px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      position: relative;
+    }
+
+    .battery-bar-fill {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #00ff88, #00f3ff);
+      transition: width 0.25s ease, background 0.25s ease;
+      box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+    }
+
+    .battery-bar-fill.medium {
+      background: linear-gradient(90deg, #ffcc00, #ff9900);
+      box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+    }
+
+    .battery-bar-fill.critical {
+      background: linear-gradient(90deg, #ff3366, #ff0033);
+      box-shadow: 0 0 12px rgba(255, 51, 102, 0.8);
+      animation: pulseAlert 0.8s infinite alternate;
+    }
+
+    @keyframes pulseAlert {
+      from { opacity: 0.6; }
+      to { opacity: 1.0; }
+    }
+
+    /* Message ticker */
+    .status-ticker {
+      font-size: 0.75rem;
+      padding: 5px 8px;
+      background: rgba(0, 243, 255, 0.08);
+      border-left: 3px solid var(--cyan);
+      border-radius: 4px;
+      min-height: 26px;
+      display: flex;
+      align-items: center;
+      color: #cbd5e1;
+      font-family: monospace;
+    }
+
+    /* Canvas / Board */
+    .board-wrapper {
+      position: relative;
+      width: 100%;
+      background: #030712;
+      border: 1px solid rgba(0, 243, 255, 0.2);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      aspect-ratio: 16 / 10;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      image-rendering: pixelated;
+    }
+
+    /* Legend */
+    .legend-bar {
+      display: flex;
+      justify-content: space-around;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 4px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      display: inline-block;
+    }
+
+    .dot.robot { background: var(--cyan); box-shadow: 0 0 6px var(--cyan); }
+    .dot.energy { background: var(--yellow); box-shadow: 0 0 6px var(--yellow); }
+    .dot.exit { background: var(--green); box-shadow: 0 0 6px var(--green); }
+    .dot.hazard { background: var(--red); box-shadow: 0 0 6px var(--red); }
+    .dot.wall { background: #475569; }
+
+    /* Touch Controls (Mobile D-Pad) */
+    .controls-panel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .dpad-container {
+      display: grid;
+      grid-template-columns: repeat(3, 56px);
+      grid-template-rows: repeat(3, 50px);
+      gap: 5px;
+      margin: 0 auto;
+    }
+
+    .dbtn {
+      background: rgba(30, 41, 59, 0.85);
+      border: 1px solid rgba(0, 243, 255, 0.4);
+      border-radius: 10px;
+      color: var(--cyan);
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+      transition: all 0.08s ease;
+      touch-action: none;
+    }
+
+    .dbtn:active, .dbtn.pressed {
+      background: var(--cyan);
+      color: #000;
+      transform: scale(0.92);
+      box-shadow: 0 0 15px var(--cyan);
+    }
+
+    .dbtn-up    { grid-column: 2; grid-row: 1; }
+    .dbtn-left  { grid-column: 1; grid-row: 2; }
+    .dbtn-down  { grid-column: 2; grid-row: 2; }
+    .dbtn-right { grid-column: 3; grid-row: 2; }
+
+    .action-tools {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .tool-btn {
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #cbd5e1;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .tool-btn:hover, .tool-btn:active {
+      background: rgba(0, 243, 255, 0.2);
+      border-color: var(--cyan);
+      color: #fff;
+    }
+
+    /* Modals & Overlays */
+    .overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(5, 8, 15, 0.9);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+
+    .modal-box {
+      background: #0f172a;
+      border: 2px solid var(--cyan);
+      border-radius: 12px;
+      padding: 20px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(0, 243, 255, 0.3);
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      font-weight: 800;
+    }
+
+    .modal-msg {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .modal-stats {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    .modal-btn {
+      background: linear-gradient(135deg, #00f3ff, #0088ff);
+      color: #000;
+      font-weight: bold;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      width: 100%;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 15px rgba(0, 243, 255, 0.4);
+    }
+
+    .modal-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* Desktop instruction hint */
+    .desktop-hint {
+      display: none;
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    @media (min-width: 600px) {
+      .desktop-hint { display: block; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Last Battery</h1>
+    <div class="sub-title">A Robot Survival Game • Play Anywhere</div>
+  </header>
+
+  <div class="game-container">
+    <!-- Top HUD -->
+    <div class="hud">
+      <div class="hud-item">
+        <span class="hud-label">Sector</span>
+        <span class="hud-val" id="val-sector">1 / 3</span>
+      </div>
+      <div class="hud-item" style="text-align: right;">
+        <span class="hud-label">Score</span>
+        <span class="hud-val" id="val-score" style="color: var(--cyan);">0</span>
+      </div>
+      
+      <!-- Battery Meter -->
+      <div class="battery-container">
+        <div class="battery-header">
+          <span>POWER CORE</span>
+          <span id="val-battery-pct" style="color: var(--green);">100%</span>
+        </div>
+        <div class="battery-bar-outer">
+          <div class="battery-bar-fill" id="battery-fill"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Message -->
+    <div class="status-ticker" id="status-text">
+      System Online. Find Energy Cells (E) and navigate to Exit (X)!
+    </div>
+
+    <!-- Game Screen / Canvas -->
+    <div class="board-wrapper">
+      <canvas id="gameCanvas" width="480" height="300"></canvas>
+    </div>
+
+    <!-- Mini Legend -->
+    <div class="legend-bar">
+      <div class="legend-item"><span class="dot robot"></span> Robot</div>
+      <div class="legend-item"><span class="dot energy"></span> +25% Energy</div>
+      <div class="legend-item"><span class="dot hazard"></span> -15% Hazard</div>
+      <div class="legend-item"><span class="dot exit"></span> Exit</div>
+      <div class="legend-item"><span class="dot wall"></span> Wall</div>
+    </div>
+
+    <!-- Mobile Virtual Controls -->
+    <div class="controls-panel">
+      <div class="dpad-container">
+        <button class="dbtn dbtn-up" id="btn-up" aria-label="Up">▲</button>
+        <button class="dbtn dbtn-left" id="btn-left" aria-label="Left">◄</button>
+        <button class="dbtn dbtn-down" id="btn-down" aria-label="Down">▼</button>
+        <button class="dbtn dbtn-right" id="btn-right" aria-label="Right">►</button>
+      </div>
+      <div class="action-tools">
+        <button class="tool-btn" id="btn-restart">🔄 Restart</button>
+        <button class="tool-btn" id="btn-phone">📱 Mobile Link</button>
+        <button class="tool-btn" id="btn-sound">🔊 Sound: ON</button>
+        <button class="tool-btn" id="btn-info">❓ Rules</button>
+      </div>
+    </div>
+
+    <div class="desktop-hint">
+      Keyboard Controls: <strong>W/A/S/D</strong> or <strong>Arrow Keys</strong> to move
+    </div>
+  </div>
+
+  <!-- Modal Screen (Game Over / Level Clear / Win) -->
+  <div class="overlay" id="gameModal">
+    <div class="modal-box">
+      <div class="modal-title" id="modalTitle" style="color: var(--cyan);">MISSION ACCOMPLISHED</div>
+      <div class="modal-msg" id="modalMessage">You survived and reached the extraction zone!</div>
+      <div class="modal-stats" id="modalStats">
+        <div>Final Score: <strong id="statScore">0</strong></div>
+        <div>Remaining Battery: <strong id="statBattery">0%</strong></div>
+        <div>Total Moves: <strong id="statMoves">0</strong></div>
+        <div>High Score: <strong id="statHigh">0</strong></div>
+      </div>
+      <button class="modal-btn" id="modalBtn">Next Sector</button>
+    </div>
+  </div>
+
+  <script>
+    // Audio Synthesizer (Zero dependencies, works offline on any phone/PC)
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+    let soundEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playBeep(freq, type, duration, delay = 0) {
+      if (!soundEnabled) return;
+      initAudio();
+      setTimeout(() => {
+        try {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+          gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + duration);
+        } catch (e) {}
+      }, delay);
+    }
+
+    function soundMove() { playBeep(320, 'sine', 0.04); }
+    function soundEnergy() {
+      playBeep(587, 'triangle', 0.08);
+      playBeep(880, 'triangle', 0.12, 70);
+    }
+    function soundHazard() {
+      playBeep(180, 'sawtooth', 0.18);
+      playBeep(120, 'sawtooth', 0.18, 90);
+    }
+    function soundWin() {
+      playBeep(523, 'sine', 0.1);
+      playBeep(659, 'sine', 0.1, 90);
+      playBeep(784, 'sine', 0.1, 180);
+      playBeep(1046, 'sine', 0.25, 270);
+    }
+    function soundGameOver() {
+      playBeep(300, 'sawtooth', 0.15);
+      playBeep(240, 'sawtooth', 0.18, 120);
+      playBeep(160, 'sawtooth', 0.35, 280);
+    }
+
+    function vibrate(pattern) {
+      if ('vibrate' in navigator) {
+        try { navigator.vibrate(pattern); } catch(e) {}
+      }
+    }
+
+    // Level Layouts
+    const LEVELS = [
+      {
+        title: "Sector Alpha - Training Ground",
+        grid: [
+          "##########",
+          "#R...E...#",
+          "#..##....#",
+          "#........#",
+          "#.....E.X#",
+          "##########"
+        ]
+      },
+      {
+        title: "Sector Beta - Power Grid",
+        grid: [
+          "###############",
+          "#R..#...E.....#",
+          "#.###.#####.#.#",
+          "#...#...#...#.#",
+          "###.###.#.###.#",
+          "#.....E.#...E.#",
+          "#.#####.#####.#",
+          "#.......#....X#",
+          "###############"
+        ]
+      },
+      {
+        title: "Sector Gamma - The Core Meltdown",
+        grid: [
+          "###################",
+          "#R..#....E...#...E#",
+          "#.###.######.#.##.#",
+          "#...^.#...E..#..#.#",
+          "###.###.###.###.#.#",
+          "#E....#.#^#...#.#.#",
+          "#.###.#.###.#.#.#.#",
+          "#...#.#...^.#...#.#",
+          "###.#.#####.#####.#",
+          "#...#.....E.....#X#",
+          "###################"
+        ]
+      }
+    ];
+
+    // Game State
+    let currentLevelIdx = 0;
+    let grid = [];
+    let robot = { x: 1, y: 1, battery: 100, maxBattery: 100, score: 0, moves: 0, energyCount: 0 };
+    let exitPos = { x: 0, y: 0 };
+    let isGameOver = false;
+    let levelCompleted = false;
+
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // UI Elements
+    const valSector = document.getElementById('val-sector');
+    const valScore = document.getElementById('val-score');
+    const valBatteryPct = document.getElementById('val-battery-pct');
+    const batteryFill = document.getElementById('battery-fill');
+    const statusText = document.getElementById('status-text');
+
+    const gameModal = document.getElementById('gameModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalMessage = document.getElementById('modalMessage');
+    const modalStats = document.getElementById('modalStats');
+    const modalBtn = document.getElementById('modalBtn');
+    const statScore = document.getElementById('statScore');
+    const statBattery = document.getElementById('statBattery');
+    const statMoves = document.getElementById('statMoves');
+    const statHigh = document.getElementById('statHigh');
+
+    function loadLevel(idx) {
+      currentLevelIdx = idx;
+      const levelData = LEVELS[idx];
+      grid = levelData.grid.map(row => row.split(''));
+
+      // Find robot and exit
+      for (let y = 0; y < grid.length; y++) {
+        for (let x = 0; x < grid[y].length; x++) {
+          if (grid[y][x] === 'R') {
+            robot.x = x;
+            robot.y = y;
+            grid[y][x] = '.';
+          } else if (grid[y][x] === 'X') {
+            exitPos = { x, y };
+          }
+        }
+      }
+
+      levelCompleted = false;
+      isGameOver = false;
+      valSector.innerText = `${idx + 1} / ${LEVELS.length}`;
+      statusText.innerText = `${levelData.title}. Navigate to exit (X)!`;
+      statusText.style.borderLeftColor = 'var(--cyan)';
+      updateHUD();
+      render();
+    }
+
+    function startNewGame() {
+      robot.battery = 100;
+      robot.score = 0;
+      robot.moves = 0;
+      robot.energyCount = 0;
+      loadLevel(0);
+    }
+
+    function updateHUD() {
+      valScore.innerText = robot.score;
+      valBatteryPct.innerText = `${robot.battery}%`;
+      batteryFill.style.width = `${robot.battery}%`;
+
+      batteryFill.className = 'battery-bar-fill';
+      if (robot.battery > 50) {
+        valBatteryPct.style.color = 'var(--green)';
+      } else if (robot.battery > 20) {
+        batteryFill.classList.add('medium');
+        valBatteryPct.style.color = 'var(--yellow)';
+      } else {
+        batteryFill.classList.add('critical');
+        valBatteryPct.style.color = 'var(--red)';
+      }
+    }
+
+    function move(dx, dy) {
+      if (isGameOver || levelCompleted) return;
+      initAudio();
+
+      const nextX = robot.x + dx;
+      const nextY = robot.y + dy;
+
+      // Wall collision
+      if (nextY < 0 || nextY >= grid.length || nextX < 0 || nextX >= grid[0].length || grid[nextY][nextX] === '#') {
+        vibrate(40);
+        statusText.innerText = "Blocked by reinforced wall (#)!";
+        statusText.style.borderLeftColor = 'var(--red)';
+        return;
+      }
+
+      robot.x = nextX;
+      robot.y = nextY;
+      robot.moves++;
+      robot.battery = Math.max(0, robot.battery - 4);
+      soundMove();
+      vibrate(20);
+
+      // Hazard check
+      if (grid[nextY][nextX] === '^') {
+        robot.battery = Math.max(0, robot.battery - 15);
+        soundHazard();
+        vibrate([50, 50, 100]);
+        statusText.innerText = "HAZARD! High-voltage tile inflicted -15% battery drain!";
+        statusText.style.borderLeftColor = 'var(--red)';
+      }
+      // Energy check
+      else if (grid[nextY][nextX] === 'E') {
+        grid[nextY][nextX] = '.';
+        robot.battery = Math.min(robot.maxBattery, robot.battery + 25);
+        robot.score += 100;
+        robot.energyCount++;
+        soundEnergy();
+        vibrate([30, 30, 60]);
+        statusText.innerText = "Energy Cell harvested! +25% Power, +100 Score!";
+        statusText.style.borderLeftColor = 'var(--green)';
+      } else {
+        statusText.innerText = `Scouting sector... Power drained by 4%.`;
+        statusText.style.borderLeftColor = 'var(--cyan)';
+      }
+
+      updateHUD();
+      render();
+
+      // Check win or death
+      if (robot.battery <= 0) {
+        handleGameOver();
+      } else if (robot.x === exitPos.x && robot.y === exitPos.y) {
+        handleSectorWin();
+      }
+    }
+
+    function handleGameOver() {
+      isGameOver = true;
+      soundGameOver();
+      vibrate([100, 100, 200]);
+      saveHighScore(robot.score);
+
+      modalTitle.innerText = "BATTERY EXHAUSTED";
+      modalTitle.style.color = "var(--red)";
+      modalMessage.innerText = "The robot powered down before reaching the portal!";
+      statScore.innerText = robot.score;
+      statBattery.innerText = "0%";
+      statMoves.innerText = robot.moves;
+      statHigh.innerText = getHighScore();
+      modalBtn.innerText = "TRY AGAIN";
+      modalBtn.onclick = () => {
+        gameModal.style.display = 'none';
+        startNewGame();
+      };
+      gameModal.style.display = 'flex';
+    }
+
+    function handleSectorWin() {
+      levelCompleted = true;
+      soundWin();
+      vibrate([40, 40, 80, 40, 120]);
+
+      const batteryBonus = robot.battery * 5;
+      robot.score += 200 + batteryBonus;
+      updateHUD();
+      saveHighScore(robot.score);
+
+      if (currentLevelIdx < LEVELS.length - 1) {
+        modalTitle.innerText = `SECTOR ${currentLevelIdx + 1} CLEARED!`;
+        modalTitle.style.color = "var(--green)";
+        modalMessage.innerText = `Extraction portal reached! Battery Bonus: +${batteryBonus} pts.`;
+        statScore.innerText = robot.score;
+        statBattery.innerText = `${robot.battery}%`;
+        statMoves.innerText = robot.moves;
+        statHigh.innerText = getHighScore();
+        modalBtn.innerText = `ENTER SECTOR ${currentLevelIdx + 2}`;
+        modalBtn.onclick = () => {
+          gameModal.style.display = 'none';
+          loadLevel(currentLevelIdx + 1);
+        };
+      } else {
+        modalTitle.innerText = "MISSION ACCOMPLISHED!";
+        modalTitle.style.color = "var(--cyan)";
+        modalMessage.innerText = "Outstanding! You successfully guided Scout-X through all sectors!";
+        statScore.innerText = robot.score;
+        statBattery.innerText = `${robot.battery}%`;
+        statMoves.innerText = robot.moves;
+        statHigh.innerText = getHighScore();
+        modalBtn.innerText = "PLAY AGAIN";
+        modalBtn.onclick = () => {
+          gameModal.style.display = 'none';
+          startNewGame();
+        };
+      }
+      gameModal.style.display = 'flex';
+    }
+
+    function getHighScore() {
+      return parseInt(localStorage.getItem('last_battery_highscore') || '0', 10);
+    }
+
+    function saveHighScore(score) {
+      const best = getHighScore();
+      if (score > best) {
+        localStorage.setItem('last_battery_highscore', score.toString());
+      }
+    }
+
+    // Renderer
+    function render() {
+      const rows = grid.length;
+      const cols = grid[0].length;
+
+      // Resize canvas buffer to match grid aspect ratio
+      const cellW = canvas.width / cols;
+      const cellH = canvas.height / rows;
+
+      ctx.fillStyle = '#080d1a';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          const char = grid[y][x];
+          const px = x * cellW;
+          const py = y * cellH;
+
+          // Floor
+          ctx.fillStyle = '#0b1120';
+          ctx.fillRect(px, py, cellW, cellH);
+          ctx.strokeStyle = '#1e293b';
+          ctx.strokeRect(px, py, cellW, cellH);
+
+          if (char === '#') {
+            // Wall
+            ctx.fillStyle = '#334155';
+            ctx.fillRect(px + 1, py + 1, cellW - 2, cellH - 2);
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(px + 4, py + 4, cellW - 8, cellH - 8);
+          } else if (char === 'E') {
+            // Energy Cell (Glowing orb)
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#ffcc00';
+            ctx.fillStyle = '#ffcc00';
+            ctx.beginPath();
+            ctx.arc(px + cellW/2, py + cellH/2, Math.min(cellW, cellH)*0.28, 0, Math.PI*2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            ctx.fillStyle = '#000';
+            ctx.font = `bold ${Math.floor(cellH * 0.4)}px monospace`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('E', px + cellW/2, py + cellH/2 + 1);
+          } else if (char === 'X') {
+            // Exit Portal
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = '#00ff88';
+            ctx.fillStyle = '#00ff88';
+            ctx.fillRect(px + 3, py + 3, cellW - 6, cellH - 6);
+            ctx.shadowBlur = 0;
+
+            ctx.fillStyle = '#000';
+            ctx.font = `bold ${Math.floor(cellH * 0.45)}px monospace`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('X', px + cellW/2, py + cellH/2);
+          } else if (char === '^') {
+            // Hazard
+            ctx.fillStyle = '#ff3366';
+            ctx.font = `bold ${Math.floor(cellH * 0.55)}px monospace`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('▲', px + cellW/2, py + cellH/2);
+          }
+        }
+      }
+
+      // Draw Robot
+      const rpx = robot.x * cellW;
+      const rpy = robot.y * cellH;
+
+      ctx.shadowBlur = 14;
+      ctx.shadowColor = '#00f3ff';
+      ctx.fillStyle = '#00f3ff';
+      ctx.beginPath();
+      ctx.arc(rpx + cellW/2, rpy + cellH/2, Math.min(cellW, cellH)*0.36, 0, Math.PI*2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Robot eyes/visor
+      ctx.fillStyle = '#000';
+      ctx.fillRect(rpx + cellW*0.35, rpy + cellH*0.4, cellW*0.3, cellH*0.16);
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(rpx + cellW*0.42, rpy + cellH*0.44, cellW*0.08, cellH*0.08);
+      ctx.fillRect(rpx + cellW*0.52, rpy + cellH*0.44, cellW*0.08, cellH*0.08);
+    }
+
+    // Keyboard controls (Windows PC & Laptops)
+    window.addEventListener('keydown', (e) => {
+      const key = e.key.toLowerCase();
+      if (['arrowup', 'w'].includes(key)) { e.preventDefault(); move(0, -1); }
+      else if (['arrowdown', 's'].includes(key)) { e.preventDefault(); move(0, 1); }
+      else if (['arrowleft', 'a'].includes(key)) { e.preventDefault(); move(-1, 0); }
+      else if (['arrowright', 'd'].includes(key)) { e.preventDefault(); move(1, 0); }
+    });
+
+    // Mobile Virtual Touch D-Pad
+    function bindTouchButton(id, dx, dy) {
+      const btn = document.getElementById(id);
+      const trigger = (e) => {
+        e.preventDefault();
+        btn.classList.add('pressed');
+        move(dx, dy);
+      };
+      const release = (e) => {
+        e.preventDefault();
+        btn.classList.remove('pressed');
+      };
+      btn.addEventListener('touchstart', trigger, { passive: false });
+      btn.addEventListener('touchend', release, { passive: false });
+      btn.addEventListener('mousedown', trigger);
+      btn.addEventListener('mouseup', release);
+    }
+
+    bindTouchButton('btn-up', 0, -1);
+    bindTouchButton('btn-down', 0, 1);
+    bindTouchButton('btn-left', -1, 0);
+    bindTouchButton('btn-right', 1, 0);
+
+    // Touch Swipe Gestures on Canvas
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    canvas.addEventListener('touchstart', (e) => {
+      if (e.touches.length > 0) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+
+    canvas.addEventListener('touchend', (e) => {
+      if (e.changedTouches.length > 0) {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        const absX = Math.abs(dx);
+        const absY = Math.abs(dy);
+
+        if (Math.max(absX, absY) > 25) { // Minimum swipe threshold
+          if (absX > absY) {
+            move(dx > 0 ? 1 : -1, 0);
+          } else {
+            move(0, dy > 0 ? 1 : -1);
+          }
+        }
+      }
+    }, { passive: true });
+
+    // Action buttons
+    document.getElementById('btn-restart').onclick = () => startNewGame();
+
+    document.getElementById('btn-phone').onclick = () => {
+      const currentUrl = window.location.href.startsWith('http') 
+        ? window.location.href 
+        : `http://192.168.1.19:8080/LastBattery_PlayAnywhere.html`;
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(currentUrl)}`;
+
+      modalTitle.innerText = "PLAY ON MOBILE";
+      modalTitle.style.color = "var(--cyan)";
+      modalMessage.innerHTML = `
+        <div style="margin-bottom:12px;">Scan with your phone camera or enter this URL on any phone browser:</div>
+        <div style="background:#000; padding:10px; border-radius:8px; display:inline-block; margin-bottom:10px;">
+          <img src="${qrUrl}" alt="Scan QR Code" style="width:160px; height:160px; display:block;" onerror="this.style.display='none'">
+        </div>
+        <div style="background:rgba(0,243,255,0.1); border:1px dashed var(--cyan); padding:8px; border-radius:6px; font-family:monospace; font-size:0.8rem; word-break:break-all; color:#fff; margin-bottom:8px;">
+          ${currentUrl}
+        </div>
+        <div style="font-size:0.75rem; color:var(--muted); text-align:left;">
+          ✓ Works on Android, iPhone, iPad, Windows & Mac<br>
+          ✓ Responsive touch D-Pad & swipe gestures<br>
+          ✓ Add to Home Screen to play in full-screen mode
+        </div>
+      `;
+      statScore.innerText = robot.score;
+      statBattery.innerText = `${robot.battery}%`;
+      statMoves.innerText = robot.moves;
+      statHigh.innerText = getHighScore();
+      modalBtn.innerText = "BACK TO GAME";
+      modalBtn.onclick = () => { gameModal.style.display = 'none'; };
+      gameModal.style.display = 'flex';
+    };
+
+    const btnSound = document.getElementById('btn-sound');
+    btnSound.onclick = () => {
+      soundEnabled = !soundEnabled;
+      btnSound.innerText = soundEnabled ? "🔊 Sound: ON" : "🔇 Sound: OFF";
+    };
+
+    document.getElementById('btn-info').onclick = () => {
+      modalTitle.innerText = "MISSION RULES";
+      modalTitle.style.color = "var(--yellow)";
+      modalMessage.innerHTML = `
+        <strong>Scout-X Survival Manual:</strong><br><br>
+        • Move with <strong>D-Pad, Swipes, or WASD</strong>.<br>
+        • Every move consumes <strong>-4% Battery</strong>.<br>
+        • Collect <strong>Energy Cells (E)</strong> for <strong>+25% Battery</strong> and <strong>+100 Points</strong>.<br>
+        • Avoid <strong>High-Voltage Hazards (▲)</strong>: <strong>-15% Damage</strong>.<br>
+        • Reach the <strong>Exit (X)</strong> to advance sectors.
+      `;
+      statScore.innerText = robot.score;
+      statBattery.innerText = `${robot.battery}%`;
+      statMoves.innerText = robot.moves;
+      statHigh.innerText = getHighScore();
+      modalBtn.innerText = "RESUME GAME";
+      modalBtn.onclick = () => { gameModal.style.display = 'none'; };
+      gameModal.style.display = 'flex';
+    };
+
+    // Initialize game
+    startNewGame();
+  </script>
+</body>
+</html>
