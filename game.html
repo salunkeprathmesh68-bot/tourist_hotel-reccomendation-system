@@ -79,7 +79,7 @@
     /* Top HUD */
     .hud {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1.2fr 1fr;
       gap: 6px;
       background: rgba(0, 0, 0, 0.4);
       padding: 8px;
@@ -109,7 +109,7 @@
 
     /* Battery Bar */
     .battery-container {
-      grid-column: span 2;
+      grid-column: span 3;
       display: flex;
       flex-direction: column;
       gap: 3px;
@@ -383,6 +383,10 @@
         <span class="hud-label">Sector</span>
         <span class="hud-val" id="val-sector">1 / 3</span>
       </div>
+      <div class="hud-item" style="text-align: center;">
+        <span class="hud-label">⏱️ Time Left</span>
+        <span class="hud-val" id="val-timer" style="color: var(--yellow);">00:45</span>
+      </div>
       <div class="hud-item" style="text-align: right;">
         <span class="hud-label">Score</span>
         <span class="hud-val" id="val-score" style="color: var(--cyan);">0</span>
@@ -516,10 +520,11 @@
       }
     }
 
-    // Level Layouts
+    // Level Layouts with Time Limits for Competition
     const LEVELS = [
       {
         title: "Sector Alpha - Training Ground",
+        timeLimit: 45, // 45 seconds
         grid: [
           "##########",
           "#R...E...#",
@@ -531,6 +536,7 @@
       },
       {
         title: "Sector Beta - Power Grid",
+        timeLimit: 60, // 60 seconds
         grid: [
           "###############",
           "#R..#...E.....#",
@@ -545,6 +551,7 @@
       },
       {
         title: "Sector Gamma - The Core Meltdown",
+        timeLimit: 75, // 75 seconds
         grid: [
           "###################",
           "#R...E....#...E...#",
@@ -568,15 +575,17 @@
     let exitPos = { x: 0, y: 0 };
     let isGameOver = false;
     let levelCompleted = false;
+    let timeLeft = 45;
+    let timerInterval = null;
 
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
     // UI Elements
     const valSector = document.getElementById('val-sector');
+    const valTimer = document.getElementById('val-timer');
     const valScore = document.getElementById('val-score');
     const valBatteryPct = document.getElementById('val-battery-pct');
-    const batteryFill = document.getElementById('battery-fill');
     const statusText = document.getElementById('status-text');
 
     const gameModal = document.getElementById('gameModal');
@@ -589,7 +598,21 @@
     const statMoves = document.getElementById('statMoves');
     const statHigh = document.getElementById('statHigh');
 
+    function updateTimerHUD() {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      valTimer.innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      if (timeLeft <= 10) {
+        valTimer.style.color = 'var(--red)';
+        valTimer.style.fontWeight = '900';
+      } else {
+        valTimer.style.color = 'var(--yellow)';
+        valTimer.style.fontWeight = '700';
+      }
+    }
+
     function loadLevel(idx) {
+      clearInterval(timerInterval);
       currentLevelIdx = idx;
       const levelData = LEVELS[idx];
       grid = levelData.grid.map(row => row.split(''));
@@ -610,11 +633,34 @@
       levelCompleted = false;
       isGameOver = false;
       robot.battery = 100; // Power Core fully restored for the new sector
+      timeLeft = levelData.timeLimit || 45;
+
       valSector.innerText = `${idx + 1} / ${LEVELS.length}`;
-      statusText.innerText = `⚡ ${levelData.title}. Power Core 100%! Navigate to exit (X)!`;
+      statusText.innerText = `⚡ ${levelData.title}. Time: ${timeLeft}s! Navigate to exit (X)!`;
       statusText.style.borderLeftColor = 'var(--green)';
+      updateTimerHUD();
       updateHUD();
       render();
+
+      // Start countdown timer
+      timerInterval = setInterval(() => {
+        if (isGameOver || levelCompleted) {
+          clearInterval(timerInterval);
+          return;
+        }
+        timeLeft--;
+        updateTimerHUD();
+
+        if (timeLeft <= 10 && timeLeft > 0) {
+          playBeep(800, 'square', 0.05);
+          vibrate(30);
+        }
+
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          handleTimeExpired();
+        }
+      }, 1000);
     }
 
     function startNewGame() {
@@ -660,7 +706,7 @@
       robot.x = nextX;
       robot.y = nextY;
       robot.moves++;
-      robot.battery = Math.max(0, robot.battery - 3);
+      robot.battery = Math.max(0, robot.battery - 2); // 2% drain per step (balanced tactical challenge)
       soundMove();
       vibrate(20);
 
@@ -683,7 +729,7 @@
         statusText.innerText = "Energy Cell harvested! +30% Power, +100 Score!";
         statusText.style.borderLeftColor = 'var(--green)';
       } else {
-        statusText.innerText = `Scouting sector... Power drained by 4%.`;
+        statusText.innerText = `Scouting sector... Power -2%. Use mind & hurry!`;
         statusText.style.borderLeftColor = 'var(--cyan)';
       }
 
@@ -698,8 +744,31 @@
       }
     }
 
+    function handleTimeExpired() {
+      isGameOver = true;
+      clearInterval(timerInterval);
+      soundGameOver();
+      vibrate([100, 100, 300]);
+      saveHighScore(robot.score);
+
+      modalTitle.innerText = "⏱️ TIME EXPIRED!";
+      modalTitle.style.color = "var(--red)";
+      modalMessage.innerText = "Facility lockdown triggered! You did not reach the portal in time!";
+      statScore.innerText = robot.score;
+      statBattery.innerText = `${robot.battery}%`;
+      statMoves.innerText = robot.moves;
+      statHigh.innerText = getHighScore();
+      modalBtn.innerText = "TRY AGAIN";
+      modalBtn.onclick = () => {
+        gameModal.style.display = 'none';
+        startNewGame();
+      };
+      gameModal.style.display = 'flex';
+    }
+
     function handleGameOver() {
       isGameOver = true;
+      clearInterval(timerInterval);
       soundGameOver();
       vibrate([100, 100, 200]);
       saveHighScore(robot.score);
@@ -721,18 +790,24 @@
 
     function handleSectorWin() {
       levelCompleted = true;
+      clearInterval(timerInterval);
       soundWin();
       vibrate([40, 40, 80, 40, 120]);
 
+      const timeBonus = timeLeft * 10;
       const batteryBonus = robot.battery * 5;
-      robot.score += 200 + batteryBonus;
+      robot.score += 200 + batteryBonus + timeBonus;
       updateHUD();
       saveHighScore(robot.score);
 
       if (currentLevelIdx < LEVELS.length - 1) {
         modalTitle.innerText = `SECTOR ${currentLevelIdx + 1} CLEARED!`;
         modalTitle.style.color = "var(--green)";
-        modalMessage.innerText = `Extraction portal reached! Battery Bonus: +${batteryBonus} pts.`;
+        modalMessage.innerHTML = `
+          Extraction portal reached!<br>
+          ⚡ Battery Bonus: <strong>+${batteryBonus} pts</strong><br>
+          ⏱️ Speed Bonus (${timeLeft}s left): <strong>+${timeBonus} pts</strong>
+        `;
         statScore.innerText = robot.score;
         statBattery.innerText = `${robot.battery}%`;
         statMoves.innerText = robot.moves;
@@ -745,7 +820,11 @@
       } else {
         modalTitle.innerText = "MISSION ACCOMPLISHED!";
         modalTitle.style.color = "var(--cyan)";
-        modalMessage.innerText = "Outstanding! You successfully guided Scout-X through all sectors!";
+        modalMessage.innerHTML = `
+          Outstanding! You cleared all sectors with mind & speed!<br>
+          ⚡ Battery Bonus: <strong>+${batteryBonus} pts</strong><br>
+          ⏱️ Speed Bonus: <strong>+${timeBonus} pts</strong>
+        `;
         statScore.innerText = robot.score;
         statBattery.innerText = `${robot.battery}%`;
         statMoves.innerText = robot.moves;
@@ -960,15 +1039,16 @@
     };
 
     document.getElementById('btn-info').onclick = () => {
-      modalTitle.innerText = "MISSION RULES";
+      modalTitle.innerText = "MISSION RULES & COMPETITION";
       modalTitle.style.color = "var(--yellow)";
       modalMessage.innerHTML = `
         <strong>Scout-X Survival Manual:</strong><br><br>
         • Move with <strong>D-Pad, Swipes, or WASD</strong>.<br>
-        • Every move consumes <strong>-4% Battery</strong>.<br>
-        • Collect <strong>Energy Cells (E)</strong> for <strong>+25% Battery</strong> and <strong>+100 Points</strong>.<br>
+        • Every move consumes only <strong>-2% Battery</strong>.<br>
+        • Collect <strong>Energy Cells (E)</strong> for <strong>+30% Battery</strong> & <strong>+100 Pts</strong>.<br>
         • Avoid <strong>High-Voltage Hazards (▲)</strong>: <strong>-15% Damage</strong>.<br>
-        • Reach the <strong>Exit (X)</strong> to advance sectors.
+        • <strong>⏱️ Competition Timer</strong>: Reach the <strong>Exit (X)</strong> before time runs out!<br>
+        • <strong>⚡ Speed Bonus</strong>: Earn <strong>+10 Bonus Points</strong> for every second remaining!
       `;
       statScore.innerText = robot.score;
       statBattery.innerText = `${robot.battery}%`;
