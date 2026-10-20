@@ -1059,14 +1059,16 @@
           🌫️ <strong>Cyber Fog</strong> (अंधार) • 🌀 <strong>Warp Portals</strong> (@) • ⚡ <strong>Inverted Gyros</strong> (?) • 🔋 <strong>+10% Battery</strong>
         </div>
       </div>
-            <!-- Universal Song Search & Stream Player in Menu -->
+            <!-- Full Song Jukebox Bar in Menu -->
       <div class="music-jukebox-bar">
-        <button class="jukebox-btn" id="btn-open-search-menu">🔍 Search Song (गाणे शोधा)</button>
-        <button class="jukebox-btn-sec" id="btn-play-pause-stream-menu">▶️</button>
+        <button class="jukebox-btn" id="btn-open-search-menu">🎵 गाणे निवडा (Full Songs)</button>
+        <button class="jukebox-btn-sec" id="btn-play-pause-stream-menu" title="Play/Pause">▶️</button>
+        <button class="jukebox-btn-sec" id="btn-stop-music-menu" title="गाणे बंद करा (Stop)">⏹️</button>
+        <button class="jukebox-btn-sec" id="btn-toggle-video-menu" title="Video दाखवा/लपवा">📺</button>
         <div class="audio-wave" id="audio-wave-menu" style="display:none;">
           <span></span><span></span><span></span><span></span>
         </div>
-        <span class="jukebox-title" id="jukebox-now-playing-menu">Select Any Song to Play</span>
+        <span class="jukebox-title" id="jukebox-now-playing-menu">गुलाबी साडी (Full Song)</span>
         <div class="jukebox-vol-wrap">
           <span style="font-size:0.75rem;">🔊</span>
           <input type="range" id="stream-vol-menu" min="0" max="1" step="0.05" value="1.0" class="jukebox-slider" title="Music Volume">
@@ -1167,14 +1169,16 @@
       </div>
 
       <!-- Status Message -->
-            <!-- Universal Song Search & Stream Player in Game -->
+            <!-- Full Song Jukebox Bar in Game -->
       <div class="music-jukebox-bar">
-        <button class="jukebox-btn" id="btn-open-search-game">🔍 Search Song (गाणे शोधा)</button>
-        <button class="jukebox-btn-sec" id="btn-play-pause-stream-game">⏸️</button>
+        <button class="jukebox-btn" id="btn-open-search-game">🎵 गाणे निवडा (Full Songs)</button>
+        <button class="jukebox-btn-sec" id="btn-play-pause-stream-game" title="Play/Pause">⏸️</button>
+        <button class="jukebox-btn-sec" id="btn-stop-music-game" title="गाणे बंद करा (Stop)">⏹️</button>
+        <button class="jukebox-btn-sec" id="btn-toggle-video-game" title="Video दाखवा/लपवा">📺</button>
         <div class="audio-wave" id="audio-wave-game" style="display:none;">
           <span></span><span></span><span></span><span></span>
         </div>
-        <span class="jukebox-title" id="jukebox-now-playing-game">Tap Search to Play Any Song</span>
+        <span class="jukebox-title" id="jukebox-now-playing-game">गुलाबी साडी (Full Song)</span>
         <div class="jukebox-vol-wrap">
           <span style="font-size:0.75rem;">🔊</span>
           <input type="range" id="stream-vol-game" min="0" max="1" step="0.05" value="1.0" class="jukebox-slider" title="Music Volume">
@@ -1242,50 +1246,67 @@
     </div>
   </div>
 
-      <!-- Universal Song Search & Stream Modal -->
+      <!-- Floating Full Song Mini Player Dock (Draggable / Minimizable) -->
+  <div id="fullSongPlayerDock" style="display:none; position:fixed; bottom:14px; right:14px; z-index:9999; width:280px; background:rgba(15,23,42,0.95); border:2px solid var(--cyan); border-radius:12px; box-shadow:0 0 25px rgba(0,243,255,0.4); overflow:hidden; font-family:sans-serif; backdrop-filter:blur(8px);">
+    <div style="background:#0b1120; padding:6px 10px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(0,243,255,0.3);">
+      <span style="font-size:0.75rem; font-weight:800; color:var(--cyan); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:170px;" id="dock-song-title">🎵 Gulabi Sadi (Full Song)</span>
+      <div style="display:flex; gap:6px;">
+        <button id="btn-dock-minimize" style="background:transparent; border:none; color:#cbd5e1; font-size:0.85rem; cursor:pointer;" title="व्हिडिओ लहान/मोठा करा">🔽</button>
+        <button id="btn-dock-close" style="background:transparent; border:none; color:var(--red); font-size:0.95rem; cursor:pointer; font-weight:bold;" title="गाणे बंद करा">✕</button>
+      </div>
+    </div>
+    <div id="dock-video-wrapper" style="width:100%; height:158px; background:#000;">
+      <iframe id="fullSongFrame" width="100%" height="158" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border:none; display:block;"></iframe>
+    </div>
+  </div>
+
+  <!-- Universal Full Song Search & Jukebox Modal -->
   <div class="overlay" id="musicSearchModal">
-    <div class="modal-box" style="max-width: 480px; max-height: 85vh; display: flex; flex-direction: column; text-align: left;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-        <div class="modal-title" style="color: var(--cyan); font-size: 1.25rem; margin-bottom: 0;">🎵 SEARCH ANY SONG</div>
+    <div class="modal-box" style="max-width: 490px; max-height: 88vh; display: flex; flex-direction: column; text-align: left;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+        <div class="modal-title" style="color: var(--cyan); font-size: 1.2rem; margin-bottom: 0;">🎵 संपूर्ण गाणी (FULL 100% SONGS)</div>
         <button class="mini-btn" id="btn-close-music-search" style="font-size: 1.1rem; padding: 2px 8px;">✕</button>
       </div>
-      <div style="font-size: 0.74rem; color: #94a3b8; margin-bottom: 10px;">
-        कोणतेही गाणे (मराठी, हिंदी, DJ, Phonk) सर्च करा व <strong>'Play'</strong> दाबून थेट ऐका:
+      <div style="font-size: 0.74rem; color: #94a3b8; margin-bottom: 8px;">
+        ⚡ संपूर्ण ३ ते ५ मिनिटांचे गाणे ऐका (खेळताना बॅकग्राऊंडमध्ये चालू राहील):
       </div>
 
       <!-- Search Input Form -->
       <div style="display: flex; gap: 6px; margin-bottom: 8px;">
-        <input type="text" id="songQueryInput" placeholder="उदा. Gulabi Sadi, Zingaat, Chhava, DJ, Phonk..." 
+        <input type="text" id="songQueryInput" placeholder="उदा. Gulabi Sadi, Zingaat, Chhava, DJ Marathi..." 
                style="flex: 1; background: #0b1120; border: 1px solid var(--cyan); color: #fff; border-radius: 8px; padding: 8px 12px; font-size: 0.88rem; font-weight: bold; outline: none;">
-        <button class="jukebox-btn" id="btn-execute-search" style="padding: 8px 14px;">🔍 Search</button>
+        <button class="jukebox-btn" id="btn-execute-search" style="padding: 8px 14px;">🔍 शोधा</button>
       </div>
 
-      <!-- 1-Tap Category Filters -->
-      <div style="display: flex; gap: 5px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 8px;" id="quick-category-tags">
-        <button class="tag-btn" data-q="Marathi Zingaat">🔥 Marathi Hits</button>
-        <button class="tag-btn" data-q="Gulabi Sadi">💃 Gulabi Sadi</button>
-        <button class="tag-btn" data-q="Bollywood Dance 2024">⚡ Bollywood</button>
-        <button class="tag-btn" data-q="Gaming Phonk">🎧 Phonk</button>
-        <button class="tag-btn" data-q="KGF Monster">🔥 KGF Action</button>
-        <button class="tag-btn" data-q="DJ Remix Marathi">🎶 DJ Remix</button>
+      <!-- Quick Category Buttons -->
+      <div style="display: flex; gap: 5px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 8px;" id="quick-category-tags">
+        <button class="tag-btn" data-q="Gulabi Sadi">💃 गुलाबी साडी</button>
+        <button class="tag-btn" data-q="Zingaat Sairat">🔥 झिंगाट</button>
+        <button class="tag-btn" data-q="Taambdi Chaamdi">⚡ तांबडी चामडी</button>
+        <button class="tag-btn" data-q="Marathi DJ Remix Nonstop">🎶 DJ Remix</button>
+        <button class="tag-btn" data-q="KGF Monster Song">💥 KGF Action</button>
+        <button class="tag-btn" data-q="Gaming Phonk Drift">🎧 Gaming Phonk</button>
       </div>
 
-      <div id="search-status-bar" style="font-size: 0.75rem; color: var(--yellow); margin-bottom: 6px; min-height: 18px;"></div>
+      <div id="search-status-bar" style="font-size: 0.74rem; color: var(--yellow); margin-bottom: 6px; min-height: 18px;">
+        👇 खालीलपैकी आवडत्या गाण्यावर <strong>'▶️ Play Full Song'</strong> दाबा:
+      </div>
 
-      <!-- Results Container -->
-      <div id="song-results-container" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; max-height: 280px; padding-right: 4px;">
+      <!-- Full Songs List -->
+      <div id="song-results-container" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; max-height: 270px; padding-right: 4px;">
         <!-- Injected dynamically -->
       </div>
 
       <!-- Local File Upload Fallback -->
-      <div style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem;">
-        <span style="color: var(--muted);">किंवा फोनमधील MP3 निवडा:</span>
+      <div style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 0.74rem;">
+        <span style="color: var(--muted);">किंवा फोनमधील संपूर्ण MP3 निवडा:</span>
         <label class="mini-btn" style="cursor: pointer; padding: 4px 10px; border-color: var(--cyan);">
           📂 Local MP3
           <input type="file" id="localSongFallback" accept="audio/*" style="display:none;">
         </label>
       </div>
     </div>
+  </div>
   </div>
 
   <!-- Leaderboard Modal -->
@@ -3480,48 +3501,51 @@
 
     
     // =========================================================
-    // UNIVERSAL SONG SEARCH & STREAMING PLAYER ENGINE (ROCK SOLID)
+    // FULL LENGTH SONGS (100% COMPLETE) & AUTO-EXIT STOP ENGINE
     // =========================================================
-    const CURATED_HIT_SONGS = [
+    const FULL_SONGS_CATALOG = [
       {
-        trackName: "Zingaat",
-        artistName: "Ajay-Atul (Sairat)",
-        artworkUrl60: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/66/5a/e8/665ae8ad-1aab-5d0c-3ca9-4fa062b1606c/8718857670711.png/60x60bb.jpg",
-        previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e3/21/1e/e3211ebb-2b2f-8977-2300-bdc6760c94c3/mzaf_14840830049985436711.plus.aac.p.m4a"
+        trackName: "गुलाबी साडी (Gulabi Sadi)",
+        artistName: "संजू राठोड (Sanju Rathod) • 3:43 min (संपूर्ण गाणे)",
+        videoId: "B_6d3RBiEN0",
+        thumb: "https://i.ytimg.com/vi/B_6d3RBiEN0/mqdefault.jpg"
       },
       {
-        trackName: "Gulabi Sadi",
-        artistName: "Sanju Rathod & G-Spark",
-        artworkUrl60: "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/13/2d/eb/132deb17-aee2-6b64-d0cc-6446c213375d/cover.jpg/60x60bb.jpg",
-        previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/e0/5d/f4/e05df471-362a-e644-ab97-749faab709a6/mzaf_7961758401486200377.plus.aac.p.m4a"
+        trackName: "झिंगाट (Zingaat)",
+        artistName: "अजय-अतुल (Sairat) • 3:46 min (संपूर्ण गाणे)",
+        videoId: "luhVm60Wiro",
+        thumb: "https://i.ytimg.com/vi/luhVm60Wiro/mqdefault.jpg"
       },
       {
-        trackName: "Taambdi Chaamdi",
-        artistName: "Kratex & Shreyas (KSHMR Remix)",
-        artworkUrl60: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/1f/83/d7/1f83d709-0c0e-a9f1-354f-f104f401c334/5021732537126.jpg/60x60bb.jpg",
-        previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/23/1e/4d/231e4d88-b2e4-b3a6-5d39-0e86b3cbae44/mzaf_7547668705355659230.plus.aac.p.m4a"
+        trackName: "तांबडी चामडी (Taambdi Chaamdi)",
+        artistName: "Kratex & Shreyas • 3:15 min (संपूर्ण गाणे)",
+        videoId: "kmjeMrjOjFA",
+        thumb: "https://i.ytimg.com/vi/kmjeMrjOjFA/mqdefault.jpg"
       },
       {
         trackName: "KGF Monster Theme",
-        artistName: "Hustler Bhai (Monster Action)",
-        artworkUrl60: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/cb/c4/4f/cbc44f15-cdd4-4484-fcd0-52ca77c46622/cover.jpg/60x60bb.jpg",
-        previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/4f/16/93/4f16934b-c351-b5f8-00f4-a738e4c9073b/mzaf_11259271242587623768.plus.aac.p.m4a"
+        artistName: "रॉकिंग यश (KGF Chapter 2) • 3:30 min (संपूर्ण गाणे)",
+        videoId: "R4He_Gcn7cA",
+        thumb: "https://i.ytimg.com/vi/R4He_Gcn7cA/mqdefault.jpg"
       },
       {
-        trackName: "Gaming Phonk",
-        artistName: "Alexi Action (Bass Drift)",
-        artworkUrl60: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/b6/a5/08/b6a508b9-5364-d1b8-bdbd-b68b04b1eede/20049.jpg/60x60bb.jpg",
-        previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/58/44/ea/5844ea4e-05ef-3e15-f17b-b3db0605a509/mzaf_9676942911355329547.plus.aac.p.m4a"
+        trackName: "Gaming Phonk (Bass Drift)",
+        artistName: "Drift Phonk Gaming • 3:00 min (संपूर्ण गाणे)",
+        videoId: "Pnq1_3BXIqA",
+        thumb: "https://i.ytimg.com/vi/Pnq1_3BXIqA/mqdefault.jpg"
       },
       {
-        trackName: "New Rules (Dance Remix)",
-        artistName: "Dua Lipa (Party Beats)",
-        artworkUrl60: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/31/33/cf/3133cffc-4b77-f3c6-3ee3-5c9b6cfb6bd4/190295806675.jpg/60x60bb.jpg",
-        previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/07/2e/84/072e84d4-2970-034b-0941-60c112f36a2b/mzaf_5630674587159822008.plus.aac.p.m4a"
+        trackName: "Non-Stop Marathi DJ Mashup",
+        artistName: "High Energy Dance Remix • 30:00 min (Non-Stop DJ)",
+        videoId: "SecdlLzQLd0",
+        thumb: "https://i.ytimg.com/vi/SecdlLzQLd0/mqdefault.jpg"
       }
     ];
 
-    let searchResultsList = [...CURATED_HIT_SONGS];
+    let currentPlayingType = 'none'; // 'youtube' or 'audio' or 'none'
+    let currentFullVideoId = null;
+    let fullSongTitle = "गुलाबी साडी (Full Song)";
+    let isVideoDockMinimized = false;
 
     const musicSearchModal = document.getElementById('musicSearchModal');
     const songQueryInput = document.getElementById('songQueryInput');
@@ -3531,10 +3555,22 @@
     const btnCloseMusicSearch = document.getElementById('btn-close-music-search');
     const localSongFallback = document.getElementById('localSongFallback');
 
+    const fullSongPlayerDock = document.getElementById('fullSongPlayerDock');
+    const fullSongFrame = document.getElementById('fullSongFrame');
+    const dockSongTitle = document.getElementById('dock-song-title');
+    const btnDockMinimize = document.getElementById('btn-dock-minimize');
+    const btnDockClose = document.getElementById('btn-dock-close');
+    const dockVideoWrapper = document.getElementById('dock-video-wrapper');
+
     const btnOpenSearchGame = document.getElementById('btn-open-search-game');
     const btnOpenSearchMenu = document.getElementById('btn-open-search-menu');
     const btnPlayPauseStreamGame = document.getElementById('btn-play-pause-stream-game');
     const btnPlayPauseStreamMenu = document.getElementById('btn-play-pause-stream-menu');
+    const btnStopMusicGame = document.getElementById('btn-stop-music-game');
+    const btnStopMusicMenu = document.getElementById('btn-stop-music-menu');
+    const btnToggleVideoGame = document.getElementById('btn-toggle-video-game');
+    const btnToggleVideoMenu = document.getElementById('btn-toggle-video-menu');
+
     const titleNowPlayingGame = document.getElementById('jukebox-now-playing-game');
     const titleNowPlayingMenu = document.getElementById('jukebox-now-playing-menu');
     const waveGame = document.getElementById('audio-wave-game');
@@ -3542,182 +3578,151 @@
     const volSliderGame = document.getElementById('stream-vol-game');
     const volSliderMenu = document.getElementById('stream-vol-menu');
 
-    // Unlock audio context on user interaction
-    function unlockAudioCtx() {
-      try {
-        initAudio();
-        if (audioCtx && audioCtx.state === 'suspended') {
-          audioCtx.resume();
-        }
-      } catch (e) {}
-    }
-    window.addEventListener('touchstart', unlockAudioCtx, { once: true });
-    window.addEventListener('click', unlockAudioCtx, { once: true });
-
-    // Open/Close Search Modal
+    // 1. OPEN / CLOSE SEARCH MODAL
     function openMusicSearchModal() {
-      unlockAudioCtx();
       if (musicSearchModal) musicSearchModal.style.display = 'flex';
-      renderSongResults();
+      renderFullSongCards(FULL_SONGS_CATALOG);
     }
 
     if (btnOpenSearchGame) btnOpenSearchGame.onclick = openMusicSearchModal;
     if (btnOpenSearchMenu) btnOpenSearchMenu.onclick = openMusicSearchModal;
     if (btnCloseMusicSearch) btnCloseMusicSearch.onclick = () => { if (musicSearchModal) musicSearchModal.style.display = 'none'; };
 
-    // Search Engine
-    async function executeSearch(query) {
-      if (!query || query.trim() === '') {
-        searchResultsList = [...CURATED_HIT_SONGS];
-        renderSongResults();
-        return;
-      }
-      unlockAudioCtx();
-      if (searchStatusBar) searchStatusBar.innerHTML = `🔍 <strong>"${query}"</strong> शोधत आहे...`;
-      if (songResultsContainer) {
-        songResultsContainer.innerHTML = '<div style="color:var(--cyan); font-size:0.85rem; padding:15px; text-align:center;">⏳ गाणी लोड होत आहेत...</div>';
-      }
-
-      try {
-        const resp = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&limit=15`);
-        const data = await resp.json();
-
-        if (!data.results || data.results.length === 0) {
-          if (searchStatusBar) searchStatusBar.innerHTML = `❌ कोणतेही गाणे सापडले नाही. कृपया वेगळा शब्द शोधा.`;
-          searchResultsList = [...CURATED_HIT_SONGS];
-          renderSongResults();
-          return;
-        }
-
-        const validResults = data.results.filter(r => r.previewUrl);
-        if (validResults.length === 0) {
-          searchResultsList = [...CURATED_HIT_SONGS];
-        } else {
-          searchResultsList = validResults;
-        }
-
-        if (searchStatusBar) searchStatusBar.innerHTML = `✓ ${searchResultsList.length} गाणी सापडली! खालीलपैकी <strong>'▶️ Play'</strong> दाबा:`;
-        renderSongResults();
-      } catch (err) {
-        console.warn("Search fetch error:", err);
-        if (searchStatusBar) searchStatusBar.innerHTML = `⚠️ ऑनलाईन सर्चमध्ये एरर. खालील लोकप्रिय गाणी निवडा:`;
-        searchResultsList = [...CURATED_HIT_SONGS];
-        renderSongResults();
-      }
-    }
-
-    function renderSongResults() {
+    // 2. RENDER FULL SONG CARDS
+    function renderFullSongCards(songs) {
       if (!songResultsContainer) return;
       songResultsContainer.innerHTML = '';
 
-      searchResultsList.forEach((song, idx) => {
-        const isCurrent = (currentStreamUrl === song.previewUrl && isTrackPlaying);
+      songs.forEach((song, idx) => {
+        const isCurrent = (currentFullVideoId === song.videoId && isTrackPlaying);
         const card = document.createElement('div');
         card.className = `song-card ${isCurrent ? 'now-playing-card' : ''}`;
-        const artwork = song.artworkUrl60 || 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=60&auto=format&fit=crop';
 
         card.innerHTML = `
-          <img src="${artwork}" class="song-thumb" alt="art" onerror="this.src='https://placehold.co/44x44/1e293b/00f3ff?text=🎵'">
+          <img src="${song.thumb}" class="song-thumb" alt="art" onerror="this.src='https://placehold.co/44x44/1e293b/00f3ff?text=🎵'">
           <div class="song-meta">
             <div class="song-name">${song.trackName}</div>
             <div class="song-artist">${song.artistName}</div>
           </div>
           <button class="btn-play-song" id="song-btn-${idx}">
-            ${isCurrent ? '⏸️ Playing' : '▶️ Play'}
+            ${isCurrent ? '⏸️ Playing' : '▶️ Play Full Song'}
           </button>
         `;
 
-        const playBtn = card.querySelector('.btn-play-song');
-        playBtn.onclick = (e) => {
+        card.querySelector('.btn-play-song').onclick = (e) => {
           e.stopPropagation();
-          playBtn.innerText = '⏳ Loading...';
-          playStreamSong(song.previewUrl, `${song.trackName} - ${song.artistName}`);
+          playFullLengthSong(song.videoId, song.trackName);
         };
 
         songResultsContainer.appendChild(card);
       });
     }
 
+    // 3. PLAY FULL LENGTH SONG (YOUTUBE / OFFICIAL STREAM)
+    function playFullLengthSong(videoId, title) {
+      currentPlayingType = 'youtube';
+      currentFullVideoId = videoId;
+      fullSongTitle = title;
+      isTrackPlaying = true;
+
+      // Stop native audio and procedural synth
+      try { bgmAudio.pause(); } catch(e) {}
+      stopBGM();
+
+      // Show floating dock with video player
+      if (fullSongPlayerDock) fullSongPlayerDock.style.display = 'block';
+      if (dockSongTitle) dockSongTitle.innerText = `🎵 ${title}`;
+      if (dockVideoWrapper) dockVideoWrapper.style.display = 'block';
+      if (btnDockMinimize) btnDockMinimize.innerText = '🔽';
+      isVideoDockMinimized = false;
+
+      // Load official embed with autoplay & jsapi
+      if (fullSongFrame) {
+        fullSongFrame.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&enablejsapi=1&playsinline=1&rel=0`;
+      }
+
+      updatePlayerUI(title, true);
+      renderFullSongCards(FULL_SONGS_CATALOG);
+
+      if (searchStatusBar) {
+        searchStatusBar.innerHTML = `<span style="color:var(--green); font-weight:bold;">▶️ संपूर्ण गाणे सुरू झाले: ${title}</span>`;
+      }
+      if (statusText) {
+        statusText.innerText = `🎵 Now Playing (Full): ${title}`;
+        statusText.style.borderLeftColor = 'var(--green)';
+      }
+    }
+
+    // 4. SEARCH ANY SONG (FULL LENGTH YOUTUBE SEARCH)
+    function searchAnyFullSong(query) {
+      if (!query || query.trim() === '') {
+        renderFullSongCards(FULL_SONGS_CATALOG);
+        return;
+      }
+
+      // Check if user entered a direct YouTube URL or ID
+      const ytMatch = query.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+      if (ytMatch) {
+        playFullLengthSong(ytMatch[1], "Custom YouTube Song");
+        if (musicSearchModal) musicSearchModal.style.display = 'none';
+        return;
+      }
+
+      // Search matching local catalog first
+      const qLower = query.toLowerCase();
+      const matched = FULL_SONGS_CATALOG.filter(s => 
+        s.trackName.toLowerCase().includes(qLower) || s.artistName.toLowerCase().includes(qLower)
+      );
+
+      if (matched.length > 0) {
+        if (searchStatusBar) searchStatusBar.innerHTML = `✓ ${matched.length} गाणी सापडली:`;
+        renderFullSongCards(matched);
+      } else {
+        // Load YouTube Search list directly
+        currentPlayingType = 'youtube';
+        currentFullVideoId = 'search_' + query;
+        fullSongTitle = query + " (Full Search)";
+        isTrackPlaying = true;
+
+        try { bgmAudio.pause(); } catch(e) {}
+        stopBGM();
+
+        if (fullSongPlayerDock) fullSongPlayerDock.style.display = 'block';
+        if (dockSongTitle) dockSongTitle.innerText = `🔍 ${query}`;
+        if (dockVideoWrapper) dockVideoWrapper.style.display = 'block';
+
+        if (fullSongFrame) {
+          fullSongFrame.src = `https://www.youtube-nocookie.com/embed?listType=search&list=${encodeURIComponent(query)}&autoplay=1&enablejsapi=1&playsinline=1`;
+        }
+
+        updatePlayerUI(query, true);
+        if (searchStatusBar) {
+          searchStatusBar.innerHTML = `<span style="color:var(--green); font-weight:bold;">▶️ "${query}" सर्चचे संपूर्ण गाणे प्ले होत आहे!</span>`;
+        }
+      }
+    }
+
     if (btnExecuteSearch) {
-      btnExecuteSearch.onclick = () => executeSearch(songQueryInput ? songQueryInput.value : '');
+      btnExecuteSearch.onclick = () => searchAnyFullSong(songQueryInput ? songQueryInput.value : '');
     }
     if (songQueryInput) {
       songQueryInput.onkeydown = (e) => {
-        if (e.key === 'Enter') executeSearch(songQueryInput.value);
+        if (e.key === 'Enter') searchAnyFullSong(songQueryInput.value);
       };
     }
 
-    // 1-Tap Category Tags
+    // Quick Category Tags
     document.querySelectorAll('.tag-btn').forEach(btn => {
       btn.onclick = () => {
         const q = btn.getAttribute('data-q');
         if (songQueryInput) songQueryInput.value = q;
-        executeSearch(q);
+        searchAnyFullSong(q);
       };
     });
 
-    // Play Stream Song (Bulletproof with user gesture & volume)
-    function playStreamSong(url, title) {
-      if (!url) return;
-      unlockAudioCtx();
-      stopBGM();
-
-      currentStreamUrl = url;
-      currentTrackTitle = title;
-
-      bgmAudio.pause();
-      bgmAudio.src = url;
-      bgmAudio.currentTime = 0;
-      bgmAudio.volume = parseFloat(volSliderGame?.value || 1.0);
-      bgmAudio.muted = false;
-
-      updatePlayerUI(title, false);
-      if (searchStatusBar) {
-        searchStatusBar.innerHTML = `⏳ <strong>"${title}"</strong> सुरू होत आहे...`;
-      }
-
-      const playPromise = bgmAudio.play();
-      if (playPromise !== undefined) {
-        playPromise.then(() => {
-          isTrackPlaying = true;
-          updatePlayerUI(title, true);
-          renderSongResults();
-          if (searchStatusBar) {
-            searchStatusBar.innerHTML = `<span style="color:var(--green); font-weight:bold;">▶️ आता वाजत आहे: ${title}</span>`;
-          }
-          if (statusText) {
-            statusText.innerText = `🎵 Now Playing: ${title}`;
-            statusText.style.borderLeftColor = 'var(--green)';
-          }
-        }).catch(err => {
-          console.error("Audio stream playback failed:", err);
-          isTrackPlaying = false;
-          updatePlayerUI(title, false);
-          renderSongResults();
-          if (searchStatusBar) {
-            searchStatusBar.innerHTML = `<span style="color:var(--red); font-weight:bold;">⚠️ आवाज सुरू करण्यासाठी पुन्हा '▶️ Play' दाबा किंवा मोबाईलचा Media Volume वाढवा.</span>`;
-          }
-          if (statusText) {
-            statusText.innerText = `⚠️ Audio play error. स्क्रीनवर स्पर्श करा.`;
-          }
-        });
-      }
-
-      bgmAudio.onended = () => {
-        bgmAudio.currentTime = 0;
-        bgmAudio.play().catch(() => {});
-      };
-
-      bgmAudio.onerror = (e) => {
-        console.warn("bgmAudio error:", e);
-        if (searchStatusBar) {
-          searchStatusBar.innerHTML = `<span style="color:var(--red);">⚠️ हे गाणे सुरू झाले नाही. कृपया दुसरे गाणे निवडा.</span>`;
-        }
-      };
-    }
-
+    // 5. UPDATE PLAYER UI
     function updatePlayerUI(title, isPlaying) {
-      const displayTitle = title.length > 22 ? title.substring(0, 20) + '...' : title;
+      const displayTitle = title.length > 20 ? title.substring(0, 18) + '...' : title;
       if (titleNowPlayingGame) titleNowPlayingGame.innerText = displayTitle;
       if (titleNowPlayingMenu) titleNowPlayingMenu.innerText = displayTitle;
       if (btnPlayPauseStreamGame) btnPlayPauseStreamGame.innerText = isPlaying ? '⏸️' : '▶️';
@@ -3726,55 +3731,164 @@
       if (waveMenu) waveMenu.style.display = isPlaying ? 'inline-flex' : 'none';
     }
 
-    function toggleStreamPlayback() {
-      unlockAudioCtx();
-      if (currentStreamUrl && bgmAudio.src) {
+    // 6. TOGGLE PLAY / PAUSE
+    function toggleFullSongPlayback() {
+      if (currentPlayingType === 'youtube' && fullSongFrame && fullSongFrame.contentWindow) {
+        if (isTrackPlaying) {
+          fullSongFrame.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+          isTrackPlaying = false;
+          updatePlayerUI(fullSongTitle, false);
+        } else {
+          fullSongFrame.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+          isTrackPlaying = true;
+          updatePlayerUI(fullSongTitle, true);
+        }
+        renderFullSongCards(FULL_SONGS_CATALOG);
+      } else if (currentPlayingType === 'audio' && bgmAudio.src) {
         if (bgmAudio.paused) {
           bgmAudio.play().then(() => {
             isTrackPlaying = true;
-            updatePlayerUI(currentTrackTitle, true);
-            renderSongResults();
-          }).catch(err => {
-            console.warn("Play resume error:", err);
+            updatePlayerUI(fullSongTitle, true);
           });
         } else {
           bgmAudio.pause();
           isTrackPlaying = false;
-          updatePlayerUI(currentTrackTitle, false);
-          renderSongResults();
+          updatePlayerUI(fullSongTitle, false);
         }
       } else {
-        // If no song loaded yet, play first curated song immediately!
-        const firstSong = CURATED_HIT_SONGS[0];
-        playStreamSong(firstSong.previewUrl, `${firstSong.trackName} - ${firstSong.artistName}`);
+        // If nothing is playing, start first full song (Gulabi Sadi) immediately!
+        playFullLengthSong(FULL_SONGS_CATALOG[0].videoId, FULL_SONGS_CATALOG[0].trackName);
       }
     }
 
-    if (btnPlayPauseStreamGame) btnPlayPauseStreamGame.onclick = toggleStreamPlayback;
-    if (btnPlayPauseStreamMenu) btnPlayPauseStreamMenu.onclick = toggleStreamPlayback;
+    if (btnPlayPauseStreamGame) btnPlayPauseStreamGame.onclick = toggleFullSongPlayback;
+    if (btnPlayPauseStreamMenu) btnPlayPauseStreamMenu.onclick = toggleFullSongPlayback;
 
-    // Volume Sync
-    function setStreamVolume(val) {
+    // 7. STOP MUSIC COMPLETELY (⏹️)
+    function stopFullMusic() {
+      isTrackPlaying = false;
+      currentPlayingType = 'none';
+
+      try {
+        if (bgmAudio) {
+          bgmAudio.pause();
+          bgmAudio.currentTime = 0;
+        }
+      } catch(e) {}
+
+      if (fullSongFrame) {
+        fullSongFrame.src = "";
+      }
+
+      if (fullSongPlayerDock) fullSongPlayerDock.style.display = 'none';
+      updatePlayerUI("गाणे बंद आहे", false);
+      renderFullSongCards(FULL_SONGS_CATALOG);
+
+      if (statusText) {
+        statusText.innerText = "⏹️ गाणे बंद केले.";
+      }
+    }
+
+    if (btnStopMusicGame) btnStopMusicGame.onclick = stopFullMusic;
+    if (btnStopMusicMenu) btnStopMusicMenu.onclick = stopFullMusic;
+    if (btnDockClose) btnDockClose.onclick = stopFullMusic;
+
+    // 8. TOGGLE VIDEO VISIBILITY (📺)
+    function toggleVideoVisibility() {
+      if (!fullSongPlayerDock) return;
+      if (fullSongPlayerDock.style.display === 'none' && currentFullVideoId) {
+        fullSongPlayerDock.style.display = 'block';
+        if (dockVideoWrapper) dockVideoWrapper.style.display = 'block';
+        isVideoDockMinimized = false;
+        if (btnDockMinimize) btnDockMinimize.innerText = '🔽';
+      } else if (dockVideoWrapper) {
+        isVideoDockMinimized = !isVideoDockMinimized;
+        dockVideoWrapper.style.display = isVideoDockMinimized ? 'none' : 'block';
+        if (btnDockMinimize) btnDockMinimize.innerText = isVideoDockMinimized ? '🔼' : '🔽';
+      }
+    }
+
+    if (btnToggleVideoGame) btnToggleVideoGame.onclick = toggleVideoVisibility;
+    if (btnToggleVideoMenu) btnToggleVideoMenu.onclick = toggleVideoVisibility;
+    if (btnDockMinimize) btnDockMinimize.onclick = toggleVideoVisibility;
+
+    // 9. VOLUME CONTROLS
+    function setFullMusicVolume(val) {
       const v = parseFloat(val);
-      bgmAudio.volume = v;
+      if (bgmAudio) bgmAudio.volume = v;
       if (volSliderGame) volSliderGame.value = val;
       if (volSliderMenu) volSliderMenu.value = val;
     }
 
-    if (volSliderGame) volSliderGame.oninput = (e) => setStreamVolume(e.target.value);
-    if (volSliderMenu) volSliderMenu.oninput = (e) => setStreamVolume(e.target.value);
+    if (volSliderGame) volSliderGame.oninput = (e) => setFullMusicVolume(e.target.value);
+    if (volSliderMenu) volSliderMenu.oninput = (e) => setFullMusicVolume(e.target.value);
 
-    // Local Fallback Upload
+    // 10. LOCAL FULL MP3 UPLOAD
     if (localSongFallback) {
       localSongFallback.onchange = (e) => {
         if (e.target.files && e.target.files[0]) {
           const file = e.target.files[0];
           const localUrl = URL.createObjectURL(file);
-          playStreamSong(localUrl, file.name);
-          if (musicSearchModal) musicSearchModal.style.display = 'none';
+          currentPlayingType = 'audio';
+          currentFullVideoId = null;
+          fullSongTitle = file.name;
+
+          if (fullSongPlayerDock) fullSongPlayerDock.style.display = 'none';
+          if (fullSongFrame) fullSongFrame.src = "";
+
+          bgmAudio.pause();
+          bgmAudio.src = localUrl;
+          bgmAudio.currentTime = 0;
+          bgmAudio.volume = parseFloat(volSliderGame?.value || 1.0);
+          bgmAudio.muted = false;
+
+          bgmAudio.play().then(() => {
+            isTrackPlaying = true;
+            updatePlayerUI(file.name, true);
+            if (musicSearchModal) musicSearchModal.style.display = 'none';
+          });
         }
       };
     }
+
+    // =========================================================
+    // 11. CRITICAL REQUIREMENT: AUTO-STOP MUSIC WHEN USER EXITS/LEAVES GAME!
+    // =========================================================
+    function handleUserExitGame() {
+      console.log("User switched away or exited game. Stopping music immediately!");
+      // Pause YouTube player
+      if (fullSongFrame && fullSongFrame.contentWindow) {
+        try {
+          fullSongFrame.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+        } catch(e) {}
+      }
+      // Pause native HTML5 audio
+      try {
+        if (bgmAudio) bgmAudio.pause();
+      } catch(e) {}
+
+      // Stop synth sound effects
+      try { stopBGM(); } catch(e) {}
+
+      isTrackPlaying = false;
+      updatePlayerUI(fullSongTitle, false);
+      if (waveGame) waveGame.style.display = 'none';
+      if (waveMenu) waveMenu.style.display = 'none';
+    }
+
+    // When tab is hidden / minimized / switched
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        handleUserExitGame();
+      }
+    });
+
+    // When window loses focus / app switches
+    window.addEventListener('blur', handleUserExitGame);
+
+    // When page is unloading or closed
+    window.addEventListener('pagehide', handleUserExitGame);
+    window.addEventListener('beforeunload', handleUserExitGame);
 
     // INITIALIZE TO MAIN MENU
     showScreen('menu');
