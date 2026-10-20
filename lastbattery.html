@@ -435,6 +435,42 @@
       to { opacity: 1.0; }
     }
 
+    
+    /* EMP Glitch Alert */
+    .emp-alert {
+      width: 100%;
+      background: rgba(244, 63, 94, 0.25);
+      border: 1px solid var(--red);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-align: center;
+      padding: 6px 10px;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+      animation: empGlitch 0.6s infinite alternate;
+      box-shadow: 0 0 15px rgba(244, 63, 94, 0.5);
+    }
+
+    @keyframes empGlitch {
+      0% { transform: translateX(0); opacity: 1; }
+      25% { transform: translateX(-3px); }
+      50% { transform: translateX(3px); opacity: 0.9; }
+      75% { transform: translateX(-2px); }
+      100% { transform: translateX(0); opacity: 1; }
+    }
+
+    .dot.portal {
+      background: #c084fc;
+      box-shadow: 0 0 8px #c084fc;
+    }
+
+    .dot.emp {
+      background: #f43f5e;
+      box-shadow: 0 0 8px #f43f5e;
+    }
+
     /* Message ticker */
     .status-ticker {
       font-size: 0.74rem;
@@ -778,6 +814,10 @@
       </div>
 
       <!-- Game Screen / Canvas -->
+            <!-- EMP Alert Banner -->
+      <div id="emp-warning" class="emp-alert" style="display: none;">
+        ⚡ SENSORS SCRAMBLED! CONTROLS REVERSED: <span id="emp-count">4</span> STEPS LEFT!
+      </div>
       <div class="board-wrapper">
         <canvas id="gameCanvas" width="480" height="300"></canvas>
       </div>
@@ -786,9 +826,10 @@
       <div class="legend-bar">
         <div class="legend-item"><span class="dot robot"></span> Robot</div>
         <div class="legend-item"><span class="dot energy"></span> +10% Energy</div>
-        <div class="legend-item"><span class="dot hazard"></span> -15% Hazard</div>
+        <div class="legend-item"><span class="dot portal"></span> @ Warp</div>
+        <div class="legend-item"><span class="dot emp"></span> ? EMP</div>
+        <div class="legend-item"><span class="dot hazard"></span> Hazard</div>
         <div class="legend-item"><span class="dot exit"></span> Exit</div>
-        <div class="legend-item"><span class="dot wall"></span> Wall</div>
       </div>
 
       <!-- Mobile Virtual Controls -->
@@ -800,6 +841,7 @@
           <button class="dbtn dbtn-right" id="btn-right" aria-label="Right">►</button>
         </div>
         <div class="action-tools">
+          <button class="tool-btn" id="btn-fog">🌫️ Fog: ON</button>
           <button class="tool-btn" id="btn-restart">🔄 Restart</button>
           <button class="tool-btn" id="btn-sound">🔊 Sound: ON</button>
           <button class="tool-btn" id="btn-rules">❓ Rules</button>
@@ -881,6 +923,17 @@
       playBeep(220, 'sawtooth', 0.18, 120);
       playBeep(150, 'sawtooth', 0.35, 270);
     }
+    function soundPortal() {
+      playBeep(240, 'sine', 0.08);
+      playBeep(480, 'sine', 0.1, 60);
+      playBeep(720, 'sine', 0.12, 120);
+      playBeep(1200, 'sine', 0.22, 180);
+    }
+    function soundGlitch() {
+      playBeep(180, 'sawtooth', 0.09);
+      playBeep(340, 'square', 0.09, 50);
+      playBeep(120, 'sawtooth', 0.16, 110);
+    }
 
     function vibrate(pattern) {
       if ('vibrate' in navigator) {
@@ -889,7 +942,7 @@
     }
 
     // 50 LEVEL DATASET
-    const LEVELS = [{"level": 1, "title": "Sector 1: Sub-Station #1", "timeLimit": 46, "grid": ["#############", "#R#E#E#.....#", "#.#.#.#.#####", "#...#.....E.#", "#.#####.#.#.#", "#.E....E#.#X#", "#############"]}, {"level": 2, "title": "Sector 2: Power Grid #2", "timeLimit": 47, "grid": ["#############", "#R....E....E#", "#E#.#.#.###.#", "#.#.#.#...#.#", "###.#.#.#.#.#", "#..E#.#.#.#X#", "#############"]}, {"level": 3, "title": "Sector 3: Capacitor Array #3", "timeLimit": 48, "grid": ["#############", "#R..#.#..E..#", "#.###.#.#####", "#.......#..X#", "###E#####.###", "#......E..E.#", "#############"]}, {"level": 4, "title": "Sector 4: Voltage Relay #4", "timeLimit": 49, "grid": ["#############", "#R^...E...#X#", "###.###.###.#", "#.....#..E..#", "#E#.#.#.#.###", "#.#.#E#.#...#", "#############"]}, {"level": 5, "title": "Sector 5: Thermal Duct #5", "timeLimit": 50, "grid": ["#############", "#R...^E.....#", "#.#.#.#.#.###", "#.#E#.#.#E..#", "#...#.#####.#", "#.#.#..E..#X#", "#############"]}, {"level": 6, "title": "Sector 6: Quantum Vault #6", "timeLimit": 51, "grid": ["#############", "#R..^.....#X#", "#.#.#E#####.#", "#.#.#....E..#", "#.#####.#####", "#....E#....E#", "#############"]}, {"level": 7, "title": "Sector 7: Battery Depot #7", "timeLimit": 52, "grid": ["#############", "#R..........#", "#.#######.###", "#...E...#E#X#", "#.#.###^###.#", "#.#..E#E....#", "#############"]}, {"level": 8, "title": "Sector 8: Reactor Core #8", "timeLimit": 53, "grid": ["#############", "#R.^.^E....E#", "#E#E#######.#", "#.#.......#.#", "#.#.###.#.#.#", "#.....#.#.#X#", "#############"]}, {"level": 9, "title": "Sector 9: Cooling Matrix #9", "timeLimit": 54, "grid": ["#############", "#R#.#.#E..#X#", "#^#.#.###.#.#", "#...E...^E..#", "#.#####.###.#", "#.E...#...#.#", "#############"]}, {"level": 10, "title": "Sector 10: Omega Chamber #10", "timeLimit": 55, "grid": ["#############", "#R...^^.#..X#", "#.#.#.#.#E###", "#.#.#.#.#..E#", "###E#####.###", "#......E...E#", "#############"]}, {"level": 11, "title": "Sector 11: Sub-Station #11", "timeLimit": 56, "grid": ["###############", "#R....#.#...#.#", "#.#^###.#.###.#", "#^#..E....#X..#", "#.###.#.#.###.#", "#.#.#.#E..#.#.#", "#.#.#######.#.#", "#E.....E.....E#", "###############"]}, {"level": 12, "title": "Sector 12: Power Grid #12", "timeLimit": 57, "grid": ["###############", "#R.^..#...E.#X#", "#.##^##.#####.#", "#...E....E#.#.#", "#..##.#.#.#.#.#", "#.E.#.#.#...E.#", "#.###.#.#.#.###", "#.#...#.#.#...#", "###############"]}, {"level": 13, "title": "Sector 13: Capacitor Array #13", "timeLimit": 58, "grid": ["###############", "#R....E....E^E#", "#.###.###.#.###", "#.#.....#.#...#", "#.###.#####^###", "#.#..E..#.#.E.#", "#.#.#.#.#.###.#", "#.#.#.#.....#X#", "###############"]}, {"level": 14, "title": "Sector 14: Voltage Relay #14", "timeLimit": 59, "grid": ["###############", "#R#.......#.#X#", "#.#.#######.#.#", "#.#...#^#E....#", "#.#.###.###.###", "#...#^..#E#.E.#", "#.##.##.#.###.#", "#.E......E....#", "###############"]}, {"level": 15, "title": "Sector 15: Thermal Duct #15", "timeLimit": 60, "grid": ["###############", "#R..^.....#X.E#", "#.###.#######.#", "#...#^..E.#...#", "###.#########.#", "#..E#.#E#...#.#", "###.#.#.#.###.#", "#.....^E.....E#", "###############"]}, {"level": 16, "title": "Sector 16: Quantum Vault #16", "timeLimit": 61, "grid": ["###############", "#R^^#.......#X#", "#.#.#.#######.#", "#.#.E.....#...#", "#.#..#^####E###", "#.#....E......#", "#.###.#.#######", "#.#E..#...E...#", "###############"]}, {"level": 17, "title": "Sector 17: Battery Depot #17", "timeLimit": 62, "grid": ["###############", "#R...^#.#.E.#.#", "#.#.#E#.###.#.#", "#E#.#.........#", "###.#.#########", "#...#.....#^#X#", "###.#.#####.#.#", "#...#E^...E...#", "###############"]}, {"level": 18, "title": "Sector 18: Reactor Core #18", "timeLimit": 63, "grid": ["###############", "#R...^#.E.#...#", "#.#.###.#...###", "#.#.E...#.....#", "#.#.#.###.#.###", "#.#.#.^E..#.#X#", "#E..#.#.#####.#", "#.#.#^#...E...#", "###############"]}, {"level": 19, "title": "Sector 19: Cooling Matrix #19", "timeLimit": 64, "grid": ["###############", "#R....#.#.#.#X#", "###.#E#.#E..#.#", "#...#...#^#..E#", "#.###E#.#.###.#", "#.#...#E^...#.#", "#####.#.###.#.#", "#..^..#.#..E..#", "###############"]}, {"level": 20, "title": "Sector 20: Omega Chamber #20", "timeLimit": 65, "grid": ["###############", "#R..#.#.E^#...#", "#.###.#.###.###", "#...E......^..#", "#.###.#########", "#.#....E....E^#", "#.#####.#.#.#.#", "#.#E.^..#.#.#X#", "###############"]}, {"level": 21, "title": "Sector 21: Sub-Station #21", "timeLimit": 66, "grid": ["###############", "#R....#..^...^#", "#.#.#E..#.###.#", "#.#.#.#.#...#E#", "#.###.#.#######", "#...#..E..#.#X#", "#.#E###.#.#^#.#", "#.#.#...#.E..^#", "###############"]}, {"level": 22, "title": "Sector 22: Power Grid #22", "timeLimit": 67, "grid": ["###############", "#R..E.#E..#...#", "#.#.###.#..E###", "#^..E...#^#...#", "#.###.#.###E#.#", "#.#...#..^..#X#", "###.#.#.###.###", "#...#.#...#^..#", "###############"]}, {"level": 23, "title": "Sector 23: Capacitor Array #23", "timeLimit": 68, "grid": ["###############", "#R....E.^.....#", "#.###.#.#.#####", "#...#E#.#E#E#X#", "###.#.###.#.#.#", "#...#^..#...E.#", "###.###########", "#^...........^#", "###############"]}, {"level": 24, "title": "Sector 24: Voltage Relay #24", "timeLimit": 69, "grid": ["###############", "#R#.^..E.^....#", "#^#.#####E#.###", "#...E.#.#.#..X#", "###^#.#.#####.#", "#...#..E....E.#", "#.#.###.#.###.#", "#.#...#.#...#.#", "###############"]}, {"level": 25, "title": "Sector 25: Thermal Duct #25", "timeLimit": 70, "grid": ["###############", "#R....#.^.....#", "###.###.#######", "#E#.E..^..^...#", "#.#.#.###.#####", "#^^.#..E#.#..X#", "#.#.###.###.###", "#.#E..#...E...#", "###############"]}, {"level": 26, "title": "Sector 26: Quantum Vault #26", "timeLimit": 66, "grid": ["#################", "#R#.#..E..#.#...#", "#.#.#.#.#.#.#.###", "#...E.#^..E....E#", "###.###########^#", "#...E...#.....#X#", "#.###.#.###.###.#", "#.#...#.E..^....#", "#################"]}, {"level": 27, "title": "Sector 27: Battery Depot #27", "timeLimit": 67, "grid": ["#################", "#R..#.#.......#.#", "#.###.#.#######.#", "#...E....E......#", "###.#.#.###.#####", "#..^#.#.....#.#X#", "###.#.#.#E#E#.#.#", "#...#.#.#E..^^.E#", "#################"]}, {"level": 28, "title": "Sector 28: Reactor Core #28", "timeLimit": 68, "grid": ["#################", "#R......E.#E^...#", "#.#########.###.#", "#...#.#.#.....#X#", "#.###.#.###.#####", "#..E.....E^..^..#", "###.#.#.#####.###", "#.E.#.......#...#", "#################"]}, {"level": 29, "title": "Sector 29: Cooling Matrix #29", "timeLimit": 69, "grid": ["#################", "#R...^..#.#.#.#X#", "#.#E#####...#^#.#", "#.#.#...#.#.#..E#", "#.###.###.#.#.#.#", "#.....#....E..#.#", "#.#####.###.#.###", "#E.....E#.E^#...#", "#################"]}, {"level": 30, "title": "Sector 30: Omega Chamber #30", "timeLimit": 70, "grid": ["#################", "#R#.#..^.E.....E#", "#.#.#.#^#####.#.#", "#....E#.#.#.#...#", "#.#.#.###.#.###.#", "#.#E#...#.....#.#", "#E###.##..#.###^#", "#...#....^#.#X.E#", "#################"]}, {"level": 31, "title": "Sector 31: Sub-Station #31", "timeLimit": 71, "grid": ["#################", "#R^E#..E..#.#E.X#", "#.###.###.#.#.###", "#...E...#^E.....#", "#.#.#############", "#.#.............#", "#.#######.##....#", "#.#.^..^...E#.#.#", "#################"]}, {"level": 32, "title": "Sector 32: Power Grid #32", "timeLimit": 72, "grid": ["#################", "#R^.............#", "#.#.#E#######.###", "#.#.#.#.#.#.#...#", "#.#E##..#.#.#####", "#^..^..E....E..^#", "#.###.###.#.###.#", "#.#...#E....#X.E#", "#################"]}, {"level": 33, "title": "Sector 33: Capacitor Array #33", "timeLimit": 73, "grid": ["#################", "#R..#....E..#X^.#", "#.###.#.###.###.#", "#....E..E.#^.E^.#", "#.###.########..#", "#.........#...#.#", "#####.###.#.###.#", "#.....#.^.....#E#", "#################"]}, {"level": 34, "title": "Sector 34: Voltage Relay #34", "timeLimit": 74, "grid": ["#################", "#R....#.....#...#", "#.#^#^#.#####.#.#", "#^..#E......#E#X#", "#.#.#...#####.###", "#.#E#.#..E....#.#", "#.##..#.#.###.#.#", "#.#..^#.#E..#...#", "#################"]}, {"level": 35, "title": "Sector 35: Thermal Duct #35", "timeLimit": 75, "grid": ["#################", "#R....^..E......#", "#.#.###E#########", "#.#...#.#...#.^.#", "#.#######...#.#^#", "#..E.....E#..E#X#", "#.#########.#.###", "#....^..^.#.#...#", "#################"]}, {"level": 36, "title": "Sector 36: Quantum Vault #36", "timeLimit": 76, "grid": ["#################", "#R#....E#....E.X#", "#.#E###^#E#######", "#...#.#...^...^.#", "#.###.#.#########", "#..^.E..........#", "#^#.##.E#########", "#.#.#...........#", "#################"]}, {"level": 37, "title": "Sector 37: Battery Depot #37", "timeLimit": 77, "grid": ["#################", "#R...^..........#", "#.###########.###", "#...E.^..E..#..^#", "#.###.#.#.#.#####", "#.#...#..^.^E...#", "#E#####.#.###...#", "#.....#.#E..#.#X#", "#################"]}, {"level": 38, "title": "Sector 38: Reactor Core #38", "timeLimit": 78, "grid": ["#################", "#R....#.......#^#", "#.#.#.#.#######.#", "#.#.#E..^.^E#X.E#", "#.#.#^#.###^###.#", "#.#.#.#..E#.#...#", "#E###.#.#.###.#.#", "#.#...#.#....E..#", "#################"]}, {"level": 39, "title": "Sector 39: Cooling Matrix #39", "timeLimit": 79, "grid": ["#################", "#R.........E....#", "#.###E#########.#", "#...^...^E#...#.#", "###.#####.#.#####", "#...^..E#^..E^..#", "###.#.###.#.#.#.#", "#...#.#...#.#.#X#", "#################"]}, {"level": 40, "title": "Sector 40: Omega Chamber #40", "timeLimit": 80, "grid": ["#################", "#R^.^.E....E..#.#", "#.###.#.###.###.#", "#...#E#..^....^.#", "#.#####.###.#E#.#", "#.E.#...#^..#.#.#", "#..####.###.#^###", "#...#.....#.#..X#", "#################"]}, {"level": 41, "title": "Sector 41: Sub-Station #41", "timeLimit": 76, "grid": ["###################", "#R.....E..........#", "#.#####.#.#########", "#.#.#...#.#.#.#.#.#", "#.#.#.#.###.#...#.#", "#..E#E#..E.^......#", "#.###.#####.#.###.#", "#...#.....#.#E^^#^#", "#.###.#######.#####", "#.#.........#....X#", "###################"]}, {"level": 42, "title": "Sector 42: Power Grid #42", "timeLimit": 77, "grid": ["###################", "#R.....E.^..#.#..^#", "#.###.#.#####.#.###", "#.E.#.#....E....#.#", "###.#####.###.###.#", "#.......#...#..E..#", "#.#.###.#.###.#^###", "#.#.#...#...#.#...#", "#.##.####.###.#.#.#", "#.....#.....#^#E#X#", "###################"]}, {"level": 43, "title": "Sector 43: Capacitor Array #43", "timeLimit": 78, "grid": ["###################", "#R...^....#...#..^#", "#.#.#######.###.###", "#.#.#.#^#...#..E..#", "#^###.#.#.###.#.###", "#.....#^.E....#...#", "###.###.#####.#.###", "#.#E........#.#.#X#", "#E#.###########.#.#", "#...........E.#..E#", "###################"]}, {"level": 44, "title": "Sector 44: Voltage Relay #44", "timeLimit": 79, "grid": ["###################", "#R#..^....#^..#.#X#", "#.#.#####.#.#E#.#.#", "#....E..#.....#...#", "#.#####.#.#####.###", "#.....#..E.....E..#", "###^#...#####.#####", "#...#.#...#.......#", "#.#.#.###.###.###.#", "#..E#...#..^#..^#.#", "###################"]}, {"level": 45, "title": "Sector 45: Thermal Duct #45", "timeLimit": 80, "grid": ["###################", "#R...^.E.^...^....#", "#.#^#.#.###.#######", "#.#.#.#.#..E......#", "###.#.#####.#######", "#...#..E#.......#.#", "###.#.###.###.#.#.#", "#...#.#X#E#...#.^.#", "#E#.#.#.#.#####.###", "#.#.#.#.....#.....#", "###################"]}, {"level": 46, "title": "Sector 46: Quantum Vault #46", "timeLimit": 81, "grid": ["###################", "#R......#.#...#.#X#", "#.#.#####.#.###...#", "#.#..E..^.#.......#", "###^###.#####.#.#.#", "#...#E#..E.....E..#", "#.#.#.#.#####.#####", "#.#^#.^..^..#...E.#", "###.#######..##.#.#", "#.........#^..#.#.#", "###################"]}, {"level": 47, "title": "Sector 47: Battery Depot #47", "timeLimit": 82, "grid": ["###################", "#R..#..E....#...#X#", "#.###.#####.#.###.#", "#.#.#.^.#...E.....#", "#.#^#.#.#.##E##.#.#", "#...E.#.#.....#E#.#", "#.#.#^###.#########", "#^#.#.....#.......#", "#.#^###.###.#######", "#.#...#..........^#", "###################"]}, {"level": 48, "title": "Sector 48: Reactor Core #48", "timeLimit": 83, "grid": ["###################", "#R.........^#.....#", "#..#.########.#####", "#E...E..^..E...^.E#", "#.#########.#.###.#", "#.....^.....#.#..^#", "###.#.###.#######.#", "#...#...#E....#..^#", "###.###.#.#.#.###.#", "#.....#.#.#.#.#X.E#", "###################"]}, {"level": 49, "title": "Sector 49: Cooling Matrix #49", "timeLimit": 84, "grid": ["###################", "#R.....E..#^....E.#", "#.###^#..##.#####.#", "#.#.#......E#.#.#.#", "#.#^###.#.#.#.#.###", "#.^E#...#.#.^.....#", "#.###########^#####", "#.......#...#E..^.#", "#.#######.###.###.#", "#...........#....X#", "###################"]}, {"level": 50, "title": "Sector 50: The Omega Core (Final Protocol)", "timeLimit": 85, "grid": ["###################", "#R..#..^...E......#", "#.###E###.#.#####^#", "#.......#.#^..E...#", "###^#######.#.###.#", "#.......#...#...#.#", "#.#E#####.#.#####.#", "#.#...^.#.#.E.^.#.#", "#.#.#######.#.#.###", "#.#....^#...#.#..X#", "###################"]}];
+    const LEVELS = [{"level": 1, "title": "Sector 1: Sub-Station #1", "timeLimit": 46, "grid": ["#############", "#R#E#E#.....#", "#.#.#.#.#####", "#...#.....E.#", "#.#####.#.#.#", "#.E....E#.#X#", "#############"]}, {"level": 2, "title": "Sector 2: Power Grid #2", "timeLimit": 47, "grid": ["#############", "#R....E....E#", "#E#.#.#.###.#", "#.#.#.#...#.#", "###.#.#.#.#.#", "#..E#.#.#.#X#", "#############"]}, {"level": 3, "title": "Sector 3: Capacitor Array #3", "timeLimit": 48, "grid": ["#############", "#R..#.#..E..#", "#.###.#.#####", "#.......#..X#", "###E#####.###", "#......E..E.#", "#############"]}, {"level": 4, "title": "Sector 4: Voltage Relay #4", "timeLimit": 49, "grid": ["#############", "#R^...E...#X#", "###.###.###.#", "#.....#..E..#", "#E#.#.#.#.###", "#.#.#E#.#...#", "#############"]}, {"level": 5, "title": "Sector 5: Thermal Duct #5", "timeLimit": 50, "grid": ["#############", "#R...^E.....#", "#.#.#.#.#.###", "#.#E#.#.#E..#", "#...#.#####.#", "#.#.#..E..#X#", "#############"]}, {"level": 6, "title": "Sector 6: Quantum Vault #6", "timeLimit": 51, "grid": ["#############", "#R..^.....#X#", "#.#@#E#####.#", "#.#.#....E..#", "#.#####.#####", "#.@..E#....E#", "#############"]}, {"level": 7, "title": "Sector 7: Battery Depot #7", "timeLimit": 52, "grid": ["#############", "#R..........#", "#.#######.###", "#...E...#E#X#", "#.#.###^###.#", "#.#..E#E....#", "#############"]}, {"level": 8, "title": "Sector 8: Reactor Core #8", "timeLimit": 53, "grid": ["#############", "#R.^.^E....E#", "#E#E#######.#", "#.#......?#.#", "#.#.###.#.#.#", "#.....#.#.#X#", "#############"]}, {"level": 9, "title": "Sector 9: Cooling Matrix #9", "timeLimit": 54, "grid": ["#############", "#R#.#.#E..#X#", "#^#.#.###.#.#", "#...E...^E..#", "#.#####.###.#", "#.E...#...#.#", "#############"]}, {"level": 10, "title": "Sector 10: Omega Chamber #10", "timeLimit": 55, "grid": ["#############", "#R...^^.#..X#", "#.#.#.#.#E###", "#.#.#.#.#..E#", "###E#####.###", "#......E...E#", "#############"]}, {"level": 11, "title": "Sector 11: Sub-Station #11", "timeLimit": 56, "grid": ["###############", "#R....#.#...#.#", "#.#^###.#.###.#", "#^#..E....#X..#", "#.###.#.#.###.#", "#.#.#.#E..#.#.#", "#.#.#######.#.#", "#E.....E.....E#", "###############"]}, {"level": 12, "title": "Sector 12: Power Grid #12", "timeLimit": 57, "grid": ["###############", "#R.^..#...E.#X#", "#.##^##.#####.#", "#...E@...E#.#.#", "#..##.#.#.#.#.#", "#.E.#.#.#...E.#", "#.###.#@#.#.###", "#.#...#.#.#...#", "###############"]}, {"level": 13, "title": "Sector 13: Capacitor Array #13", "timeLimit": 58, "grid": ["###############", "#R....E....E^E#", "#.###.###.#.###", "#.#.....#.#...#", "#.###.#####^###", "#.#..E..#.#.E.#", "#.#.#.#.#.###.#", "#.#.#.#.....#X#", "###############"]}, {"level": 14, "title": "Sector 14: Voltage Relay #14", "timeLimit": 59, "grid": ["###############", "#R#.......#.#X#", "#.#.#######.#.#", "#.#...#^#E....#", "#.#.###.###.###", "#?..#^..#E#.E.#", "#.##.##.#.###.#", "#.E......E....#", "###############"]}, {"level": 15, "title": "Sector 15: Thermal Duct #15", "timeLimit": 60, "grid": ["###############", "#R..^.....#X.E#", "#.###.#######.#", "#...#^..E.#...#", "###.#########.#", "#..E#.#E#...#.#", "###.#.#.#.###.#", "#.....^E.....E#", "###############"]}, {"level": 16, "title": "Sector 16: Quantum Vault #16", "timeLimit": 61, "grid": ["###############", "#R^^#.......#X#", "#.#.#.#######.#", "#.#.E.....#...#", "#.#..#^####E###", "#.#....E......#", "#.###.#.#######", "#.#E..#...E...#", "###############"]}, {"level": 17, "title": "Sector 17: Battery Depot #17", "timeLimit": 62, "grid": ["###############", "#R...^#.#.E.#.#", "#.#.#E#.###.#.#", "#E#.#.........#", "###.#.#########", "#...#.....#^#X#", "###.#.#####.#.#", "#...#E^...E...#", "###############"]}, {"level": 18, "title": "Sector 18: Reactor Core #18", "timeLimit": 63, "grid": ["###############", "#R...^#.E.#...#", "#.#.###.#..@###", "#.#.E...#.....#", "#.#.#.###.#.###", "#.#.#.^E..#.#X#", "#E.@#.#.#####.#", "#.#.#^#...E...#", "###############"]}, {"level": 19, "title": "Sector 19: Cooling Matrix #19", "timeLimit": 64, "grid": ["###############", "#R....#.#.#.#X#", "###.#E#.#E..#.#", "#...#...#^#..E#", "#.###E#.#.###.#", "#.#...#E^...#.#", "#####.#.###.#.#", "#..^..#.#..E..#", "###############"]}, {"level": 20, "title": "Sector 20: Omega Chamber #20", "timeLimit": 65, "grid": ["###############", "#R..#.#.E^#...#", "#.###.#.###.###", "#...E......^..#", "#.###?#########", "#.#....E....E^#", "#.#####.#.#.#.#", "#.#E.^..#.#.#X#", "###############"]}, {"level": 21, "title": "Sector 21: Sub-Station #21", "timeLimit": 66, "grid": ["###############", "#R....#..^...^#", "#.#.#E..#.###.#", "#.#.#.#.#...#E#", "#.###.#.#######", "#...#..E..#.#X#", "#.#E###.#.#^#.#", "#.#.#...#.E..^#", "###############"]}, {"level": 22, "title": "Sector 22: Power Grid #22", "timeLimit": 67, "grid": ["###############", "#R..E.#E..#...#", "#.#.###.#..E###", "#^..E...#^#...#", "#.###.#.###E#.#", "#.#...#..^..#X#", "###.#.#.###.###", "#...#.#...#^..#", "###############"]}, {"level": 23, "title": "Sector 23: Capacitor Array #23", "timeLimit": 68, "grid": ["###############", "#R....E.^.....#", "#.###.#.#.#####", "#...#E#.#E#E#X#", "###.#.###.#.#.#", "#...#^..#...E.#", "###.###########", "#^...........^#", "###############"]}, {"level": 24, "title": "Sector 24: Voltage Relay #24", "timeLimit": 69, "grid": ["###############", "#R#.^..E.^....#", "#^#.#####E#.###", "#.@.E.#.#.#..X#", "###^#.#.#####.#", "#...#..E....E.#", "#.#.###@#.###.#", "#.#...#.#...#.#", "###############"]}, {"level": 25, "title": "Sector 25: Thermal Duct #25", "timeLimit": 70, "grid": ["###############", "#R....#.^.....#", "###.###.#######", "#E#.E..^..^...#", "#.#.#.###.#####", "#^^.#..E#.#..X#", "#.#.###.###.###", "#.#E..#...E...#", "###############"]}, {"level": 26, "title": "Sector 26: Quantum Vault #26", "timeLimit": 66, "grid": ["#################", "#R#.#..E..#.#...#", "#.#.#.#.#.#.#.###", "#...E.#^..E....E#", "###.###########^#", "#?..E...#.....#X#", "#.###.#.###.###.#", "#.#...#.E..^....#", "#################"]}, {"level": 27, "title": "Sector 27: Battery Depot #27", "timeLimit": 67, "grid": ["#################", "#R..#.#.......#.#", "#.###.#.#######.#", "#...E....E......#", "###.#.#.###.#####", "#..^#.#.....#.#X#", "###.#.#.#E#E#.#.#", "#...#.#.#E..^^.E#", "#################"]}, {"level": 28, "title": "Sector 28: Reactor Core #28", "timeLimit": 68, "grid": ["#################", "#R......E.#E^...#", "#.#########.###.#", "#...#.#.#.....#X#", "#.###.#.###.#####", "#..E.....E^..^..#", "###.#.#.#####.###", "#.E.#.......#...#", "#################"]}, {"level": 29, "title": "Sector 29: Cooling Matrix #29", "timeLimit": 69, "grid": ["#################", "#R...^..#.#.#.#X#", "#.#E#####...#^#.#", "#.#.#...#.#.#..E#", "#.###.###.#.#.#.#", "#.....#....E..#.#", "#.#####.###.#.###", "#E.....E#.E^#...#", "#################"]}, {"level": 30, "title": "Sector 30: Omega Chamber #30", "timeLimit": 70, "grid": ["#################", "#R#.#..^.E.....E#", "#.#.#.#^#####.#.#", "#@...E#.#.#.#...#", "#.#.#.###.#.###.#", "#.#E#...#.....#.#", "#E###@##..#.###^#", "#...#....^#.#X.E#", "#################"]}, {"level": 31, "title": "Sector 31: Sub-Station #31", "timeLimit": 71, "grid": ["#################", "#R^E#..E..#.#E.X#", "#.###.###.#.#.###", "#...E...#^E.....#", "#.#.#############", "#.#.............#", "#.#######.##....#", "#.#.^..^...E#.#.#", "#################"]}, {"level": 32, "title": "Sector 32: Power Grid #32", "timeLimit": 72, "grid": ["#################", "#R^.............#", "#.#.#E#######.###", "#.#.#.#.#.#.#...#", "#.#E##.?#.#.#####", "#^..^..E....E..^#", "#.###.###.#.###.#", "#.#...#E....#X.E#", "#################"]}, {"level": 33, "title": "Sector 33: Capacitor Array #33", "timeLimit": 73, "grid": ["#################", "#R..#....E..#X^.#", "#.###.#.###.###.#", "#....E..E.#^.E^.#", "#.###.########..#", "#.........#...#.#", "#####.###.#.###.#", "#.....#.^.....#E#", "#################"]}, {"level": 34, "title": "Sector 34: Voltage Relay #34", "timeLimit": 74, "grid": ["#################", "#R....#.....#...#", "#.#^#^#.#####.#.#", "#^..#E......#E#X#", "#.#.#...#####.###", "#.#E#.#..E....#.#", "#.##..#.#.###.#.#", "#.#..^#.#E..#...#", "#################"]}, {"level": 35, "title": "Sector 35: Thermal Duct #35", "timeLimit": 75, "grid": ["#################", "#R....^..E......#", "#.#.###E#########", "#.#...#.#...#.^.#", "#.#######...#.#^#", "#..E.....E#..E#X#", "#.#########.#.###", "#....^..^.#.#...#", "#################"]}, {"level": 36, "title": "Sector 36: Quantum Vault #36", "timeLimit": 76, "grid": ["#################", "#R#....E#....E.X#", "#.#E###^#E#######", "#...#@#...^...^.#", "#.###.#.#########", "#..^.E..........#", "#^#.##.E#########", "#@#.#...........#", "#################"]}, {"level": 37, "title": "Sector 37: Battery Depot #37", "timeLimit": 77, "grid": ["#################", "#R...^..........#", "#.###########.###", "#...E.^..E..#..^#", "#.###.#.#.#.#####", "#.#...#..^.^E...#", "#E#####.#.###...#", "#.....#.#E..#.#X#", "#################"]}, {"level": 38, "title": "Sector 38: Reactor Core #38", "timeLimit": 78, "grid": ["#################", "#R....#.......#^#", "#.#.#.#.#######.#", "#.#.#E..^.^E#X.E#", "#.#.#^#.###^###.#", "#?#.#.#..E#.#...#", "#E###.#.#.###.#.#", "#.#...#.#....E..#", "#################"]}, {"level": 39, "title": "Sector 39: Cooling Matrix #39", "timeLimit": 79, "grid": ["#################", "#R.........E....#", "#.###E#########.#", "#...^...^E#...#.#", "###.#####.#.#####", "#...^..E#^..E^..#", "###.#.###.#.#.#.#", "#...#.#...#.#.#X#", "#################"]}, {"level": 40, "title": "Sector 40: Omega Chamber #40", "timeLimit": 80, "grid": ["#################", "#R^.^.E....E..#.#", "#.###.#.###.###.#", "#...#E#..^....^.#", "#.#####.###.#E#.#", "#.E.#...#^..#.#.#", "#..####.###.#^###", "#...#.....#.#..X#", "#################"]}, {"level": 41, "title": "Sector 41: Sub-Station #41", "timeLimit": 76, "grid": ["###################", "#R.....E..........#", "#.#####.#.#########", "#.#.#...#.#.#.#.#.#", "#.#.#.#.###.#...#.#", "#..E#E#..E.^......#", "#.###.#####.#.###.#", "#...#.....#.#E^^#^#", "#.###.#######.#####", "#.#.........#....X#", "###################"]}, {"level": 42, "title": "Sector 42: Power Grid #42", "timeLimit": 77, "grid": ["###################", "#R.....E.^..#.#..^#", "#.###.#.#####.#.###", "#.E.#.#..@.E....#.#", "###.#####.###.###.#", "#.......#...#..E..#", "#.#.###.#.###.#^###", "#.#.#...#...#@#...#", "#.##.####.###.#.#.#", "#.....#.....#^#E#X#", "###################"]}, {"level": 43, "title": "Sector 43: Capacitor Array #43", "timeLimit": 78, "grid": ["###################", "#R...^....#...#..^#", "#.#.#######.###.###", "#.#.#.#^#...#..E..#", "#^###.#.#.###.#.###", "#.....#^.E....#...#", "###.###.#####.#.###", "#.#E........#.#.#X#", "#E#.###########.#.#", "#...........E.#..E#", "###################"]}, {"level": 44, "title": "Sector 44: Voltage Relay #44", "timeLimit": 79, "grid": ["###################", "#R#..^....#^..#.#X#", "#.#.#####.#.#E#.#.#", "#....E..#.....#...#", "#.#####.#.#####.###", "#.....#..E.?...E..#", "###^#...#####.#####", "#...#?#...#.......#", "#.#.#.###.###.###.#", "#..E#...#..^#..^#.#", "###################"]}, {"level": 45, "title": "Sector 45: Thermal Duct #45", "timeLimit": 80, "grid": ["###################", "#R...^.E.^...^....#", "#.#^#.#.###.#######", "#.#.#.#.#..E......#", "###.#.#####.#######", "#...#..E#.......#.#", "###.#.###.###.#.#.#", "#...#.#X#E#...#.^.#", "#E#.#.#.#.#####.###", "#.#.#.#.....#.....#", "###################"]}, {"level": 46, "title": "Sector 46: Quantum Vault #46", "timeLimit": 81, "grid": ["###################", "#R......#.#...#.#X#", "#.#.#####.#.###...#", "#.#..E..^.#.......#", "###^###.#####.#.#.#", "#...#E#..E.....E..#", "#.#.#.#.#####.#####", "#.#^#.^..^..#...E.#", "###.#######..##.#.#", "#.........#^..#.#.#", "###################"]}, {"level": 47, "title": "Sector 47: Battery Depot #47", "timeLimit": 82, "grid": ["###################", "#R..#..E....#...#X#", "#.###.#####.#.###.#", "#.#.#.^.#...E.....#", "#.#^#.#.#.##E##.#.#", "#...E.#.#.?...#E#.#", "#.#.#^###.#########", "#^#.#...?.#.......#", "#.#^###.###.#######", "#.#...#..........^#", "###################"]}, {"level": 48, "title": "Sector 48: Reactor Core #48", "timeLimit": 83, "grid": ["###################", "#R.........^#.....#", "#..#.########.#####", "#E...E@.^..E...^.E#", "#.#########.#.###.#", "#.....^.....#.#..^#", "###.#.###.#######.#", "#...#...#E...@#..^#", "###.###.#.#.#.###.#", "#.....#.#.#.#.#X.E#", "###################"]}, {"level": 49, "title": "Sector 49: Cooling Matrix #49", "timeLimit": 84, "grid": ["###################", "#R.....E..#^....E.#", "#.###^#..##.#####.#", "#.#.#......E#.#.#.#", "#.#^###.#.#.#.#.###", "#.^E#...#.#.^?....#", "#.###########^#####", "#......?#...#E..^.#", "#.#######.###.###.#", "#...........#....X#", "###################"]}, {"level": 50, "title": "Sector 50: The Omega Core (Final Protocol)", "timeLimit": 85, "grid": ["###################", "#R..#..^...E......#", "#.###E###.#.#####^#", "#....@..#.#^..E...#", "###^#######.#.###.#", "#.......#?..#...#.#", "#.#E#####.#.#####.#", "#.#?..^.#.#.E@^.#.#", "#.#.#######.#.#.###", "#.#....^#...#.#..X#", "###################"]}];
 
     // Game State
     let currentLevelIdx = 0;
@@ -900,6 +953,10 @@
     let levelCompleted = false;
     let timeLeft = 45;
     let timerInterval = null;
+    let isFogEnabled = true;
+    let scrambleMovesLeft = 0;
+    let hazardsActive = true;
+    let hazardInterval = null;
 
     // Canvas Elements
     const canvas = document.getElementById('gameCanvas');
@@ -1035,6 +1092,11 @@
     // LOAD LEVEL
     function loadLevel(idx) {
       clearInterval(timerInterval);
+      clearInterval(hazardInterval);
+      scrambleMovesLeft = 0;
+      const empAlert = document.getElementById('emp-warning');
+      if (empAlert) empAlert.style.display = 'none';
+
       currentLevelIdx = idx;
       const levelData = LEVELS[idx];
       grid = levelData.grid.map(row => row.split(''));
@@ -1057,9 +1119,33 @@
       robot.battery = 100; // Full 100% recharge per sector
       timeLeft = levelData.timeLimit || 45;
 
+      // Fog is enabled by default for Sector 4 and above
+      isFogEnabled = (idx >= 3);
+      const btnFog = document.getElementById('btn-fog');
+      if (btnFog) btnFog.innerText = isFogEnabled ? "🌫️ Fog: ON" : "💡 Fog: OFF";
+
+      // Pulsing hazards every 2.5s
+      hazardsActive = true;
+      hazardInterval = setInterval(() => {
+        if (isGameOver || levelCompleted) {
+          clearInterval(hazardInterval);
+          return;
+        }
+        hazardsActive = !hazardsActive;
+        render();
+      }, 2500);
+
       gameSectorTitle.innerText = `Sector ${idx + 1}`;
       valSector.innerText = `${idx + 1} / 50`;
-      statusText.innerText = `⚡ ${levelData.title}. Time: ${timeLeft}s! Plan path carefully!`;
+
+      const hasPortal = levelData.grid.some(row => row.includes('@'));
+      const hasEmp = levelData.grid.some(row => row.includes('?'));
+      let notes = [];
+      if (isFogEnabled) notes.push("🌫️ Fog");
+      if (hasPortal) notes.push("🌀 Warp Portal (@)");
+      if (hasEmp) notes.push("⚡ EMP Glitch (?)");
+      let noteStr = notes.length > 0 ? ` [${notes.join(' | ')}]` : '';
+      statusText.innerText = `⚡ ${levelData.title}.${noteStr} Plan path with care!`;
       statusText.style.borderLeftColor = 'var(--green)';
 
       updateTimerHUD();
@@ -1105,9 +1191,27 @@
     }
 
     // MOVEMENT & GAMEPLAY
-    function move(dx, dy) {
+    function move(inputDx, inputDy) {
       if (isGameOver || levelCompleted) return;
       initAudio();
+
+      let dx = inputDx;
+      let dy = inputDy;
+
+      // Handle EMP Scrambler Glitch (Inverted Controls!)
+      if (scrambleMovesLeft > 0) {
+        dx = -inputDx;
+        dy = -inputDy;
+        scrambleMovesLeft--;
+        const empCountEl = document.getElementById('emp-count');
+        if (empCountEl) empCountEl.innerText = scrambleMovesLeft;
+        if (scrambleMovesLeft === 0) {
+          const empAlert = document.getElementById('emp-warning');
+          if (empAlert) empAlert.style.display = 'none';
+          statusText.innerText = "✅ SENSORS RE-CALIBRATED! Normal controls restored.";
+          statusText.style.borderLeftColor = 'var(--green)';
+        }
+      }
 
       const nextX = robot.x + dx;
       const nextY = robot.y + dy;
@@ -1127,15 +1231,64 @@
       soundMove();
       vibrate(20);
 
-      // Hazard check
-      if (grid[nextY][nextX] === '^') {
-        robot.battery = Math.max(0, robot.battery - 15);
-        soundHazard();
-        vibrate([50, 50, 100]);
-        statusText.innerText = "HAZARD! High-voltage tile inflicted -15% battery drain!";
-        statusText.style.borderLeftColor = 'var(--red)';
+      // Quantum Warp Portal Check (@)
+      if (grid[nextY][nextX] === '@') {
+        let companion = null;
+        for (let r = 0; r < grid.length; r++) {
+          for (let c = 0; c < grid[r].length; c++) {
+            if (grid[r][c] === '@' && (r !== nextY || c !== nextX)) {
+              companion = { x: c, y: r };
+              break;
+            }
+          }
+          if (companion) break;
+        }
+        if (companion) {
+          robot.x = companion.x;
+          robot.y = companion.y;
+          soundPortal();
+          vibrate([40, 60, 40, 60]);
+          statusText.innerText = "🌀 QUANTUM WARP! Teleported across sector!";
+          statusText.style.borderLeftColor = 'var(--purple)';
+        }
       }
-      // Energy check
+      // EMP Mystery Node Check (?)
+      else if (grid[nextY][nextX] === '?') {
+        grid[nextY][nextX] = '.';
+        const isGlitch = Math.random() < 0.65;
+        if (isGlitch) {
+          scrambleMovesLeft = 4;
+          soundGlitch();
+          vibrate([80, 50, 80, 50, 100]);
+          const empAlert = document.getElementById('emp-warning');
+          const empCountEl = document.getElementById('emp-count');
+          if (empAlert) empAlert.style.display = 'block';
+          if (empCountEl) empCountEl.innerText = '4';
+          statusText.innerText = "⚡ EMP SCRAMBLE! Gyro inverted: Controls REVERSED for 4 steps!";
+          statusText.style.borderLeftColor = 'var(--red)';
+        } else {
+          robot.battery = Math.min(robot.maxBattery, robot.battery + 15);
+          robot.score += 150;
+          soundEnergy();
+          vibrate([30, 40, 80]);
+          statusText.innerText = "🔋 OVERCHARGED CACHE! +15% Battery, +150 Score!";
+          statusText.style.borderLeftColor = 'var(--green)';
+        }
+      }
+      // Hazard Spikes Check (^)
+      else if (grid[nextY][nextX] === '^') {
+        if (hazardsActive) {
+          robot.battery = Math.max(0, robot.battery - 15);
+          soundHazard();
+          vibrate([50, 50, 100]);
+          statusText.innerText = "HAZARD! High-voltage tile inflicted -15% battery drain!";
+          statusText.style.borderLeftColor = 'var(--red)';
+        } else {
+          statusText.innerText = "⚡ Safe passage! Hazard spikes were temporarily discharged!";
+          statusText.style.borderLeftColor = 'var(--cyan)';
+        }
+      }
+      // Energy Check (E)
       else if (grid[nextY][nextX] === 'E') {
         grid[nextY][nextX] = '.';
         robot.battery = Math.min(robot.maxBattery, robot.battery + 10); // EXACTLY +10% Recharge
@@ -1146,8 +1299,13 @@
         statusText.innerText = "Energy Cell harvested! +10% Battery, +100 Score!";
         statusText.style.borderLeftColor = 'var(--green)';
       } else {
-        statusText.innerText = `Scouting sector... Power -2%. Mind your path!`;
-        statusText.style.borderLeftColor = 'var(--cyan)';
+        if (scrambleMovesLeft > 0) {
+          statusText.innerText = `⚡ SENSORS GLITCHED! ${scrambleMovesLeft} inverted moves remaining!`;
+          statusText.style.borderLeftColor = 'var(--red)';
+        } else {
+          statusText.innerText = `Scouting sector... Power -2%. Mind your path!`;
+          statusText.style.borderLeftColor = 'var(--cyan)';
+        }
       }
 
       updateHUD();
@@ -1164,6 +1322,7 @@
     function handleTimeExpired() {
       isGameOver = true;
       clearInterval(timerInterval);
+      clearInterval(hazardInterval);
       soundGameOver();
       vibrate([100, 100, 300]);
       saveHighScore(robot.score);
@@ -1187,6 +1346,7 @@
     function handleGameOver() {
       isGameOver = true;
       clearInterval(timerInterval);
+      clearInterval(hazardInterval);
       soundGameOver();
       vibrate([100, 100, 200]);
       saveHighScore(robot.score);
@@ -1210,6 +1370,7 @@
     function handleSectorWin() {
       levelCompleted = true;
       clearInterval(timerInterval);
+      clearInterval(hazardInterval);
       soundWin();
       vibrate([40, 40, 80, 40, 120]);
 
@@ -1330,13 +1491,63 @@
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText('X', px + cellW/2, py + cellH/2);
-          } else if (char === '^') {
-            // Hazard
-            ctx.fillStyle = '#ff3366';
-            ctx.font = `bold ${Math.floor(cellH * 0.55)}px monospace`;
+          } else if (char === '@') {
+            // Quantum Warp Portal
+            ctx.shadowBlur = 14;
+            ctx.shadowColor = '#c084fc';
+            ctx.strokeStyle = '#c084fc';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.arc(px + cellW/2, py + cellH/2, Math.min(cellW, cellH)*0.35, 0, Math.PI*2);
+            ctx.stroke();
+
+            ctx.fillStyle = 'rgba(192, 132, 252, 0.35)';
+            ctx.fill();
+
+            ctx.fillStyle = '#00f3ff';
+            ctx.beginPath();
+            ctx.arc(px + cellW/2, py + cellH/2, Math.min(cellW, cellH)*0.16, 0, Math.PI*2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            ctx.fillStyle = '#fff';
+            ctx.font = `bold ${Math.floor(cellH * 0.42)}px monospace`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText('▲', px + cellW/2, py + cellH/2);
+            ctx.fillText('@', px + cellW/2, py + cellH/2);
+          } else if (char === '?') {
+            // EMP Scrambler Node
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = '#f43f5e';
+            ctx.fillStyle = '#f43f5e';
+            ctx.beginPath();
+            ctx.arc(px + cellW/2, py + cellH/2, Math.min(cellW, cellH)*0.28, 0, Math.PI*2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            ctx.fillStyle = '#fff';
+            ctx.font = `bold ${Math.floor(cellH * 0.44)}px monospace`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('?', px + cellW/2, py + cellH/2);
+          } else if (char === '^') {
+            // Hazard (Pulsing Active or Discharged)
+            if (hazardsActive) {
+              ctx.shadowBlur = 10;
+              ctx.shadowColor = '#ff3366';
+              ctx.fillStyle = '#ff3366';
+              ctx.font = `bold ${Math.floor(cellH * 0.55)}px monospace`;
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText('▲', px + cellW/2, py + cellH/2);
+              ctx.shadowBlur = 0;
+            } else {
+              ctx.fillStyle = '#38bdf8';
+              ctx.font = `bold ${Math.floor(cellH * 0.45)}px monospace`;
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText('▽', px + cellW/2, py + cellH/2);
+            }
           }
         }
       }
@@ -1346,8 +1557,8 @@
       const rpy = robot.y * cellH;
 
       ctx.shadowBlur = 14;
-      ctx.shadowColor = '#00f3ff';
-      ctx.fillStyle = '#00f3ff';
+      ctx.shadowColor = scrambleMovesLeft > 0 ? '#f43f5e' : '#00f3ff';
+      ctx.fillStyle = scrambleMovesLeft > 0 ? '#f43f5e' : '#00f3ff';
       ctx.beginPath();
       ctx.arc(rpx + cellW/2, rpy + cellH/2, Math.min(cellW, cellH)*0.36, 0, Math.PI*2);
       ctx.fill();
@@ -1359,6 +1570,31 @@
       ctx.fillStyle = '#fff';
       ctx.fillRect(rpx + cellW*0.42, rpy + cellH*0.44, cellW*0.08, cellH*0.08);
       ctx.fillRect(rpx + cellW*0.52, rpy + cellH*0.44, cellW*0.08, cellH*0.08);
+
+      // Cyber Fog of War (Darkness & Flashlight Scanner)
+      if (isFogEnabled) {
+        const rx = rpx + cellW / 2;
+        const ry = rpy + cellH / 2;
+        const viewRadius = Math.max(cellW, cellH) * 3.4;
+
+        const grad = ctx.createRadialGradient(rx, ry, viewRadius * 0.35, rx, ry, viewRadius);
+        grad.addColorStop(0, 'rgba(4, 7, 16, 0)');
+        grad.addColorStop(0.65, 'rgba(4, 7, 16, 0.45)');
+        grad.addColorStop(0.9, 'rgba(4, 7, 16, 0.96)');
+        grad.addColorStop(1, 'rgba(4, 7, 16, 1)');
+
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // High-tech scanner circular radar ring
+        ctx.strokeStyle = 'rgba(0, 243, 255, 0.3)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 6]);
+        ctx.beginPath();
+        ctx.arc(rx, ry, viewRadius * 0.96, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
     }
 
     // KEYBOARD CONTROLS
@@ -1445,6 +1681,16 @@
       showScreen('levels');
     };
 
+    const btnFog = document.getElementById('btn-fog');
+    if (btnFog) {
+      btnFog.onclick = () => {
+        isFogEnabled = !isFogEnabled;
+        btnFog.innerText = isFogEnabled ? "🌫️ Fog: ON" : "💡 Fog: OFF";
+        statusText.innerText = isFogEnabled ? "🌫️ Cyber Fog Active! Memorize your path!" : "💡 Facility Floodlights ON!";
+        render();
+      };
+    }
+
     document.getElementById('btn-restart').onclick = () => {
       loadLevel(currentLevelIdx);
     };
@@ -1464,11 +1710,14 @@
         <strong>Scout-X Survival Directives:</strong><br><br>
         • <strong>50 Sectors Campaign</strong>: Choose any unlocked level from the Level Selector!<br>
         • <strong>Move with D-Pad, Swipes, or WASD</strong>.<br>
-        • Every move drains <strong>-2% Battery</strong> (Mindful path planning is essential).<br>
-        • Collect <strong>Energy Cells (E)</strong> for <strong>+10% Battery</strong> & <strong>+100 Pts</strong>.<br>
-        • Avoid <strong>High-Voltage Hazards (▲)</strong>: <strong>-15% Damage</strong>.<br>
-        • <strong>⏱️ Competition Timer</strong>: Speed bonus <strong>+10 Pts/sec</strong> remaining!<br>
-        • Earn up to <strong>⭐⭐⭐ 3 Stars</strong> based on remaining battery and speed!
+        • Every move drains <strong>-2% Battery</strong> (Strict planning required).<br>
+        • Collect <strong>Energy Cells (E)</strong> for strictly <strong>+10% Battery</strong> & <strong>+100 Pts</strong>.<br>
+        • 🌫️ <strong>Cyber Fog of War</strong>: From Sector 4+, distant corridors are shrouded in darkness! Memorize your path (Toggleable via Fog button).<br>
+        • 🌀 <strong>Quantum Warp Portals (@)</strong>: Step onto '@' to warp instantly across the sector!<br>
+        • ⚡ <strong>EMP Scrambler Nodes (?)</strong>: Gamble for battery or suffer 4-step inverted reverse controls!<br>
+        • ⚡ <strong>Pulsing Hazards (▲/▽)</strong>: Spikes alternate active (Red: -15%) & safe (Dim: 0%) every 2.5s!<br>
+        • ⏱️ <strong>Competition Timer</strong>: Speed bonus <strong>+10 Pts/sec</strong> remaining!<br>
+        • Earn up to <strong>⭐⭐⭐ 3 Stars</strong> based on battery efficiency!
       `;
       modalStats.innerHTML = `
         <div>Total Stars Earned: <strong>${getTotalStars()} / 150</strong></div>
