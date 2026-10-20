@@ -1320,10 +1320,20 @@
   </div>
 
   <script>
-    // Audio Synthesizer & Procedural BGM
+    // Audio Synthesizer & Universal Stream Audio Engine
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx = null;
     let soundEnabled = true;
+    let isTrackPlaying = false;
+    let currentStreamUrl = null;
+    let currentTrackTitle = "Zingaat - Ajay-Atul";
+
+    // Global native audio element (always defined and ready)
+    const bgmAudio = new Audio();
+    bgmAudio.crossOrigin = "anonymous";
+    bgmAudio.preload = "auto";
+    bgmAudio.volume = 1.0;
+    bgmAudio.loop = true;
     let musicEnabled = true;
     let bgmInterval = null;
     let bgmStep = 0;
@@ -1381,6 +1391,7 @@
     const LEAD_NOTES = [261.63, 0, 311.13, 392.00, 0, 311.13, 466.16, 392.00, 261.63, 349.23, 0, 392.00, 523.25, 466.16, 392.00, 311.13];
 
     function startBGM() {
+      if (isTrackPlaying) return; // Do not play synth beeps when a real song is active
       if (bgmInterval) return;
       bgmInterval = setInterval(() => {
         if (!musicEnabled || !soundEnabled) return;
@@ -2268,7 +2279,7 @@
     // UI Elements
     const valSector = document.getElementById('val-sector');
     const valMoves = document.getElementById('val-moves');
-    const bgmAudio = document.getElementById('bgmAudio');
+    // bgmAudio declared globally at audio engine top
     let customSongLoaded = false;
     const valScore = document.getElementById('val-score');
     const valKey = document.getElementById('val-key');
@@ -3469,12 +3480,48 @@
 
     
     // =========================================================
-    // UNIVERSAL SONG SEARCH & STREAMING PLAYER ENGINE
+    // UNIVERSAL SONG SEARCH & STREAMING PLAYER ENGINE (ROCK SOLID)
     // =========================================================
-    let currentStreamUrl = null;
-    let currentTrackTitle = "Default Cyber Synth";
-    let isTrackPlaying = false;
-    let searchResultsList = [];
+    const CURATED_HIT_SONGS = [
+      {
+        trackName: "Zingaat",
+        artistName: "Ajay-Atul (Sairat)",
+        artworkUrl60: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/66/5a/e8/665ae8ad-1aab-5d0c-3ca9-4fa062b1606c/8718857670711.png/60x60bb.jpg",
+        previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e3/21/1e/e3211ebb-2b2f-8977-2300-bdc6760c94c3/mzaf_14840830049985436711.plus.aac.p.m4a"
+      },
+      {
+        trackName: "Gulabi Sadi",
+        artistName: "Sanju Rathod & G-Spark",
+        artworkUrl60: "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/13/2d/eb/132deb17-aee2-6b64-d0cc-6446c213375d/cover.jpg/60x60bb.jpg",
+        previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/e0/5d/f4/e05df471-362a-e644-ab97-749faab709a6/mzaf_7961758401486200377.plus.aac.p.m4a"
+      },
+      {
+        trackName: "Taambdi Chaamdi",
+        artistName: "Kratex & Shreyas (KSHMR Remix)",
+        artworkUrl60: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/1f/83/d7/1f83d709-0c0e-a9f1-354f-f104f401c334/5021732537126.jpg/60x60bb.jpg",
+        previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/23/1e/4d/231e4d88-b2e4-b3a6-5d39-0e86b3cbae44/mzaf_7547668705355659230.plus.aac.p.m4a"
+      },
+      {
+        trackName: "KGF Monster Theme",
+        artistName: "Hustler Bhai (Monster Action)",
+        artworkUrl60: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/cb/c4/4f/cbc44f15-cdd4-4484-fcd0-52ca77c46622/cover.jpg/60x60bb.jpg",
+        previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/4f/16/93/4f16934b-c351-b5f8-00f4-a738e4c9073b/mzaf_11259271242587623768.plus.aac.p.m4a"
+      },
+      {
+        trackName: "Gaming Phonk",
+        artistName: "Alexi Action (Bass Drift)",
+        artworkUrl60: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/b6/a5/08/b6a508b9-5364-d1b8-bdbd-b68b04b1eede/20049.jpg/60x60bb.jpg",
+        previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/58/44/ea/5844ea4e-05ef-3e15-f17b-b3db0605a509/mzaf_9676942911355329547.plus.aac.p.m4a"
+      },
+      {
+        trackName: "New Rules (Dance Remix)",
+        artistName: "Dua Lipa (Party Beats)",
+        artworkUrl60: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/31/33/cf/3133cffc-4b77-f3c6-3ee3-5c9b6cfb6bd4/190295806675.jpg/60x60bb.jpg",
+        previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/07/2e/84/072e84d4-2970-034b-0941-60c112f36a2b/mzaf_5630674587159822008.plus.aac.p.m4a"
+      }
+    ];
+
+    let searchResultsList = [...CURATED_HIT_SONGS];
 
     const musicSearchModal = document.getElementById('musicSearchModal');
     const songQueryInput = document.getElementById('songQueryInput');
@@ -3495,46 +3542,74 @@
     const volSliderGame = document.getElementById('stream-vol-game');
     const volSliderMenu = document.getElementById('stream-vol-menu');
 
+    // Unlock audio context on user interaction
+    function unlockAudioCtx() {
+      try {
+        initAudio();
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+      } catch (e) {}
+    }
+    window.addEventListener('touchstart', unlockAudioCtx, { once: true });
+    window.addEventListener('click', unlockAudioCtx, { once: true });
+
     // Open/Close Search Modal
     function openMusicSearchModal() {
-      initAudio();
-      musicSearchModal.style.display = 'flex';
-      if (searchResultsList.length === 0) {
-        executeSearch("Marathi Zingaat");
-      }
+      unlockAudioCtx();
+      if (musicSearchModal) musicSearchModal.style.display = 'flex';
+      renderSongResults();
     }
 
     if (btnOpenSearchGame) btnOpenSearchGame.onclick = openMusicSearchModal;
     if (btnOpenSearchMenu) btnOpenSearchMenu.onclick = openMusicSearchModal;
-    if (btnCloseMusicSearch) btnCloseMusicSearch.onclick = () => { musicSearchModal.style.display = 'none'; };
+    if (btnCloseMusicSearch) btnCloseMusicSearch.onclick = () => { if (musicSearchModal) musicSearchModal.style.display = 'none'; };
 
     // Search Engine
     async function executeSearch(query) {
-      if (!query || query.trim() === '') return;
-      searchStatusBar.innerText = `🔍 Searching "${query}"...`;
-      songResultsContainer.innerHTML = '<div style="color:var(--muted); font-size:0.8rem; padding:10px; text-align:center;">लोड होत आहे...</div>';
+      if (!query || query.trim() === '') {
+        searchResultsList = [...CURATED_HIT_SONGS];
+        renderSongResults();
+        return;
+      }
+      unlockAudioCtx();
+      if (searchStatusBar) searchStatusBar.innerHTML = `🔍 <strong>"${query}"</strong> शोधत आहे...`;
+      if (songResultsContainer) {
+        songResultsContainer.innerHTML = '<div style="color:var(--cyan); font-size:0.85rem; padding:15px; text-align:center;">⏳ गाणी लोड होत आहेत...</div>';
+      }
 
       try {
         const resp = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&limit=15`);
         const data = await resp.json();
 
         if (!data.results || data.results.length === 0) {
-          searchStatusBar.innerText = `❌ कोणतीही गाणी सापडली नाहीत. कृपया वेगळा शब्द शोधा.`;
-          songResultsContainer.innerHTML = '<div style="color:var(--muted); font-size:0.8rem; padding:10px; text-align:center;">गाणे सापडले नाही.</div>';
+          if (searchStatusBar) searchStatusBar.innerHTML = `❌ कोणतेही गाणे सापडले नाही. कृपया वेगळा शब्द शोधा.`;
+          searchResultsList = [...CURATED_HIT_SONGS];
+          renderSongResults();
           return;
         }
 
-        searchResultsList = data.results.filter(r => r.previewUrl);
-        searchStatusBar.innerText = `✓ ${searchResultsList.length} गाणी सापडली! खालीलपैकी 'Play' दाबा:`;
+        const validResults = data.results.filter(r => r.previewUrl);
+        if (validResults.length === 0) {
+          searchResultsList = [...CURATED_HIT_SONGS];
+        } else {
+          searchResultsList = validResults;
+        }
+
+        if (searchStatusBar) searchStatusBar.innerHTML = `✓ ${searchResultsList.length} गाणी सापडली! खालीलपैकी <strong>'▶️ Play'</strong> दाबा:`;
         renderSongResults();
       } catch (err) {
-        searchStatusBar.innerText = `⚠️ नेटवर्क एरर. पुन्हा प्रयत्न करा.`;
-        songResultsContainer.innerHTML = '<div style="color:var(--red); font-size:0.8rem; padding:10px; text-align:center;">गाणी लोड करताना एरर आला.</div>';
+        console.warn("Search fetch error:", err);
+        if (searchStatusBar) searchStatusBar.innerHTML = `⚠️ ऑनलाईन सर्चमध्ये एरर. खालील लोकप्रिय गाणी निवडा:`;
+        searchResultsList = [...CURATED_HIT_SONGS];
+        renderSongResults();
       }
     }
 
     function renderSongResults() {
+      if (!songResultsContainer) return;
       songResultsContainer.innerHTML = '';
+
       searchResultsList.forEach((song, idx) => {
         const isCurrent = (currentStreamUrl === song.previewUrl && isTrackPlaying);
         const card = document.createElement('div');
@@ -3552,9 +3627,11 @@
           </button>
         `;
 
-        card.querySelector('.btn-play-song').onclick = () => {
+        const playBtn = card.querySelector('.btn-play-song');
+        playBtn.onclick = (e) => {
+          e.stopPropagation();
+          playBtn.innerText = '⏳ Loading...';
           playStreamSong(song.previewUrl, `${song.trackName} - ${song.artistName}`);
-          renderSongResults();
         };
 
         songResultsContainer.appendChild(card);
@@ -3562,7 +3639,7 @@
     }
 
     if (btnExecuteSearch) {
-      btnExecuteSearch.onclick = () => executeSearch(songQueryInput.value);
+      btnExecuteSearch.onclick = () => executeSearch(songQueryInput ? songQueryInput.value : '');
     }
     if (songQueryInput) {
       songQueryInput.onkeydown = (e) => {
@@ -3570,7 +3647,7 @@
       };
     }
 
-    // Category Tags
+    // 1-Tap Category Tags
     document.querySelectorAll('.tag-btn').forEach(btn => {
       btn.onclick = () => {
         const q = btn.getAttribute('data-q');
@@ -3579,60 +3656,97 @@
       };
     });
 
-    // Play Stream Song
+    // Play Stream Song (Bulletproof with user gesture & volume)
     function playStreamSong(url, title) {
-      initAudio();
+      if (!url) return;
+      unlockAudioCtx();
+      stopBGM();
+
       currentStreamUrl = url;
       currentTrackTitle = title;
 
+      bgmAudio.pause();
       bgmAudio.src = url;
+      bgmAudio.currentTime = 0;
       bgmAudio.volume = parseFloat(volSliderGame?.value || 1.0);
       bgmAudio.muted = false;
 
-      // Stop synthetic procedural BGM so only the real song plays loudly!
-      stopBGM();
+      updatePlayerUI(title, false);
+      if (searchStatusBar) {
+        searchStatusBar.innerHTML = `⏳ <strong>"${title}"</strong> सुरू होत आहे...`;
+      }
 
-      bgmAudio.play().then(() => {
-        isTrackPlaying = true;
-        updatePlayerUI(title, true);
-        statusText.innerText = `🎵 Now Playing: ${title}`;
-        statusText.style.borderLeftColor = 'var(--green)';
-      }).catch(err => {
-        console.log("Audio stream play error:", err);
-        statusText.innerText = `⚠️ Audio प्ले करताना एरर आला. कृपया दुसरा ट्रॅक निवडा.`;
-      });
+      const playPromise = bgmAudio.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          isTrackPlaying = true;
+          updatePlayerUI(title, true);
+          renderSongResults();
+          if (searchStatusBar) {
+            searchStatusBar.innerHTML = `<span style="color:var(--green); font-weight:bold;">▶️ आता वाजत आहे: ${title}</span>`;
+          }
+          if (statusText) {
+            statusText.innerText = `🎵 Now Playing: ${title}`;
+            statusText.style.borderLeftColor = 'var(--green)';
+          }
+        }).catch(err => {
+          console.error("Audio stream playback failed:", err);
+          isTrackPlaying = false;
+          updatePlayerUI(title, false);
+          renderSongResults();
+          if (searchStatusBar) {
+            searchStatusBar.innerHTML = `<span style="color:var(--red); font-weight:bold;">⚠️ आवाज सुरू करण्यासाठी पुन्हा '▶️ Play' दाबा किंवा मोबाईलचा Media Volume वाढवा.</span>`;
+          }
+          if (statusText) {
+            statusText.innerText = `⚠️ Audio play error. स्क्रीनवर स्पर्श करा.`;
+          }
+        });
+      }
 
-      // Loop song seamlessly when finished
       bgmAudio.onended = () => {
         bgmAudio.currentTime = 0;
-        bgmAudio.play();
+        bgmAudio.play().catch(() => {});
+      };
+
+      bgmAudio.onerror = (e) => {
+        console.warn("bgmAudio error:", e);
+        if (searchStatusBar) {
+          searchStatusBar.innerHTML = `<span style="color:var(--red);">⚠️ हे गाणे सुरू झाले नाही. कृपया दुसरे गाणे निवडा.</span>`;
+        }
       };
     }
 
     function updatePlayerUI(title, isPlaying) {
-      const displayTitle = title.length > 24 ? title.substring(0, 22) + '...' : title;
+      const displayTitle = title.length > 22 ? title.substring(0, 20) + '...' : title;
       if (titleNowPlayingGame) titleNowPlayingGame.innerText = displayTitle;
       if (titleNowPlayingMenu) titleNowPlayingMenu.innerText = displayTitle;
       if (btnPlayPauseStreamGame) btnPlayPauseStreamGame.innerText = isPlaying ? '⏸️' : '▶️';
-      if (btnPlayPauseStreamMenu) btnPlayPauseStreamMenu.innerText = isPlaying ? '⏸️ Pause' : '▶️ Play';
+      if (btnPlayPauseStreamMenu) btnPlayPauseStreamMenu.innerText = isPlaying ? '⏸️' : '▶️';
       if (waveGame) waveGame.style.display = isPlaying ? 'inline-flex' : 'none';
       if (waveMenu) waveMenu.style.display = isPlaying ? 'inline-flex' : 'none';
     }
 
     function toggleStreamPlayback() {
-      initAudio();
+      unlockAudioCtx();
       if (currentStreamUrl && bgmAudio.src) {
         if (bgmAudio.paused) {
-          bgmAudio.play();
-          isTrackPlaying = true;
-          updatePlayerUI(currentTrackTitle, true);
+          bgmAudio.play().then(() => {
+            isTrackPlaying = true;
+            updatePlayerUI(currentTrackTitle, true);
+            renderSongResults();
+          }).catch(err => {
+            console.warn("Play resume error:", err);
+          });
         } else {
           bgmAudio.pause();
           isTrackPlaying = false;
           updatePlayerUI(currentTrackTitle, false);
+          renderSongResults();
         }
       } else {
-        openMusicSearchModal();
+        // If no song loaded yet, play first curated song immediately!
+        const firstSong = CURATED_HIT_SONGS[0];
+        playStreamSong(firstSong.previewUrl, `${firstSong.trackName} - ${firstSong.artistName}`);
       }
     }
 
@@ -3641,7 +3755,8 @@
 
     // Volume Sync
     function setStreamVolume(val) {
-      bgmAudio.volume = parseFloat(val);
+      const v = parseFloat(val);
+      bgmAudio.volume = v;
       if (volSliderGame) volSliderGame.value = val;
       if (volSliderMenu) volSliderMenu.value = val;
     }
@@ -3656,7 +3771,7 @@
           const file = e.target.files[0];
           const localUrl = URL.createObjectURL(file);
           playStreamSong(localUrl, file.name);
-          musicSearchModal.style.display = 'none';
+          if (musicSearchModal) musicSearchModal.style.display = 'none';
         }
       };
     }
@@ -3664,6 +3779,5 @@
     // INITIALIZE TO MAIN MENU
     showScreen('menu');
   </script>
-  <audio id="bgmAudio" loop></audio>
 </body>
 </html>
