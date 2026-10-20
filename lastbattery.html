@@ -609,9 +609,10 @@
 
       levelCompleted = false;
       isGameOver = false;
+      robot.battery = 100; // Power Core fully restored for the new sector
       valSector.innerText = `${idx + 1} / ${LEVELS.length}`;
-      statusText.innerText = `${levelData.title}. Navigate to exit (X)!`;
-      statusText.style.borderLeftColor = 'var(--cyan)';
+      statusText.innerText = `⚡ ${levelData.title}. Power Core 100%! Navigate to exit (X)!`;
+      statusText.style.borderLeftColor = 'var(--green)';
       updateHUD();
       render();
     }
@@ -674,12 +675,12 @@
       // Energy check
       else if (grid[nextY][nextX] === 'E') {
         grid[nextY][nextX] = '.';
-        robot.battery = Math.min(robot.maxBattery, robot.battery + 25);
+        robot.battery = Math.min(robot.maxBattery, robot.battery + 30);
         robot.score += 100;
         robot.energyCount++;
         soundEnergy();
         vibrate([30, 30, 60]);
-        statusText.innerText = "Energy Cell harvested! +25% Power, +100 Score!";
+        statusText.innerText = "Energy Cell harvested! +30% Power, +100 Score!";
         statusText.style.borderLeftColor = 'var(--green)';
       } else {
         statusText.innerText = `Scouting sector... Power drained by 4%.`;
