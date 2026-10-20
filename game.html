@@ -364,7 +364,7 @@
     /* Top HUD */
     .hud {
       display: grid;
-      grid-template-columns: 1.1fr 1.3fr 1.1fr;
+      grid-template-columns: 1fr 1.1fr 1fr 1.1fr;
       gap: 6px;
       background: rgba(0, 0, 0, 0.45);
       padding: 8px;
@@ -473,6 +473,131 @@
       background: #f43f5e;
       box-shadow: 0 0 8px #f43f5e;
     }
+
+    
+    /* ABILITIES TOOLBAR */
+    .abilities-container {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(0, 243, 255, 0.2);
+      border-radius: 10px;
+      padding: 6px 10px;
+      margin-top: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .abilities-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: var(--cyan);
+      letter-spacing: 0.5px;
+    }
+
+    .abilities-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+    }
+
+    .ability-btn {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(0, 243, 255, 0.3);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 7px 4px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+
+    .ability-btn:active:not(:disabled) {
+      transform: scale(0.95);
+      background: rgba(0, 243, 255, 0.3);
+    }
+
+    .ability-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Shield Active Banner */
+    .shield-alert {
+      width: 100%;
+      background: rgba(0, 243, 255, 0.25);
+      border: 1px solid var(--cyan);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-align: center;
+      padding: 5px 8px;
+      margin-bottom: 4px;
+      box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+      animation: pulseAlert 0.8s infinite alternate;
+    }
+
+    /* Callsign bar on menu */
+    .callsign-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(0, 243, 255, 0.3);
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-size: 0.82rem;
+    }
+
+    .callsign-input {
+      background: #0f172a;
+      border: 1px solid var(--cyan);
+      border-radius: 6px;
+      color: #fff;
+      padding: 4px 8px;
+      font-weight: 800;
+      font-family: inherit;
+      width: 140px;
+      text-align: center;
+    }
+
+    /* Leaderboard Modal Table */
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.78rem;
+    }
+
+    .leaderboard-table th {
+      background: rgba(0, 243, 255, 0.15);
+      color: var(--cyan);
+      padding: 6px;
+      text-align: left;
+    }
+
+    .leaderboard-table td {
+      padding: 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .leaderboard-table tr.highlight td {
+      color: var(--yellow);
+      font-weight: 900;
+      background: rgba(255, 204, 0, 0.1);
+    }
+
+    .dot.drone { background: #ef4444; box-shadow: 0 0 8px #ef4444; }
+    .dot.key { background: #eab308; box-shadow: 0 0 8px #eab308; }
 
     /* Message ticker */
     .status-ticker {
@@ -720,10 +845,16 @@
         <div class="game-subtitle">Tactical Robot Survival • 50 Sectors</div>
       </div>
 
+      <div class="callsign-box">
+        <span>👤 Callsign:</span>
+        <input type="text" id="playerCallsign" class="callsign-input" maxlength="12" value="Commander">
+        <button class="mini-btn" id="btn-save-callsign" style="padding:4px 8px;">Save</button>
+      </div>
+
       <div class="menu-stats-pill">
         <span>⭐ Stars: <strong id="menu-total-stars" style="color:var(--yellow);">0</strong></span>
-        <span>🗺️ Sectors: <strong style="color:var(--cyan);">50</strong></span>
         <span>🏆 Best: <strong id="menu-high-score" style="color:var(--green);">0</strong></span>
+        <span><button class="mini-btn" id="btn-show-hall-of-fame" style="padding:2px 8px; border-color:var(--yellow); color:var(--yellow); font-size:0.75rem;">🏆 Ranks</button></span>
       </div>
 
             <!-- Hardcore Confusion Mode Banner -->
@@ -812,6 +943,10 @@
           <span class="hud-label">Score</span>
           <span class="hud-val" id="val-score" style="color: var(--cyan);">0</span>
         </div>
+        <div class="hud-item" style="text-align: right;">
+          <span class="hud-label">🔑 Key</span>
+          <span class="hud-val" id="val-key" style="color: var(--yellow); font-size: 0.85rem;">NONE</span>
+        </div>
         
         <!-- Battery Meter -->
         <div class="battery-container">
@@ -843,6 +978,8 @@
       <div class="legend-bar">
         <div class="legend-item"><span class="dot robot"></span> Robot</div>
         <div class="legend-item"><span class="dot energy"></span> +10% Energy</div>
+        <div class="legend-item"><span class="dot key"></span> 🔑 Key</div>
+        <div class="legend-item"><span class="dot drone"></span> 🤖 Drone</div>
         <div class="legend-item"><span class="dot portal"></span> @ Warp</div>
         <div class="legend-item"><span class="dot emp"></span> ? EMP</div>
         <div class="legend-item"><span class="dot hazard"></span> Hazard</div>
@@ -850,6 +987,20 @@
       </div>
 
       <!-- Mobile Virtual Controls -->
+            <!-- Shield Active Indicator -->
+      <div id="shield-warning" class="shield-alert" style="display: none;">
+        🛡️ KINETIC SHIELD ACTIVE: <span id="shield-count">5</span> MOVES REMAINING!
+      </div>
+
+      <!-- Tactical Abilities Bar -->
+      <div class="abilities-container">
+        <div class="abilities-label">⚡ SPECIAL GADGETS (1 USE / SECTOR):</div>
+        <div class="abilities-row">
+          <button class="ability-btn" id="btn-ability-radar">💡 Radar Pulse (1)</button>
+          <button class="ability-btn" id="btn-ability-shield">🛡️ Shield (1)</button>
+          <button class="ability-btn" id="btn-ability-dash">🏎️ Turbo Dash (1)</button>
+        </div>
+      </div>
       <div class="controls-panel">
         <div class="dpad-container">
           <button class="dbtn dbtn-up" id="btn-up" aria-label="Up">▲</button>
@@ -860,13 +1011,30 @@
         <div class="action-tools">
           <button class="tool-btn" id="btn-fog">🌫️ Fog: ON</button>
           <button class="tool-btn" id="btn-restart">🔄 Restart</button>
-          <button class="tool-btn" id="btn-sound">🔊 Sound: ON</button>
+          <button class="tool-btn" id="btn-sound">🔊 SFX: ON</button>
+          <button class="tool-btn" id="btn-music">🎵 Music: ON</button>
           <button class="tool-btn" id="btn-rules">❓ Rules</button>
         </div>
       </div>
 
       <div class="desktop-hint">
         Keyboard Controls: <strong>W/A/S/D</strong> or <strong>Arrow Keys</strong> to move
+      </div>
+    </div>
+  </div>
+
+    <!-- Leaderboard Modal -->
+  <div class="overlay" id="leaderboardModal">
+    <div class="modal-box" style="max-width: 460px;">
+      <div class="modal-title" style="color: var(--yellow);">🏆 HALL OF FAME</div>
+      <div class="modal-msg" style="margin-bottom: 8px;">Global Survivor Rankings & High Scores</div>
+      <div style="max-height: 260px; overflow-y: auto; margin-bottom: 14px;">
+        <table class="leaderboard-table" id="leaderboard-table-body">
+          <!-- Injected dynamically -->
+        </table>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn" onclick="document.getElementById('leaderboardModal').style.display='none'">CLOSE</button>
       </div>
     </div>
   </div>
@@ -887,10 +1055,13 @@
   </div>
 
   <script>
-    // Audio Synthesizer
+    // Audio Synthesizer & Procedural BGM
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx = null;
     let soundEnabled = true;
+    let musicEnabled = true;
+    let bgmInterval = null;
+    let bgmStep = 0;
 
     function initAudio() {
       if (!audioCtx) {
@@ -920,37 +1091,19 @@
       }, delay);
     }
 
+    // Sound FX Library
     function soundMove() { playBeep(320, 'sine', 0.04); }
-    function soundEnergy() {
-      playBeep(587, 'triangle', 0.08);
-      playBeep(880, 'triangle', 0.12, 70);
-    }
-    function soundHazard() {
-      playBeep(180, 'sawtooth', 0.18);
-      playBeep(120, 'sawtooth', 0.18, 90);
-    }
-    function soundWin() {
-      playBeep(523, 'sine', 0.09);
-      playBeep(659, 'sine', 0.09, 80);
-      playBeep(784, 'sine', 0.09, 160);
-      playBeep(1046, 'sine', 0.22, 240);
-    }
-    function soundGameOver() {
-      playBeep(280, 'sawtooth', 0.15);
-      playBeep(220, 'sawtooth', 0.18, 120);
-      playBeep(150, 'sawtooth', 0.35, 270);
-    }
-    function soundPortal() {
-      playBeep(240, 'sine', 0.08);
-      playBeep(480, 'sine', 0.1, 60);
-      playBeep(720, 'sine', 0.12, 120);
-      playBeep(1200, 'sine', 0.22, 180);
-    }
-    function soundGlitch() {
-      playBeep(180, 'sawtooth', 0.09);
-      playBeep(340, 'square', 0.09, 50);
-      playBeep(120, 'sawtooth', 0.16, 110);
-    }
+    function soundEnergy() { playBeep(587, 'triangle', 0.08); playBeep(880, 'triangle', 0.12, 70); }
+    function soundHazard() { playBeep(180, 'sawtooth', 0.18); playBeep(120, 'sawtooth', 0.18, 90); }
+    function soundWin() { playBeep(523, 'sine', 0.09); playBeep(659, 'sine', 0.09, 80); playBeep(784, 'sine', 0.09, 160); playBeep(1046, 'sine', 0.22, 240); }
+    function soundGameOver() { playBeep(280, 'sawtooth', 0.15); playBeep(220, 'sawtooth', 0.18, 120); playBeep(150, 'sawtooth', 0.35, 270); }
+    function soundPortal() { playBeep(240, 'sine', 0.08); playBeep(480, 'sine', 0.1, 60); playBeep(720, 'sine', 0.12, 120); playBeep(1200, 'sine', 0.22, 180); }
+    function soundGlitch() { playBeep(180, 'sawtooth', 0.09); playBeep(340, 'square', 0.09, 50); playBeep(120, 'sawtooth', 0.16, 110); }
+    function soundKey() { playBeep(659, 'triangle', 0.08); playBeep(987, 'sine', 0.14, 80); playBeep(1318, 'sine', 0.2, 160); }
+    function soundDrone() { playBeep(160, 'sawtooth', 0.12); playBeep(110, 'sawtooth', 0.15, 60); playBeep(90, 'sawtooth', 0.2, 120); }
+    function soundShield() { playBeep(400, 'sine', 0.1); playBeep(600, 'sine', 0.1, 50); playBeep(800, 'triangle', 0.15, 100); }
+    function soundDash() { playBeep(250, 'square', 0.06); playBeep(500, 'sawtooth', 0.1, 40); }
+    function soundAccessDenied() { playBeep(150, 'sawtooth', 0.15); playBeep(130, 'sawtooth', 0.15, 80); }
 
     function vibrate(pattern) {
       if ('vibrate' in navigator) {
@@ -958,14 +1111,867 @@
       }
     }
 
-    // 50 LEVEL DATASET
-    const LEVELS = [{"level": 1, "title": "Sector 1: Sub-Station #1", "timeLimit": 46, "grid": ["#############", "#R#E#E#.....#", "#.#.#@#.#####", "#...#..?..E.#", "#.#####.#.#@#", "#.E....E#.#X#", "#############"]}, {"level": 2, "title": "Sector 2: Power Grid #2", "timeLimit": 47, "grid": ["#############", "#R....E....E#", "#E#@#.#.###.#", "#.#.#.#?..#.#", "###.#.#.#@#.#", "#..E#.#.#.#X#", "#############"]}, {"level": 3, "title": "Sector 3: Capacitor Array #3", "timeLimit": 48, "grid": ["#############", "#R..#.#..E..#", "#.###@#.#####", "#.....?.#..X#", "###E#####.###", "#..@...E..E.#", "#############"]}, {"level": 4, "title": "Sector 4: Voltage Relay #4", "timeLimit": 49, "grid": ["#############", "#R^...E...#X#", "###.###@###.#", "#.....#?.E..#", "#E#.#.#.#@###", "#.#.#E#.#...#", "#############"]}, {"level": 5, "title": "Sector 5: Thermal Duct #5", "timeLimit": 50, "grid": ["#############", "#R...^E....@#", "#.#.#.#.#.###", "#.#E#.#?#E..#", "#...#.#####@#", "#.#.#..E..#X#", "#############"]}, {"level": 6, "title": "Sector 6: Quantum Vault #6", "timeLimit": 51, "grid": ["#############", "#R..^.....#X#", "#.#@#E#####.#", "#.#.#....E..#", "#.#####.#####", "#.@..E#....E#", "#############"]}, {"level": 7, "title": "Sector 7: Battery Depot #7", "timeLimit": 52, "grid": ["#############", "#R.......@..#", "#.#######.###", "#...E?..#E#X#", "#.#.###^###.#", "#@#..E#E....#", "#############"]}, {"level": 8, "title": "Sector 8: Reactor Core #8", "timeLimit": 53, "grid": ["#############", "#R.^.^E....E#", "#E#E#######.#", "#.#......?#.#", "#.#.###.#.#.#", "#.....#.#.#X#", "#############"]}, {"level": 9, "title": "Sector 9: Cooling Matrix #9", "timeLimit": 54, "grid": ["#############", "#R#.#.#E..#X#", "#^#.#.###@#.#", "#...E..?^E..#", "#.#####.###.#", "#.E@..#...#.#", "#############"]}, {"level": 10, "title": "Sector 10: Omega Chamber #10", "timeLimit": 55, "grid": ["#############", "#R...^^.#..X#", "#.#.#.#.#E###", "#.#.#.#.#..E#", "###E#####.###", "#......E...E#", "#############"]}, {"level": 11, "title": "Sector 11: Sub-Station #11", "timeLimit": 56, "grid": ["###############", "#R....#.#...#.#", "#.#^###.#.###.#", "#^#@.E....#X..#", "#.###.#.#?###.#", "#.#.#.#E..#.#.#", "#.#.#######@#.#", "#E.....E.....E#", "###############"]}, {"level": 12, "title": "Sector 12: Power Grid #12", "timeLimit": 57, "grid": ["###############", "#R.^..#...E.#X#", "#.##^##.#####.#", "#...E@...E#.#.#", "#..##.#.#.#.#.#", "#.E.#.#.#...E.#", "#.###.#@#.#.###", "#.#...#.#.#...#", "###############"]}, {"level": 13, "title": "Sector 13: Capacitor Array #13", "timeLimit": 58, "grid": ["###############", "#R....E....E^E#", "#.###.###.#.###", "#.#@....#.#...#", "#.###.#####^###", "#?#..E..#.#.E.#", "#.#.#.#@#.###.#", "#.#.#.#.....#X#", "###############"]}, {"level": 14, "title": "Sector 14: Voltage Relay #14", "timeLimit": 59, "grid": ["###############", "#R#.......#.#X#", "#.#.#######.#.#", "#.#...#^#E....#", "#.#.###.###.###", "#?..#^..#E#.E.#", "#.##.##.#.###.#", "#.E......E....#", "###############"]}, {"level": 15, "title": "Sector 15: Thermal Duct #15", "timeLimit": 60, "grid": ["###############", "#R..^.....#X.E#", "#.###.#######.#", "#.@.#^..E.#...#", "###.#########.#", "#.?E#.#E#...#.#", "###.#.#.#.###@#", "#.....^E.....E#", "###############"]}, {"level": 16, "title": "Sector 16: Quantum Vault #16", "timeLimit": 61, "grid": ["###############", "#R^^#.......#X#", "#.#.#.#######.#", "#.#.E.....#...#", "#.#..#^####E###", "#.#....E......#", "#.###.#.#######", "#.#E..#...E...#", "###############"]}, {"level": 17, "title": "Sector 17: Battery Depot #17", "timeLimit": 62, "grid": ["###############", "#R...^#.#.E.#.#", "#.#.#E#.###.#.#", "#E#@#.........#", "###.#?#########", "#...#.....#^#X#", "###.#.#####@#.#", "#...#E^...E...#", "###############"]}, {"level": 18, "title": "Sector 18: Reactor Core #18", "timeLimit": 63, "grid": ["###############", "#R...^#.E.#...#", "#.#.###.#..@###", "#.#.E...#.....#", "#.#.#.###.#.###", "#.#.#.^E..#.#X#", "#E.@#.#.#####.#", "#.#.#^#...E...#", "###############"]}, {"level": 19, "title": "Sector 19: Cooling Matrix #19", "timeLimit": 64, "grid": ["###############", "#R....#.#.#.#X#", "###.#E#.#E..#.#", "#@..#...#^#..E#", "#.###E#.#.###?#", "#.#...#E^...#.#", "#####.#.###@#.#", "#..^..#.#..E..#", "###############"]}, {"level": 20, "title": "Sector 20: Omega Chamber #20", "timeLimit": 65, "grid": ["###############", "#R..#.#.E^#...#", "#.###.#.###.###", "#...E......^..#", "#.###?#########", "#.#....E....E^#", "#.#####.#.#.#.#", "#.#E.^..#.#.#X#", "###############"]}, {"level": 21, "title": "Sector 21: Sub-Station #21", "timeLimit": 66, "grid": ["###############", "#R....#..^...^#", "#.#.#E.@#.###.#", "#.#.#.#.#...#E#", "#.###?#.#######", "#...#..E..#.#X#", "#.#E###@#.#^#.#", "#.#.#...#.E..^#", "###############"]}, {"level": 22, "title": "Sector 22: Power Grid #22", "timeLimit": 67, "grid": ["###############", "#R..E.#E..#...#", "#.#.###.#..E###", "#^..E...#^#...#", "#.###.#.###E#.#", "#.#...#..^..#X#", "###.#.#.###.###", "#...#.#...#^..#", "###############"]}, {"level": 23, "title": "Sector 23: Capacitor Array #23", "timeLimit": 68, "grid": ["###############", "#R....E.^.....#", "#.###.#@#.#####", "#...#E#.#E#E#X#", "###.#.###.#.#.#", "#?..#^..#...E.#", "###.###########", "#^@..........^#", "###############"]}, {"level": 24, "title": "Sector 24: Voltage Relay #24", "timeLimit": 69, "grid": ["###############", "#R#.^..E.^....#", "#^#.#####E#.###", "#.@.E.#.#.#..X#", "###^#.#.#####.#", "#...#..E....E.#", "#.#.###@#.###.#", "#.#...#.#...#.#", "###############"]}, {"level": 25, "title": "Sector 25: Thermal Duct #25", "timeLimit": 70, "grid": ["###############", "#R....#.^.....#", "###.###@#######", "#E#.E..^..^...#", "#.#.#?###.#####", "#^^.#..E#.#..X#", "#.#.###@###.###", "#.#E..#...E...#", "###############"]}, {"level": 26, "title": "Sector 26: Quantum Vault #26", "timeLimit": 66, "grid": ["#################", "#R#.#..E..#.#...#", "#.#.#.#.#.#.#.###", "#...E.#^..E....E#", "###.###########^#", "#?..E...#.....#X#", "#.###.#.###.###.#", "#.#...#.E..^....#", "#################"]}, {"level": 27, "title": "Sector 27: Battery Depot #27", "timeLimit": 67, "grid": ["#################", "#R..#.#.......#.#", "#.###.#.#######.#", "#@..E....E......#", "###?#.#.###.#####", "#..^#.#.....#.#X#", "###@#.#.#E#E#.#.#", "#...#.#.#E..^^.E#", "#################"]}, {"level": 28, "title": "Sector 28: Reactor Core #28", "timeLimit": 68, "grid": ["#################", "#R......E.#E^...#", "#.#########.###.#", "#...#.#.#.....#X#", "#.###.#.###.#####", "#..E.....E^..^..#", "###.#.#.#####.###", "#.E.#.......#...#", "#################"]}, {"level": 29, "title": "Sector 29: Cooling Matrix #29", "timeLimit": 69, "grid": ["#################", "#R...^..#.#.#.#X#", "#.#E#####...#^#.#", "#.#@#...#.#.#..E#", "#.###.###.#.#.#?#", "#.....#....E..#.#", "#@#####.###.#.###", "#E.....E#.E^#...#", "#################"]}, {"level": 30, "title": "Sector 30: Omega Chamber #30", "timeLimit": 70, "grid": ["#################", "#R#.#..^.E.....E#", "#.#.#.#^#####.#.#", "#@...E#.#.#.#...#", "#.#.#.###.#.###.#", "#.#E#...#.....#.#", "#E###@##..#.###^#", "#...#....^#.#X.E#", "#################"]}, {"level": 31, "title": "Sector 31: Sub-Station #31", "timeLimit": 71, "grid": ["#################", "#R^E#..E..#.#E.X#", "#.###.###.#.#.###", "#...E@..#^E.....#", "#.#.#############", "#.#..?..........#", "#.#######.##@...#", "#.#.^..^...E#.#.#", "#################"]}, {"level": 32, "title": "Sector 32: Power Grid #32", "timeLimit": 72, "grid": ["#################", "#R^.............#", "#.#.#E#######.###", "#.#.#.#.#.#.#...#", "#.#E##.?#.#.#####", "#^..^..E....E..^#", "#.###.###.#.###.#", "#.#...#E....#X.E#", "#################"]}, {"level": 33, "title": "Sector 33: Capacitor Array #33", "timeLimit": 73, "grid": ["#################", "#R..#....E..#X^.#", "#.###.#.###.###.#", "#.@..E..E.#^.E^.#", "#.###.########..#", "#.?.......#...#.#", "#####.###@#.###.#", "#.....#.^.....#E#", "#################"]}, {"level": 34, "title": "Sector 34: Voltage Relay #34", "timeLimit": 74, "grid": ["#################", "#R....#.....#...#", "#.#^#^#.#####.#.#", "#^..#E......#E#X#", "#.#.#...#####.###", "#.#E#.#..E....#.#", "#.##..#.#.###.#.#", "#.#..^#.#E..#...#", "#################"]}, {"level": 35, "title": "Sector 35: Thermal Duct #35", "timeLimit": 75, "grid": ["#################", "#R....^..E......#", "#.#.###E#########", "#@#...#.#...#.^.#", "#.#######..?#.#^#", "#..E.....E#..E#X#", "#.#########@#.###", "#....^..^.#.#...#", "#################"]}, {"level": 36, "title": "Sector 36: Quantum Vault #36", "timeLimit": 76, "grid": ["#################", "#R#....E#....E.X#", "#.#E###^#E#######", "#...#@#...^...^.#", "#.###.#.#########", "#..^.E..........#", "#^#.##.E#########", "#@#.#...........#", "#################"]}, {"level": 37, "title": "Sector 37: Battery Depot #37", "timeLimit": 77, "grid": ["#################", "#R...^..........#", "#.###########.###", "#@..E.^..E..#..^#", "#.###.#.#?#.#####", "#.#...#..^.^E...#", "#E#####.#@###...#", "#.....#.#E..#.#X#", "#################"]}, {"level": 38, "title": "Sector 38: Reactor Core #38", "timeLimit": 78, "grid": ["#################", "#R....#.......#^#", "#.#.#.#.#######.#", "#.#.#E..^.^E#X.E#", "#.#.#^#.###^###.#", "#?#.#.#..E#.#...#", "#E###.#.#.###.#.#", "#.#...#.#....E..#", "#################"]}, {"level": 39, "title": "Sector 39: Cooling Matrix #39", "timeLimit": 79, "grid": ["#################", "#R.........E....#", "#.###E#########@#", "#...^...^E#...#.#", "###.#####.#?#####", "#...^..E#^..E^..#", "###.#.###@#.#.#.#", "#...#.#...#.#.#X#", "#################"]}, {"level": 40, "title": "Sector 40: Omega Chamber #40", "timeLimit": 80, "grid": ["#################", "#R^.^.E....E..#.#", "#.###.#.###.###.#", "#...#E#..^....^.#", "#.#####.###.#E#.#", "#.E.#...#^..#.#.#", "#..####.###.#^###", "#...#.....#.#..X#", "#################"]}, {"level": 41, "title": "Sector 41: Sub-Station #41", "timeLimit": 76, "grid": ["###################", "#R.....E..........#", "#.#####.#.#########", "#.#.#.@.#.#.#.#.#.#", "#.#.#.#.###.#...#.#", "#..E#E#.?E.^......#", "#.###.#####.#.###.#", "#...#...@.#.#E^^#^#", "#.###.#######.#####", "#.#.........#....X#", "###################"]}, {"level": 42, "title": "Sector 42: Power Grid #42", "timeLimit": 77, "grid": ["###################", "#R.....E.^..#.#..^#", "#.###.#.#####.#.###", "#.E.#.#..@.E....#.#", "###.#####.###.###.#", "#.......#...#..E..#", "#.#.###.#.###.#^###", "#.#.#...#...#@#...#", "#.##.####.###.#.#.#", "#.....#.....#^#E#X#", "###################"]}, {"level": 43, "title": "Sector 43: Capacitor Array #43", "timeLimit": 78, "grid": ["###################", "#R...^....#...#..^#", "#.#.#######.###.###", "#.#.#.#^#.@.#..E..#", "#^###.#.#.###.#.###", "#.....#^.E..?.#...#", "###.###.#####.#.###", "#.#E........#@#.#X#", "#E#.###########.#.#", "#...........E.#..E#", "###################"]}, {"level": 44, "title": "Sector 44: Voltage Relay #44", "timeLimit": 79, "grid": ["###################", "#R#..^....#^..#.#X#", "#.#.#####.#.#E#.#.#", "#....E..#.....#...#", "#.#####.#.#####.###", "#.....#..E.?...E..#", "###^#...#####.#####", "#...#?#...#.......#", "#.#.#.###.###.###.#", "#..E#...#..^#..^#.#", "###################"]}, {"level": 45, "title": "Sector 45: Thermal Duct #45", "timeLimit": 80, "grid": ["###################", "#R...^.E.^...^....#", "#.#^#.#.###.#######", "#.#.#.#.#@.E......#", "###.#.#####.#######", "#...#..E#...?...#.#", "###.#.###.###.#.#.#", "#...#.#X#E#...#.^@#", "#E#.#.#.#.#####.###", "#.#.#.#.....#.....#", "###################"]}, {"level": 46, "title": "Sector 46: Quantum Vault #46", "timeLimit": 81, "grid": ["###################", "#R......#.#...#.#X#", "#.#.#####.#.###...#", "#.#..E..^.#.......#", "###^###.#####.#.#.#", "#...#E#..E.....E..#", "#.#.#.#.#####.#####", "#.#^#.^..^..#...E.#", "###.#######..##.#.#", "#.........#^..#.#.#", "###################"]}, {"level": 47, "title": "Sector 47: Battery Depot #47", "timeLimit": 82, "grid": ["###################", "#R..#..E....#...#X#", "#.###.#####.#.###.#", "#.#.#.^.#@..E.....#", "#.#^#.#.#.##E##.#.#", "#...E.#.#.?...#E#.#", "#.#.#^###.#########", "#^#.#...?.#.....@.#", "#.#^###.###.#######", "#.#...#..........^#", "###################"]}, {"level": 48, "title": "Sector 48: Reactor Core #48", "timeLimit": 83, "grid": ["###################", "#R.........^#.....#", "#..#.########.#####", "#E...E@.^..E...^.E#", "#.#########.#.###.#", "#.....^.....#.#..^#", "###.#.###.#######.#", "#...#...#E...@#..^#", "###.###.#.#.#.###.#", "#.....#.#.#.#.#X.E#", "###################"]}, {"level": 49, "title": "Sector 49: Cooling Matrix #49", "timeLimit": 84, "grid": ["###################", "#R.....E..#^....E.#", "#.###^#..##.#####.#", "#.#.#.@....E#.#.#.#", "#.#^###.#.#.#.#.###", "#.^E#...#.#.^?....#", "#.###########^#####", "#......?#...#E..^.#", "#@#######.###.###.#", "#...........#....X#", "###################"]}, {"level": 50, "title": "Sector 50: The Omega Core (Final Protocol)", "timeLimit": 85, "grid": ["###################", "#R..#..^...E......#", "#.###E###.#.#####^#", "#....@..#.#^..E...#", "###^#######.#.###.#", "#.......#?..#...#.#", "#.#E#####.#.#####.#", "#.#?..^.#.#.E@^.#.#", "#.#.#######.#.#.###", "#.#....^#...#.#..X#", "###################"]}];
+    // Procedural Synthwave BGM Generator
+    const BASS_NOTES = [65.41, 65.41, 77.78, 77.78, 87.31, 87.31, 98.00, 116.54, 65.41, 65.41, 77.78, 77.78, 98.00, 87.31, 77.78, 58.27];
+    const LEAD_NOTES = [261.63, 0, 311.13, 392.00, 0, 311.13, 466.16, 392.00, 261.63, 349.23, 0, 392.00, 523.25, 466.16, 392.00, 311.13];
+
+    function startBGM() {
+      if (bgmInterval) return;
+      bgmInterval = setInterval(() => {
+        if (!musicEnabled || !soundEnabled) return;
+        initAudio();
+        const bFreq = BASS_NOTES[bgmStep % BASS_NOTES.length];
+        const lFreq = LEAD_NOTES[bgmStep % LEAD_NOTES.length];
+
+        if (bFreq > 0) {
+          try {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(bFreq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.16);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.16);
+          } catch(e) {}
+        }
+
+        if (lFreq > 0 && bgmStep % 2 === 0) {
+          try {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(lFreq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.025, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.22);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.22);
+          } catch(e) {}
+        }
+
+        bgmStep++;
+      }, 140);
+    }
+
+    function stopBGM() {
+      clearInterval(bgmInterval);
+      bgmInterval = null;
+    }
+
+    // 50 LEVEL DATASET (with Keys, Drones, Portals, EMP, Spikes)
+    const LEVELS = [
+  {
+    "level": 1,
+    "title": "Sector 1: Sub-Station #1",
+    "timeLimit": 46,
+    "grid": [
+      "#############",
+      "#R#E#E#.....#",
+      "#.#.#@#.#####",
+      "#...#..?..E.#",
+      "#.#####.#.#@#",
+      "#.E....E#.#X#",
+      "#############"
+    ]
+  },
+  {
+    "level": 2,
+    "title": "Sector 2: Power Grid #2",
+    "timeLimit": 47,
+    "grid": [
+      "#############",
+      "#R....E....E#",
+      "#E#@#.#.###.#",
+      "#.#.#.#?..#.#",
+      "###.#.#.#@#.#",
+      "#..E#.#.#.#X#",
+      "#############"
+    ]
+  },
+  {
+    "level": 3,
+    "title": "Sector 3: Capacitor Array #3",
+    "timeLimit": 48,
+    "grid": [
+      "#############",
+      "#R..#.#..E..#",
+      "#.###@#.#####",
+      "#.K...?.#..X#",
+      "###E#####.###",
+      "#..@...E..E.#",
+      "#############"
+    ]
+  },
+  {
+    "level": 4,
+    "title": "Sector 4: Voltage Relay #4",
+    "timeLimit": 49,
+    "grid": [
+      "#############",
+      "#R^...E...#X#",
+      "###.###@###.#",
+      "#.....#?.E..#",
+      "#E#.#.#.#@###",
+      "#.#.#E#.#...#",
+      "#############"
+    ]
+  },
+  {
+    "level": 5,
+    "title": "Sector 5: Thermal Duct #5",
+    "timeLimit": 50,
+    "grid": [
+      "#############",
+      "#R..S^E....@#",
+      "#.#.#.#.#.###",
+      "#.#E#.#?#E..#",
+      "#...#.#####@#",
+      "#.#.#..E..#X#",
+      "#############"
+    ]
+  },
+  {
+    "level": 6,
+    "title": "Sector 6: Quantum Vault #6",
+    "timeLimit": 51,
+    "grid": [
+      "#############",
+      "#R..^.....#X#",
+      "#.#@#E#####.#",
+      "#.#.#....E..#",
+      "#.#####.#####",
+      "#.@..E#....E#",
+      "#############"
+    ]
+  },
+  {
+    "level": 7,
+    "title": "Sector 7: Battery Depot #7",
+    "timeLimit": 52,
+    "grid": [
+      "#############",
+      "#R.......@.K#",
+      "#.#######.###",
+      "#...E?..#E#X#",
+      "#.#.###^###.#",
+      "#@#..E#E....#",
+      "#############"
+    ]
+  },
+  {
+    "level": 8,
+    "title": "Sector 8: Reactor Core #8",
+    "timeLimit": 53,
+    "grid": [
+      "#############",
+      "#R.^.^E....E#",
+      "#E#E#######.#",
+      "#.#......?#.#",
+      "#.#.###.#.#.#",
+      "#.....#.#.#X#",
+      "#############"
+    ]
+  },
+  {
+    "level": 9,
+    "title": "Sector 9: Cooling Matrix #9",
+    "timeLimit": 54,
+    "grid": [
+      "#############",
+      "#R#.#.#E..#X#",
+      "#^#S#.###@#.#",
+      "#...E..?^E..#",
+      "#.#####.###.#",
+      "#.E@..#...#.#",
+      "#############"
+    ]
+  },
+  {
+    "level": 10,
+    "title": "Sector 10: Omega Chamber #10",
+    "timeLimit": 55,
+    "grid": [
+      "#############",
+      "#R...^^.#..X#",
+      "#.#.#.#.#E###",
+      "#.#.#.#.#..E#",
+      "###E#####.###",
+      "#......E...E#",
+      "#############"
+    ]
+  },
+  {
+    "level": 11,
+    "title": "Sector 11: Sub-Station #11",
+    "timeLimit": 56,
+    "grid": [
+      "###############",
+      "#R....#.#...#.#",
+      "#.#^###.#.###.#",
+      "#^#@.E..K.#X..#",
+      "#.###.#.#?###.#",
+      "#.#.#.#E..#.#.#",
+      "#.#.#######@#.#",
+      "#E.....E.....E#",
+      "###############"
+    ]
+  },
+  {
+    "level": 12,
+    "title": "Sector 12: Power Grid #12",
+    "timeLimit": 57,
+    "grid": [
+      "###############",
+      "#R.^..#...E.#X#",
+      "#.##^##.#####.#",
+      "#...E@...E#.#.#",
+      "#..##.#.#.#.#.#",
+      "#.E.#.#.#...E.#",
+      "#.###.#@#.#.###",
+      "#.#...#.#.#...#",
+      "###############"
+    ]
+  },
+  {
+    "level": 13,
+    "title": "Sector 13: Capacitor Array #13",
+    "timeLimit": 58,
+    "grid": [
+      "###############",
+      "#R..S.E....E^E#",
+      "#.###.###.#.###",
+      "#.#@....#.#...#",
+      "#.###.#####^###",
+      "#?#..E..#.#.E.#",
+      "#.#.#.#@#.###.#",
+      "#.#.#.#.....#X#",
+      "###############"
+    ]
+  },
+  {
+    "level": 14,
+    "title": "Sector 14: Voltage Relay #14",
+    "timeLimit": 59,
+    "grid": [
+      "###############",
+      "#R#.......#.#X#",
+      "#.#.#######.#.#",
+      "#.#...#^#E....#",
+      "#.#.###.###.###",
+      "#?..#^..#E#.E.#",
+      "#.##.##.#.###.#",
+      "#.E......E....#",
+      "###############"
+    ]
+  },
+  {
+    "level": 15,
+    "title": "Sector 15: Thermal Duct #15",
+    "timeLimit": 60,
+    "grid": [
+      "###############",
+      "#R..^.....#X.E#",
+      "#.###.#######.#",
+      "#.@.#^..EK#...#",
+      "###.#########.#",
+      "#.?E#.#E#...#.#",
+      "###.#.#.#.###@#",
+      "#.....^E.....E#",
+      "###############"
+    ]
+  },
+  {
+    "level": 16,
+    "title": "Sector 16: Quantum Vault #16",
+    "timeLimit": 61,
+    "grid": [
+      "###############",
+      "#R^^#.......#X#",
+      "#.#.#.#######.#",
+      "#.#.E.....#...#",
+      "#.#..#^####E###",
+      "#.#....E......#",
+      "#.###.#.#######",
+      "#.#E..#...E...#",
+      "###############"
+    ]
+  },
+  {
+    "level": 17,
+    "title": "Sector 17: Battery Depot #17",
+    "timeLimit": 62,
+    "grid": [
+      "###############",
+      "#R..S^#.#.E.#.#",
+      "#.#.#E#.###.#.#",
+      "#E#@#.........#",
+      "###.#?#########",
+      "#...#.....#^#X#",
+      "###.#.#####@#.#",
+      "#...#E^...E...#",
+      "###############"
+    ]
+  },
+  {
+    "level": 18,
+    "title": "Sector 18: Reactor Core #18",
+    "timeLimit": 63,
+    "grid": [
+      "###############",
+      "#R...^#.E.#...#",
+      "#.#.###.#..@###",
+      "#.#.E...#.....#",
+      "#.#.#.###.#.###",
+      "#.#.#.^E..#.#X#",
+      "#E.@#.#.#####.#",
+      "#.#.#^#...E...#",
+      "###############"
+    ]
+  },
+  {
+    "level": 19,
+    "title": "Sector 19: Cooling Matrix #19",
+    "timeLimit": 64,
+    "grid": [
+      "###############",
+      "#R....#.#.#.#X#",
+      "###.#E#.#E..#.#",
+      "#@..#K..#^#..E#",
+      "#.###E#.#.###?#",
+      "#.#...#E^...#.#",
+      "#####.#.###@#.#",
+      "#..^..#.#..E..#",
+      "###############"
+    ]
+  },
+  {
+    "level": 20,
+    "title": "Sector 20: Omega Chamber #20",
+    "timeLimit": 65,
+    "grid": [
+      "###############",
+      "#R..#.#.E^#...#",
+      "#.###.#.###.###",
+      "#...E......^..#",
+      "#.###?#########",
+      "#.#....E....E^#",
+      "#.#####.#.#.#.#",
+      "#.#E.^..#.#.#X#",
+      "###############"
+    ]
+  },
+  {
+    "level": 21,
+    "title": "Sector 21: Sub-Station #21",
+    "timeLimit": 66,
+    "grid": [
+      "###############",
+      "#R..S.#..^...^#",
+      "#.#.#E.@#.###.#",
+      "#.#.#.#.#...#E#",
+      "#.###?#.#######",
+      "#...#..E..#.#X#",
+      "#.#E###@#.#^#.#",
+      "#.#.#...#.E..^#",
+      "###############"
+    ]
+  },
+  {
+    "level": 22,
+    "title": "Sector 22: Power Grid #22",
+    "timeLimit": 67,
+    "grid": [
+      "###############",
+      "#R..E.#E..#...#",
+      "#.#.###.#..E###",
+      "#^..E...#^#...#",
+      "#.###.#.###E#.#",
+      "#.#...#..^..#X#",
+      "###.#.#.###.###",
+      "#...#.#...#^..#",
+      "###############"
+    ]
+  },
+  {
+    "level": 23,
+    "title": "Sector 23: Capacitor Array #23",
+    "timeLimit": 68,
+    "grid": [
+      "###############",
+      "#R....E.^.....#",
+      "#.###.#@#.#####",
+      "#..K#E#.#E#E#X#",
+      "###.#.###.#.#.#",
+      "#?..#^..#...E.#",
+      "###.###########",
+      "#^@..........^#",
+      "###############"
+    ]
+  },
+  {
+    "level": 24,
+    "title": "Sector 24: Voltage Relay #24",
+    "timeLimit": 69,
+    "grid": [
+      "###############",
+      "#R#.^..E.^....#",
+      "#^#.#####E#.###",
+      "#.@.E.#.#.#..X#",
+      "###^#.#.#####.#",
+      "#...#..E....E.#",
+      "#.#.###@#.###.#",
+      "#.#...#.#...#.#",
+      "###############"
+    ]
+  },
+  {
+    "level": 25,
+    "title": "Sector 25: Thermal Duct #25",
+    "timeLimit": 70,
+    "grid": [
+      "###############",
+      "#R..S.#.^.....#",
+      "###.###@#######",
+      "#E#.E..^..^...#",
+      "#.#.#?###.#####",
+      "#^^.#..E#.#..X#",
+      "#.#.###@###.###",
+      "#.#E..#...E...#",
+      "###############"
+    ]
+  },
+  {
+    "level": 26,
+    "title": "Sector 26: Quantum Vault #26",
+    "timeLimit": 66,
+    "grid": [
+      "#################",
+      "#R#.#..E..#.#...#",
+      "#.#.#.#.#.#.#.###",
+      "#...E.#^..E....E#",
+      "###.###########^#",
+      "#?..E...#.....#X#",
+      "#.###.#.###.###.#",
+      "#.#...#.E..^....#",
+      "#################"
+    ]
+  },
+  {
+    "level": 27,
+    "title": "Sector 27: Battery Depot #27",
+    "timeLimit": 67,
+    "grid": [
+      "#################",
+      "#R..#.#.......#.#",
+      "#.###.#.#######.#",
+      "#@..E.K..E......#",
+      "###?#.#.###.#####",
+      "#..^#.#.....#.#X#",
+      "###@#.#.#E#E#.#.#",
+      "#...#.#.#E..^^.E#",
+      "#################"
+    ]
+  },
+  {
+    "level": 28,
+    "title": "Sector 28: Reactor Core #28",
+    "timeLimit": 68,
+    "grid": [
+      "#################",
+      "#R......E.#E^...#",
+      "#.#########.###.#",
+      "#...#.#.#.....#X#",
+      "#.###.#.###.#####",
+      "#..E.....E^..^..#",
+      "###.#.#.#####.###",
+      "#.E.#.......#...#",
+      "#################"
+    ]
+  },
+  {
+    "level": 29,
+    "title": "Sector 29: Cooling Matrix #29",
+    "timeLimit": 69,
+    "grid": [
+      "#################",
+      "#R..S^..#.#.#.#X#",
+      "#.#E#####...#^#.#",
+      "#.#@#...#.#.#..E#",
+      "#.###.###.#.#.#?#",
+      "#.....#....E..#.#",
+      "#@#####.###.#.###",
+      "#E.....E#.E^#...#",
+      "#################"
+    ]
+  },
+  {
+    "level": 30,
+    "title": "Sector 30: Omega Chamber #30",
+    "timeLimit": 70,
+    "grid": [
+      "#################",
+      "#R#.#..^.E.....E#",
+      "#.#.#.#^#####.#.#",
+      "#@...E#.#.#.#...#",
+      "#.#.#.###.#.###.#",
+      "#.#E#...#.....#.#",
+      "#E###@##..#.###^#",
+      "#...#....^#.#X.E#",
+      "#################"
+    ]
+  },
+  {
+    "level": 31,
+    "title": "Sector 31: Sub-Station #31",
+    "timeLimit": 71,
+    "grid": [
+      "#################",
+      "#R^E#..E..#.#E.X#",
+      "#.###.###.#.#.###",
+      "#...E@..#^E.K...#",
+      "#.#.#############",
+      "#.#..?..........#",
+      "#.#######.##@...#",
+      "#.#.^..^...E#.#.#",
+      "#################"
+    ]
+  },
+  {
+    "level": 32,
+    "title": "Sector 32: Power Grid #32",
+    "timeLimit": 72,
+    "grid": [
+      "#################",
+      "#R^.............#",
+      "#.#.#E#######.###",
+      "#.#.#.#.#.#.#...#",
+      "#.#E##.?#.#.#####",
+      "#^..^..E....E..^#",
+      "#.###.###.#.###.#",
+      "#.#...#E....#X.E#",
+      "#################"
+    ]
+  },
+  {
+    "level": 33,
+    "title": "Sector 33: Capacitor Array #33",
+    "timeLimit": 73,
+    "grid": [
+      "#################",
+      "#R..#.S..E..#X^.#",
+      "#.###.#.###.###.#",
+      "#.@..E..E.#^.E^.#",
+      "#.###.########..#",
+      "#.?.......#...#.#",
+      "#####.###@#.###.#",
+      "#.....#.^.....#E#",
+      "#################"
+    ]
+  },
+  {
+    "level": 34,
+    "title": "Sector 34: Voltage Relay #34",
+    "timeLimit": 74,
+    "grid": [
+      "#################",
+      "#R....#.....#...#",
+      "#.#^#^#.#####.#.#",
+      "#^..#E......#E#X#",
+      "#.#.#...#####.###",
+      "#.#E#.#..E....#.#",
+      "#.##..#.#.###.#.#",
+      "#.#..^#.#E..#...#",
+      "#################"
+    ]
+  },
+  {
+    "level": 35,
+    "title": "Sector 35: Thermal Duct #35",
+    "timeLimit": 75,
+    "grid": [
+      "#################",
+      "#R....^..E......#",
+      "#.#.###E#########",
+      "#@#...#K#...#.^.#",
+      "#.#######..?#.#^#",
+      "#..E.....E#..E#X#",
+      "#.#########@#.###",
+      "#....^..^.#.#...#",
+      "#################"
+    ]
+  },
+  {
+    "level": 36,
+    "title": "Sector 36: Quantum Vault #36",
+    "timeLimit": 76,
+    "grid": [
+      "#################",
+      "#R#....E#....E.X#",
+      "#.#E###^#E#######",
+      "#...#@#...^...^.#",
+      "#.###.#.#########",
+      "#..^.E..........#",
+      "#^#.##.E#########",
+      "#@#.#...........#",
+      "#################"
+    ]
+  },
+  {
+    "level": 37,
+    "title": "Sector 37: Battery Depot #37",
+    "timeLimit": 77,
+    "grid": [
+      "#################",
+      "#R..S^..........#",
+      "#.###########.###",
+      "#@..E.^..E..#..^#",
+      "#.###.#.#?#.#####",
+      "#.#...#..^.^E...#",
+      "#E#####.#@###...#",
+      "#.....#.#E..#.#X#",
+      "#################"
+    ]
+  },
+  {
+    "level": 38,
+    "title": "Sector 38: Reactor Core #38",
+    "timeLimit": 78,
+    "grid": [
+      "#################",
+      "#R....#.......#^#",
+      "#.#.#.#.#######.#",
+      "#.#.#E..^.^E#X.E#",
+      "#.#.#^#.###^###.#",
+      "#?#.#.#..E#.#...#",
+      "#E###.#.#.###.#.#",
+      "#.#...#.#....E..#",
+      "#################"
+    ]
+  },
+  {
+    "level": 39,
+    "title": "Sector 39: Cooling Matrix #39",
+    "timeLimit": 79,
+    "grid": [
+      "#################",
+      "#R.........E....#",
+      "#.###E#########@#",
+      "#...^K..^E#...#.#",
+      "###.#####.#?#####",
+      "#...^..E#^..E^..#",
+      "###.#.###@#.#.#.#",
+      "#...#.#...#.#.#X#",
+      "#################"
+    ]
+  },
+  {
+    "level": 40,
+    "title": "Sector 40: Omega Chamber #40",
+    "timeLimit": 80,
+    "grid": [
+      "#################",
+      "#R^.^.E....E..#.#",
+      "#.###.#.###.###.#",
+      "#...#E#..^....^.#",
+      "#.#####.###.#E#.#",
+      "#.E.#...#^..#.#.#",
+      "#..####.###.#^###",
+      "#...#.....#.#..X#",
+      "#################"
+    ]
+  },
+  {
+    "level": 41,
+    "title": "Sector 41: Sub-Station #41",
+    "timeLimit": 76,
+    "grid": [
+      "###################",
+      "#R..S..E..........#",
+      "#.#####.#.#########",
+      "#.#.#.@.#.#.#.#.#.#",
+      "#.#.#.#.###.#...#.#",
+      "#..E#E#.?E.^......#",
+      "#.###.#####.#.###.#",
+      "#...#...@.#.#E^^#^#",
+      "#.###.#######.#####",
+      "#.#.........#....X#",
+      "###################"
+    ]
+  },
+  {
+    "level": 42,
+    "title": "Sector 42: Power Grid #42",
+    "timeLimit": 77,
+    "grid": [
+      "###################",
+      "#R.....E.^..#.#..^#",
+      "#.###.#.#####.#.###",
+      "#.E.#.#..@.E....#.#",
+      "###.#####.###.###.#",
+      "#.......#...#..E..#",
+      "#.#.###.#.###.#^###",
+      "#.#.#...#...#@#...#",
+      "#.##.####.###.#.#.#",
+      "#.....#.....#^#E#X#",
+      "###################"
+    ]
+  },
+  {
+    "level": 43,
+    "title": "Sector 43: Capacitor Array #43",
+    "timeLimit": 78,
+    "grid": [
+      "###################",
+      "#R...^....#...#..^#",
+      "#.#.#######.###.###",
+      "#.#.#.#^#.@.#..E..#",
+      "#^###K#.#.###.#.###",
+      "#.....#^.E..?.#...#",
+      "###.###.#####.#.###",
+      "#.#E........#@#.#X#",
+      "#E#.###########.#.#",
+      "#...........E.#..E#",
+      "###################"
+    ]
+  },
+  {
+    "level": 44,
+    "title": "Sector 44: Voltage Relay #44",
+    "timeLimit": 79,
+    "grid": [
+      "###################",
+      "#R#..^....#^..#.#X#",
+      "#.#.#####.#.#E#.#.#",
+      "#....E..#.....#...#",
+      "#.#####.#.#####.###",
+      "#.....#..E.?...E..#",
+      "###^#...#####.#####",
+      "#...#?#...#.......#",
+      "#.#.#.###.###.###.#",
+      "#..E#...#..^#..^#.#",
+      "###################"
+    ]
+  },
+  {
+    "level": 45,
+    "title": "Sector 45: Thermal Duct #45",
+    "timeLimit": 80,
+    "grid": [
+      "###################",
+      "#R..S^.E.^...^....#",
+      "#.#^#.#.###.#######",
+      "#.#.#.#.#@.E......#",
+      "###.#.#####.#######",
+      "#...#..E#...?...#.#",
+      "###.#.###.###.#.#.#",
+      "#...#.#X#E#...#.^@#",
+      "#E#.#.#.#.#####.###",
+      "#.#.#.#.....#.....#",
+      "###################"
+    ]
+  },
+  {
+    "level": 46,
+    "title": "Sector 46: Quantum Vault #46",
+    "timeLimit": 81,
+    "grid": [
+      "###################",
+      "#R......#.#...#.#X#",
+      "#.#.#####.#.###...#",
+      "#.#..E..^.#.......#",
+      "###^###.#####.#.#.#",
+      "#...#E#..E.....E..#",
+      "#.#.#.#.#####.#####",
+      "#.#^#.^..^..#...E.#",
+      "###.#######..##.#.#",
+      "#.........#^..#.#.#",
+      "###################"
+    ]
+  },
+  {
+    "level": 47,
+    "title": "Sector 47: Battery Depot #47",
+    "timeLimit": 82,
+    "grid": [
+      "###################",
+      "#R..#..E....#...#X#",
+      "#.###.#####.#.###.#",
+      "#.#.#.^.#@..E....K#",
+      "#.#^#.#.#.##E##.#.#",
+      "#...E.#.#.?...#E#.#",
+      "#.#.#^###.#########",
+      "#^#.#...?.#.....@.#",
+      "#.#^###.###.#######",
+      "#.#...#..........^#",
+      "###################"
+    ]
+  },
+  {
+    "level": 48,
+    "title": "Sector 48: Reactor Core #48",
+    "timeLimit": 83,
+    "grid": [
+      "###################",
+      "#R.........^#.....#",
+      "#..#.########.#####",
+      "#E...E@.^..E...^.E#",
+      "#.#########.#.###.#",
+      "#.....^.....#.#..^#",
+      "###.#.###.#######.#",
+      "#...#...#E...@#..^#",
+      "###.###.#.#.#.###.#",
+      "#.....#.#.#.#.#X.E#",
+      "###################"
+    ]
+  },
+  {
+    "level": 49,
+    "title": "Sector 49: Cooling Matrix #49",
+    "timeLimit": 84,
+    "grid": [
+      "###################",
+      "#R..S..E..#^....E.#",
+      "#.###^#..##.#####.#",
+      "#.#.#.@....E#.#.#.#",
+      "#.#^###.#.#.#.#.###",
+      "#.^E#...#.#.^?....#",
+      "#.###########^#####",
+      "#......?#...#E..^.#",
+      "#@#######.###.###.#",
+      "#...........#....X#",
+      "###################"
+    ]
+  },
+  {
+    "level": 50,
+    "title": "Sector 50: The Omega Core (Final Protocol)",
+    "timeLimit": 85,
+    "grid": [
+      "###################",
+      "#R..#.S^...E......#",
+      "#.###E###.#.#####^#",
+      "#....@..#.#^..EK..#",
+      "###^#######.#.###.#",
+      "#.......#?..#...#.#",
+      "#.#E#####.#.#####.#",
+      "#.#?..^.#.#.E@^.#.#",
+      "#.#.#######.#.#.###",
+      "#.#....^#...#.#..X#",
+      "###################"
+    ]
+  }
+];
 
     // Game State
     let currentLevelIdx = 0;
     let grid = [];
     let robot = { x: 1, y: 1, battery: 100, maxBattery: 100, score: 0, moves: 0, energyCount: 0 };
     let exitPos = { x: 0, y: 0 };
+    let lastHeading = { dx: 1, dy: 0 };
     let isGameOver = false;
     let levelCompleted = false;
     let timeLeft = 45;
@@ -975,6 +1981,23 @@
     let hazardsActive = true;
     let hazardInterval = null;
 
+    // Feature 1: Drones
+    let drones = [];
+
+    // Feature 2: Key & Lock
+    let hasKey = false;
+    let levelRequiresKey = false;
+
+    // Feature 3: Abilities
+    let abilityRadarUses = 1;
+    let abilityShieldUses = 1;
+    let abilityDashUses = 1;
+    let shieldMovesLeft = 0;
+    let radarPulseTime = 0; // timestamp until when full map is revealed
+
+    // Feature 5: Particle System
+    let particles = [];
+
     // Canvas Elements
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -983,10 +2006,18 @@
     const valSector = document.getElementById('val-sector');
     const valTimer = document.getElementById('val-timer');
     const valScore = document.getElementById('val-score');
+    const valKey = document.getElementById('val-key');
     const valBatteryPct = document.getElementById('val-battery-pct');
     const batteryFill = document.getElementById('battery-fill');
     const statusText = document.getElementById('status-text');
     const gameSectorTitle = document.getElementById('game-sector-title');
+    const shieldWarning = document.getElementById('shield-warning');
+    const shieldCount = document.getElementById('shield-count');
+    const empWarning = document.getElementById('emp-warning');
+    const empCount = document.getElementById('emp-count');
+    const btnAbilityRadar = document.getElementById('btn-ability-radar');
+    const btnAbilityShield = document.getElementById('btn-ability-shield');
+    const btnAbilityDash = document.getElementById('btn-ability-dash');
 
     // Modals
     const gameModal = document.getElementById('gameModal');
@@ -1009,7 +2040,17 @@
       }
     }
 
-    // LocalStorage Helpers
+    // LocalStorage & Leaderboard
+    function getPlayerCallsign() {
+      return localStorage.getItem('last_battery_callsign') || 'Commander';
+    }
+    function setPlayerCallsign(name) {
+      if (!name || name.trim() === '') name = 'Commander';
+      localStorage.setItem('last_battery_callsign', name.trim());
+      const input = document.getElementById('playerCallsign');
+      if (input) input.value = name.trim();
+    }
+
     function getLevelStars(lvlNum) {
       return parseInt(localStorage.getItem('last_battery_star_' + lvlNum) || '0', 10);
     }
@@ -1021,9 +2062,7 @@
     }
     function getTotalStars() {
       let sum = 0;
-      for (let i = 1; i <= 50; i++) {
-        sum += getLevelStars(i);
-      }
+      for (let i = 1; i <= 50; i++) sum += getLevelStars(i);
       return sum;
     }
     function getHighScore() {
@@ -1034,11 +2073,83 @@
       if (score > best) {
         localStorage.setItem('last_battery_highscore', score.toString());
       }
+      recordLeaderboardEntry(getPlayerCallsign(), score, currentLevelIdx + 1, getTotalStars());
     }
+
+    function getLeaderboard() {
+      const raw = localStorage.getItem('last_battery_hall_of_fame');
+      if (raw) {
+        try { return JSON.parse(raw); } catch(e) {}
+      }
+      // Initial default rivals
+      return [
+        { name: "Apex_Robot", score: 9240, sector: 50, stars: 148 },
+        { name: "CyberNinja", score: 7850, sector: 45, stars: 125 },
+        { name: "ByteHunter", score: 5410, sector: 32, stars: 88 },
+        { name: "NeonGhost", score: 3950, sector: 24, stars: 65 },
+        { name: "Scout_Omega", score: 2600, sector: 16, stars: 42 },
+        { name: "Rookie_7", score: 1100, sector: 8, stars: 21 }
+      ];
+    }
+
+    function recordLeaderboardEntry(name, score, sector, stars) {
+      let list = getLeaderboard();
+      const existingIdx = list.findIndex(e => e.name.toLowerCase() === name.toLowerCase());
+      if (existingIdx !== -1) {
+        if (score > list[existingIdx].score) {
+          list[existingIdx].score = score;
+          list[existingIdx].sector = Math.max(list[existingIdx].sector, sector);
+          list[existingIdx].stars = Math.max(list[existingIdx].stars, stars);
+        }
+      } else {
+        list.push({ name, score, sector, stars });
+      }
+      list.sort((a, b) => b.score - a.score);
+      list = list.slice(0, 10);
+      localStorage.setItem('last_battery_hall_of_fame', JSON.stringify(list));
+    }
+
+    function showLeaderboardModal() {
+      const list = getLeaderboard();
+      const currentName = getPlayerCallsign().toLowerCase();
+      let rowsHtml = `
+        <tr>
+          <th>#</th>
+          <th>Commander</th>
+          <th>Sector</th>
+          <th>Stars</th>
+          <th>Score</th>
+        </tr>
+      `;
+      list.forEach((entry, idx) => {
+        const isCurrent = entry.name.toLowerCase() === currentName;
+        const medal = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : `${idx + 1}`));
+        rowsHtml += `
+          <tr class="${isCurrent ? 'highlight' : ''}">
+            <td>${medal}</td>
+            <td><strong>${entry.name}</strong></td>
+            <td>${entry.sector}/50</td>
+            <td>⭐ ${entry.stars}</td>
+            <td>${entry.score}</td>
+          </tr>
+        `;
+      });
+      document.getElementById('leaderboard-table-body').innerHTML = rowsHtml;
+      document.getElementById('leaderboardModal').style.display = 'flex';
+    }
+
+    document.getElementById('btn-show-hall-of-fame').onclick = showLeaderboardModal;
+
+    document.getElementById('btn-save-callsign').onclick = () => {
+      const val = document.getElementById('playerCallsign').value;
+      setPlayerCallsign(val);
+      statusText.innerText = `Callsign updated: ${getPlayerCallsign()}`;
+    };
 
     function updateMenuStats() {
       document.getElementById('menu-total-stars').innerText = getTotalStars() + ' / 150';
       document.getElementById('menu-high-score').innerText = getHighScore();
+      document.getElementById('playerCallsign').value = getPlayerCallsign();
     }
 
     // RENDER 50 LEVELS CATALOG
@@ -1049,7 +2160,6 @@
 
       LEVELS.forEach((lvl, idx) => {
         const lvlNum = idx + 1;
-        // Check filter
         if (filter === '1-10' && !(lvlNum >= 1 && lvlNum <= 10)) return;
         if (filter === '11-25' && !(lvlNum >= 11 && lvlNum <= 25)) return;
         if (filter === '26-40' && !(lvlNum >= 26 && lvlNum <= 40)) return;
@@ -1062,7 +2172,7 @@
         else if (stars === 3) starStr = '⭐⭐⭐';
 
         let tagClass = 'tag-easy';
-        let tagName = 'Warmup';
+        let tagName = 'Training';
         if (lvlNum > 40) { tagClass = 'tag-boss'; tagName = 'Master Core'; }
         else if (lvlNum > 25) { tagClass = 'tag-hard'; tagName = 'Gauntlet'; }
         else if (lvlNum > 10) { tagClass = 'tag-med'; tagName = 'Circuit'; }
@@ -1083,7 +2193,6 @@
       });
     }
 
-    // Filter tab clicks
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.onclick = () => {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1106,68 +2215,140 @@
       }
     }
 
+    // PARTICLE ENGINE
+    function addParticle(x, y, color, count = 1, speed = 1) {
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const vel = (Math.random() * 2 + 1) * speed;
+        particles.push({
+          x: x,
+          y: y,
+          vx: Math.cos(angle) * vel,
+          vy: Math.sin(angle) * vel,
+          color: color,
+          size: Math.random() * 3 + 2,
+          life: 1.0,
+          decay: Math.random() * 0.05 + 0.03
+        });
+      }
+    }
+
+    function updateAndRenderParticles() {
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= p.decay;
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+        ctx.save();
+        ctx.globalAlpha = p.life;
+        ctx.fillStyle = p.color;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // Continuous Render Loop for Particles & Animations
+    function animationLoop() {
+      if (document.getElementById('screen-game').classList.contains('active')) {
+        render();
+      }
+      requestAnimationFrame(animationLoop);
+    }
+    requestAnimationFrame(animationLoop);
+
     // LOAD LEVEL
     function loadLevel(idx) {
       clearInterval(timerInterval);
       clearInterval(hazardInterval);
       scrambleMovesLeft = 0;
-      const empAlert = document.getElementById('emp-warning');
-      if (empAlert) empAlert.style.display = 'none';
+      shieldMovesLeft = 0;
+      drones = [];
+      particles = [];
+      hasKey = false;
+      levelRequiresKey = false;
+      radarPulseTime = 0;
+      lastHeading = { dx: 1, dy: 0 };
+
+      // Reset abilities
+      abilityRadarUses = 1;
+      abilityShieldUses = 1;
+      abilityDashUses = 1;
+      updateAbilityButtons();
+
+      if (empWarning) empWarning.style.display = 'none';
+      if (shieldWarning) shieldWarning.style.display = 'none';
 
       currentLevelIdx = idx;
       const levelData = LEVELS[idx];
       grid = levelData.grid.map(row => row.split(''));
 
-      // Find robot and exit
+      // Find robot, exit, keys, and drones
       for (let y = 0; y < grid.length; y++) {
         for (let x = 0; x < grid[y].length; x++) {
-          if (grid[y][x] === 'R') {
+          const ch = grid[y][x];
+          if (ch === 'R') {
             robot.x = x;
             robot.y = y;
             grid[y][x] = '.';
-          } else if (grid[y][x] === 'X') {
+          } else if (ch === 'X') {
             exitPos = { x, y };
+          } else if (ch === 'K') {
+            levelRequiresKey = true;
+          } else if (ch === 'S') {
+            drones.push({ x, y, dx: 1, dy: 0 });
+            grid[y][x] = '.';
           }
         }
       }
 
       levelCompleted = false;
       isGameOver = false;
-      robot.battery = 100; // Full 100% recharge per sector
+      robot.battery = 100;
       timeLeft = levelData.timeLimit || 45;
+      isFogEnabled = true;
 
-      // Fog is enabled by default for Sector 4 and above
-      isFogEnabled = true; // Always ON for all sectors 1-50!
       const btnFog = document.getElementById('btn-fog');
-      if (btnFog) btnFog.innerText = isFogEnabled ? "🌫️ Fog: ON" : "💡 Fog: OFF";
+      if (btnFog) btnFog.innerText = "🌫️ Fog: ON";
 
-      // Pulsing hazards every 2.5s
+      // Pulsing hazards
       hazardsActive = true;
       hazardInterval = setInterval(() => {
-        if (isGameOver || levelCompleted) {
-          clearInterval(hazardInterval);
-          return;
-        }
+        if (isGameOver || levelCompleted) return;
         hazardsActive = !hazardsActive;
-        render();
       }, 2500);
 
       gameSectorTitle.innerText = `Sector ${idx + 1}`;
       valSector.innerText = `${idx + 1} / 50`;
 
+      if (levelRequiresKey) {
+        valKey.innerText = "NEED 🔑";
+        valKey.style.color = "var(--red)";
+      } else {
+        valKey.innerText = "OPEN";
+        valKey.style.color = "var(--green)";
+      }
+
       const hasPortal = levelData.grid.some(row => row.includes('@'));
       const hasEmp = levelData.grid.some(row => row.includes('?'));
-      let notes = [];
-      if (isFogEnabled) notes.push("🌫️ Fog");
-      if (hasPortal) notes.push("🌀 Warp Portal (@)");
-      if (hasEmp) notes.push("⚡ EMP Glitch (?)");
-      let noteStr = notes.length > 0 ? ` [${notes.join(' | ')}]` : '';
-      statusText.innerText = `⚡ ${levelData.title}.${noteStr} Plan path with care!`;
-      statusText.style.borderLeftColor = 'var(--green)';
+      let notes = ["🌫️ Cyber Fog"];
+      if (levelRequiresKey) notes.push("🔑 Key Required");
+      if (drones.length > 0) notes.push("🤖 Drone Alert");
+      if (hasPortal) notes.push("🌀 Warp Portal");
+      if (hasEmp) notes.push("⚡ EMP Glitch");
+      statusText.innerText = `⚡ ${levelData.title}. [${notes.join(' | ')}] Plan path with care!`;
+      statusText.style.borderLeftColor = 'var(--cyan)';
 
       updateTimerHUD();
       updateHUD();
-      render();
+      startBGM();
 
       // Countdown timer
       timerInterval = setInterval(() => {
@@ -1190,6 +2371,21 @@
       }, 1000);
     }
 
+    function updateAbilityButtons() {
+      if (btnAbilityRadar) {
+        btnAbilityRadar.innerText = `💡 Radar Pulse (${abilityRadarUses})`;
+        btnAbilityRadar.disabled = (abilityRadarUses <= 0);
+      }
+      if (btnAbilityShield) {
+        btnAbilityShield.innerText = `🛡️ Shield (${abilityShieldUses})`;
+        btnAbilityShield.disabled = (abilityShieldUses <= 0);
+      }
+      if (btnAbilityDash) {
+        btnAbilityDash.innerText = `🏎️ Turbo Dash (${abilityDashUses})`;
+        btnAbilityDash.disabled = (abilityDashUses <= 0);
+      }
+    }
+
     function updateHUD() {
       valScore.innerText = robot.score;
       valBatteryPct.innerText = `${robot.battery}%`;
@@ -1205,28 +2401,50 @@
         batteryFill.classList.add('critical');
         valBatteryPct.style.color = 'var(--red)';
       }
+
+      if (levelRequiresKey) {
+        if (hasKey) {
+          valKey.innerText = "UNLOCKED 🔓";
+          valKey.style.color = "var(--green)";
+        } else {
+          valKey.innerText = "NEED 🔑";
+          valKey.style.color = "var(--red)";
+        }
+      } else {
+        valKey.innerText = "OPEN";
+        valKey.style.color = "var(--green)";
+      }
     }
 
-    // MOVEMENT & GAMEPLAY
+    // MOVEMENT & ENGINE LOGIC
     function move(inputDx, inputDy) {
       if (isGameOver || levelCompleted) return;
       initAudio();
 
       let dx = inputDx;
       let dy = inputDy;
+      lastHeading = { dx: inputDx, dy: inputDy };
 
-      // Handle EMP Scrambler Glitch (Inverted Controls!)
+      // Inverted controls check
       if (scrambleMovesLeft > 0) {
         dx = -inputDx;
         dy = -inputDy;
         scrambleMovesLeft--;
-        const empCountEl = document.getElementById('emp-count');
-        if (empCountEl) empCountEl.innerText = scrambleMovesLeft;
+        if (empCount) empCount.innerText = scrambleMovesLeft;
         if (scrambleMovesLeft === 0) {
-          const empAlert = document.getElementById('emp-warning');
-          if (empAlert) empAlert.style.display = 'none';
+          if (empWarning) empWarning.style.display = 'none';
           statusText.innerText = "✅ SENSORS RE-CALIBRATED! Normal controls restored.";
           statusText.style.borderLeftColor = 'var(--green)';
+        }
+      }
+
+      // Shield count down
+      if (shieldMovesLeft > 0) {
+        shieldMovesLeft--;
+        if (shieldCount) shieldCount.innerText = shieldMovesLeft;
+        if (shieldMovesLeft === 0) {
+          if (shieldWarning) shieldWarning.style.display = 'none';
+          statusText.innerText = "🛡️ Shield depleted! Armor normal.";
         }
       }
 
@@ -1241,6 +2459,20 @@
         return;
       }
 
+      // Key check before exit
+      if (nextX === exitPos.x && nextY === exitPos.y && levelRequiresKey && !hasKey) {
+        soundAccessDenied();
+        vibrate([80, 50, 80]);
+        statusText.innerText = "🔒 ACCESS DENIED! Collect the Golden Access Key (🔑) first!";
+        statusText.style.borderLeftColor = 'var(--red)';
+        return;
+      }
+
+      // Emit movement sparks
+      const cellW = canvas.width / grid[0].length;
+      const cellH = canvas.height / grid.length;
+      addParticle(robot.x * cellW + cellW/2, robot.y * cellH + cellH/2, '#00f3ff', 2);
+
       robot.x = nextX;
       robot.y = nextY;
       robot.moves++;
@@ -1248,8 +2480,22 @@
       soundMove();
       vibrate(20);
 
-      // Quantum Warp Portal Check (@)
-      if (grid[nextY][nextX] === '@') {
+      // Patrol Drones Move
+      moveDrones();
+
+      // Check Key (K)
+      if (grid[nextY][nextX] === 'K') {
+        grid[nextY][nextX] = '.';
+        hasKey = true;
+        robot.score += 250;
+        soundKey();
+        vibrate([50, 50, 100]);
+        addParticle(nextX * cellW + cellW/2, nextY * cellH + cellH/2, '#eab308', 12);
+        statusText.innerText = "🔑 ACCESS KEY ACQUIRED! Extraction portal unlocked (+250 Pts)!";
+        statusText.style.borderLeftColor = 'var(--yellow)';
+      }
+      // Check Warp Portal (@)
+      else if (grid[nextY][nextX] === '@') {
         let companion = null;
         for (let r = 0; r < grid.length; r++) {
           for (let c = 0; c < grid[r].length; c++) {
@@ -1265,11 +2511,12 @@
           robot.y = companion.y;
           soundPortal();
           vibrate([40, 60, 40, 60]);
-          statusText.innerText = "🌀 QUANTUM WARP! Teleported across sector!";
+          addParticle(companion.x * cellW + cellW/2, companion.y * cellH + cellH/2, '#c084fc', 14);
+          statusText.innerText = "🌀 QUANTUM WARP! Translocated across sector!";
           statusText.style.borderLeftColor = 'var(--purple)';
         }
       }
-      // EMP Mystery Node Check (?)
+      // Check EMP Node (?)
       else if (grid[nextY][nextX] === '?') {
         grid[nextY][nextX] = '.';
         const isGlitch = Math.random() < 0.65;
@@ -1277,10 +2524,9 @@
           scrambleMovesLeft = 4;
           soundGlitch();
           vibrate([80, 50, 80, 50, 100]);
-          const empAlert = document.getElementById('emp-warning');
-          const empCountEl = document.getElementById('emp-count');
-          if (empAlert) empAlert.style.display = 'block';
-          if (empCountEl) empCountEl.innerText = '4';
+          if (empWarning) empWarning.style.display = 'block';
+          if (empCount) empCount.innerText = '4';
+          addParticle(nextX * cellW + cellW/2, nextY * cellH + cellH/2, '#f43f5e', 10);
           statusText.innerText = "⚡ EMP SCRAMBLE! Gyro inverted: Controls REVERSED for 4 steps!";
           statusText.style.borderLeftColor = 'var(--red)';
         } else {
@@ -1288,52 +2534,157 @@
           robot.score += 150;
           soundEnergy();
           vibrate([30, 40, 80]);
+          addParticle(nextX * cellW + cellW/2, nextY * cellH + cellH/2, '#00ff88', 8);
           statusText.innerText = "🔋 OVERCHARGED CACHE! +15% Battery, +150 Score!";
           statusText.style.borderLeftColor = 'var(--green)';
         }
       }
-      // Hazard Spikes Check (^)
+      // Check Hazard (^)
       else if (grid[nextY][nextX] === '^') {
-        if (hazardsActive) {
+        if (hazardsActive && shieldMovesLeft <= 0) {
           robot.battery = Math.max(0, robot.battery - 15);
           soundHazard();
           vibrate([50, 50, 100]);
+          addParticle(nextX * cellW + cellW/2, nextY * cellH + cellH/2, '#ff3366', 8);
           statusText.innerText = "HAZARD! High-voltage tile inflicted -15% battery drain!";
           statusText.style.borderLeftColor = 'var(--red)';
+        } else if (shieldMovesLeft > 0) {
+          soundMove();
+          statusText.innerText = "🛡️ Shield deflected hazard shock!";
+          statusText.style.borderLeftColor = 'var(--cyan)';
         } else {
           statusText.innerText = "⚡ Safe passage! Hazard spikes were temporarily discharged!";
           statusText.style.borderLeftColor = 'var(--cyan)';
         }
       }
-      // Energy Check (E)
+      // Check Energy (E)
       else if (grid[nextY][nextX] === 'E') {
         grid[nextY][nextX] = '.';
-        robot.battery = Math.min(robot.maxBattery, robot.battery + 10); // EXACTLY +10% Recharge
+        robot.battery = Math.min(robot.maxBattery, robot.battery + 10); // Strictly +10%
         robot.score += 100;
         robot.energyCount++;
         soundEnergy();
         vibrate([30, 30, 60]);
+        addParticle(nextX * cellW + cellW/2, nextY * cellH + cellH/2, '#ffcc00', 8);
         statusText.innerText = "Energy Cell harvested! +10% Battery, +100 Score!";
         statusText.style.borderLeftColor = 'var(--green)';
-      } else {
-        if (scrambleMovesLeft > 0) {
-          statusText.innerText = `⚡ SENSORS GLITCHED! ${scrambleMovesLeft} inverted moves remaining!`;
-          statusText.style.borderLeftColor = 'var(--red)';
-        } else {
-          statusText.innerText = `Scouting sector... Power -2%. Mind your path!`;
-          statusText.style.borderLeftColor = 'var(--cyan)';
-        }
       }
 
-      updateHUD();
-      render();
+      // Check Drone Collision
+      checkDroneCollision();
 
-      // Check win or death
+      updateHUD();
+
+      // Check Win or Loss
       if (robot.battery <= 0) {
         handleGameOver();
       } else if (robot.x === exitPos.x && robot.y === exitPos.y) {
         handleSectorWin();
       }
+    }
+
+    function moveDrones() {
+      const cols = grid[0].length;
+      const rows = grid.length;
+
+      drones.forEach(d => {
+        let nx = d.x + d.dx;
+        let ny = d.y + d.dy;
+
+        if (nx < 0 || nx >= cols || ny < 0 || ny >= rows || grid[ny][nx] === '#' || (nx === exitPos.x && ny === exitPos.y)) {
+          d.dx = -d.dx;
+          d.dy = -d.dy;
+          nx = d.x + d.dx;
+          ny = d.y + d.dy;
+        }
+
+        if (nx >= 0 && nx < cols && ny >= 0 && ny < rows && grid[ny][nx] !== '#') {
+          d.x = nx;
+          d.y = ny;
+        }
+      });
+    }
+
+    function checkDroneCollision() {
+      const cellW = canvas.width / grid[0].length;
+      const cellH = canvas.height / grid.length;
+
+      for (let d of drones) {
+        if (d.x === robot.x && d.y === robot.y) {
+          if (shieldMovesLeft > 0) {
+            soundMove();
+            statusText.innerText = "🛡️ Kinetic Shield deflected enemy drone strike!";
+            statusText.style.borderLeftColor = 'var(--cyan)';
+          } else {
+            robot.battery = Math.max(0, robot.battery - 25);
+            soundDrone();
+            vibrate([100, 50, 100, 50, 150]);
+            addParticle(robot.x * cellW + cellW/2, robot.y * cellH + cellH/2, '#ef4444', 16);
+            statusText.innerText = "🚨 SECURITY DRONE STRIKE! -25% Battery Damage!";
+            statusText.style.borderLeftColor = 'var(--red)';
+          }
+          break;
+        }
+      }
+    }
+
+    // ABILITY TRIGGERS
+    if (btnAbilityRadar) {
+      btnAbilityRadar.onclick = () => {
+        if (abilityRadarUses <= 0 || isGameOver || levelCompleted) return;
+        abilityRadarUses--;
+        radarPulseTime = Date.now() + 3500;
+        soundPortal();
+        vibrate([40, 80]);
+        updateAbilityButtons();
+        statusText.innerText = "💡 RADAR PULSE ACTIVATED! Facility illuminated for 3.5s!";
+        statusText.style.borderLeftColor = 'var(--cyan)';
+      };
+    }
+
+    if (btnAbilityShield) {
+      btnAbilityShield.onclick = () => {
+        if (abilityShieldUses <= 0 || isGameOver || levelCompleted) return;
+        abilityShieldUses--;
+        shieldMovesLeft = 5;
+        soundShield();
+        vibrate([60, 60]);
+        if (shieldWarning) shieldWarning.style.display = 'block';
+        if (shieldCount) shieldCount.innerText = '5';
+        updateAbilityButtons();
+        statusText.innerText = "🛡️ KINETIC SHIELD ACTIVATED! Invulnerable for 5 moves!";
+        statusText.style.borderLeftColor = 'var(--cyan)';
+      };
+    }
+
+    if (btnAbilityDash) {
+      btnAbilityDash.onclick = () => {
+        if (abilityDashUses <= 0 || isGameOver || levelCompleted) return;
+        abilityDashUses--;
+        updateAbilityButtons();
+        soundDash();
+        vibrate([30, 60]);
+
+        const dx = lastHeading.dx * 2;
+        const dy = lastHeading.dy * 2;
+        const targetX = robot.x + dx;
+        const targetY = robot.y + dy;
+
+        if (targetY >= 0 && targetY < grid.length && targetX >= 0 && targetX < grid[0].length && grid[targetY][targetX] !== '#') {
+          const cellW = canvas.width / grid[0].length;
+          const cellH = canvas.height / grid.length;
+          addParticle(robot.x * cellW + cellW/2, robot.y * cellH + cellH/2, '#00f3ff', 8);
+          robot.x = targetX;
+          robot.y = targetY;
+          addParticle(robot.x * cellW + cellW/2, robot.y * cellH + cellH/2, '#00f3ff', 8);
+          statusText.innerText = "🏎️ TURBO DASH! Leaped 2 tiles forward!";
+          statusText.style.borderLeftColor = 'var(--cyan)';
+          updateHUD();
+          checkDroneCollision();
+        } else {
+          statusText.innerText = "Dash blocked by obstacle!";
+        }
+      };
     }
 
     function handleTimeExpired() {
@@ -1349,6 +2700,7 @@
       modalStars.style.display = 'none';
       modalMessage.innerText = "Facility lockdown triggered! You did not reach the portal in time!";
       modalStats.innerHTML = `
+        <div>Commander: <strong>${getPlayerCallsign()}</strong></div>
         <div>Sector: <strong>${currentLevelIdx + 1} / 50</strong></div>
         <div>Score: <strong>${robot.score}</strong></div>
         <div>Total Moves: <strong>${robot.moves}</strong></div>
@@ -1373,6 +2725,7 @@
       modalStars.style.display = 'none';
       modalMessage.innerText = "The robot powered down before reaching the portal!";
       modalStats.innerHTML = `
+        <div>Commander: <strong>${getPlayerCallsign()}</strong></div>
         <div>Sector: <strong>${currentLevelIdx + 1} / 50</strong></div>
         <div>Score: <strong>${robot.score}</strong></div>
         <div>Total Moves: <strong>${robot.moves}</strong></div>
@@ -1391,7 +2744,15 @@
       soundWin();
       vibrate([40, 40, 80, 40, 120]);
 
-      // Calculate Stars (Mind Rating!)
+      // Trigger Victory fireworks particles!
+      for (let i = 0; i < 40; i++) {
+        const cx = Math.random() * canvas.width;
+        const cy = Math.random() * canvas.height;
+        const col = ['#00f3ff', '#00ff88', '#ffcc00', '#c084fc'][Math.floor(Math.random() * 4)];
+        addParticle(cx, cy, col, 1, 2.5);
+      }
+
+      // Calculate Stars
       let stars = 1;
       if (robot.battery >= 70 && timeLeft >= 10) stars = 3;
       else if (robot.battery >= 45) stars = 2;
@@ -1416,7 +2777,8 @@
       `;
 
       modalStats.innerHTML = `
-        <div>Performance: <strong>${stars === 3 ? 'Tactical Master (3 Stars)' : (stars === 2 ? 'Skilled Survivor (2 Stars)' : 'Survivor (1 Star)')}</strong></div>
+        <div>Commander: <strong>${getPlayerCallsign()}</strong></div>
+        <div>Rating: <strong>${stars === 3 ? 'Tactical Master (3 Stars)' : (stars === 2 ? 'Skilled Survivor (2 Stars)' : 'Survivor (1 Star)')}</strong></div>
         <div>Remaining Battery: <strong>${robot.battery}%</strong></div>
         <div>Final Score: <strong>${robot.score}</strong></div>
       `;
@@ -1454,6 +2816,7 @@
 
     // RENDER CANVAS
     function render() {
+      if (!grid || grid.length === 0) return;
       const rows = grid.length;
       const cols = grid[0].length;
       const cellW = canvas.width / cols;
@@ -1481,7 +2844,7 @@
             ctx.fillStyle = '#1e293b';
             ctx.fillRect(px + 3, py + 3, cellW - 6, cellH - 6);
           } else if (char === 'E') {
-            // Energy Cell
+            // Energy Cell (+10%)
             ctx.shadowBlur = 10;
             ctx.shadowColor = '#ffcc00';
             ctx.fillStyle = '#ffcc00';
@@ -1495,11 +2858,26 @@
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText('E', px + cellW/2, py + cellH/2 + 1);
+          } else if (char === 'K') {
+            // Cyber Key
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = '#eab308';
+            ctx.fillStyle = '#eab308';
+            ctx.beginPath();
+            ctx.arc(px + cellW/2, py + cellH/2, Math.min(cellW, cellH)*0.32, 0, Math.PI*2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            ctx.font = `${Math.floor(cellH * 0.5)}px sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🔑', px + cellW/2, py + cellH/2);
           } else if (char === 'X') {
-            // Exit Portal
+            // Exit Portal (Locked or Open)
+            const isLocked = (levelRequiresKey && !hasKey);
             ctx.shadowBlur = 14;
-            ctx.shadowColor = '#00ff88';
-            ctx.fillStyle = '#00ff88';
+            ctx.shadowColor = isLocked ? '#ff3366' : '#00ff88';
+            ctx.fillStyle = isLocked ? '#ff3366' : '#00ff88';
             ctx.fillRect(px + 3, py + 3, cellW - 6, cellH - 6);
             ctx.shadowBlur = 0;
 
@@ -1507,7 +2885,7 @@
             ctx.font = `bold ${Math.floor(cellH * 0.45)}px monospace`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText('X', px + cellW/2, py + cellH/2);
+            ctx.fillText(isLocked ? '🔒' : 'X', px + cellW/2, py + cellH/2);
           } else if (char === '@') {
             // Quantum Warp Portal
             ctx.shadowBlur = 14;
@@ -1533,7 +2911,7 @@
             ctx.textBaseline = 'middle';
             ctx.fillText('@', px + cellW/2, py + cellH/2);
           } else if (char === '?') {
-            // EMP Scrambler Node
+            // EMP Mystery Node
             ctx.shadowBlur = 12;
             ctx.shadowColor = '#f43f5e';
             ctx.fillStyle = '#f43f5e';
@@ -1548,7 +2926,7 @@
             ctx.textBaseline = 'middle';
             ctx.fillText('?', px + cellW/2, py + cellH/2);
           } else if (char === '^') {
-            // Hazard (Pulsing Active or Discharged)
+            // Pulsing Hazard
             if (hazardsActive) {
               ctx.shadowBlur = 10;
               ctx.shadowColor = '#ff3366';
@@ -1569,12 +2947,30 @@
         }
       }
 
-      // Robot
+      // Render Enemy Drones (S)
+      drones.forEach(d => {
+        const dpx = d.x * cellW;
+        const dpy = d.y * cellH;
+        ctx.shadowBlur = 14;
+        ctx.shadowColor = '#ef4444';
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.arc(dpx + cellW/2, dpy + cellH/2, Math.min(cellW, cellH)*0.32, 0, Math.PI*2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        ctx.fillStyle = '#000';
+        ctx.fillRect(dpx + cellW*0.35, dpy + cellH*0.4, cellW*0.3, cellH*0.14);
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(dpx + cellW*0.45, dpy + cellH*0.42, cellW*0.1, cellH*0.1);
+      });
+
+      // Render Robot
       const rpx = robot.x * cellW;
       const rpy = robot.y * cellH;
 
       ctx.shadowBlur = 14;
-      ctx.shadowColor = scrambleMovesLeft > 0 ? '#f43f5e' : '#00f3ff';
+      ctx.shadowColor = scrambleMovesLeft > 0 ? '#f43f5e' : (shieldMovesLeft > 0 ? '#00f3ff' : '#00f3ff');
       ctx.fillStyle = scrambleMovesLeft > 0 ? '#f43f5e' : '#00f3ff';
       ctx.beginPath();
       ctx.arc(rpx + cellW/2, rpy + cellH/2, Math.min(cellW, cellH)*0.36, 0, Math.PI*2);
@@ -1588,8 +2984,21 @@
       ctx.fillRect(rpx + cellW*0.42, rpy + cellH*0.44, cellW*0.08, cellH*0.08);
       ctx.fillRect(rpx + cellW*0.52, rpy + cellH*0.44, cellW*0.08, cellH*0.08);
 
+      // Kinetic Shield Bubble if active
+      if (shieldMovesLeft > 0) {
+        ctx.strokeStyle = '#00f3ff';
+        ctx.lineWidth = 3;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = '#00f3ff';
+        ctx.beginPath();
+        ctx.arc(rpx + cellW/2, rpy + cellH/2, Math.min(cellW, cellH)*0.46, 0, Math.PI*2);
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      }
+
       // Cyber Fog of War (Darkness & Flashlight Scanner)
-      if (isFogEnabled) {
+      const isRadarPulseActive = (Date.now() < radarPulseTime);
+      if (isFogEnabled && !isRadarPulseActive) {
         const rx = rpx + cellW / 2;
         const ry = rpy + cellH / 2;
         const viewRadius = Math.max(cellW, cellH) * 3.4;
@@ -1603,7 +3012,7 @@
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // High-tech scanner circular radar ring
+        // Circular radar ring
         ctx.strokeStyle = 'rgba(0, 243, 255, 0.3)';
         ctx.lineWidth = 1.5;
         ctx.setLineDash([4, 6]);
@@ -1612,6 +3021,9 @@
         ctx.stroke();
         ctx.setLineDash([]);
       }
+
+      // Update and draw particles on top
+      updateAndRenderParticles();
     }
 
     // KEYBOARD CONTROLS
@@ -1626,6 +3038,7 @@
     // TOUCH CONTROLS
     function bindTouchButton(id, dx, dy) {
       const btn = document.getElementById(id);
+      if (!btn) return;
       const trigger = (e) => {
         e.preventDefault();
         btn.classList.add('pressed');
@@ -1685,17 +3098,26 @@
     };
 
     document.getElementById('btn-back-to-menu').onclick = () => {
+      stopBGM();
       showScreen('menu');
     };
 
     document.getElementById('btn-game-to-menu').onclick = () => {
       clearInterval(timerInterval);
+      clearInterval(hazardInterval);
+      stopBGM();
       showScreen('menu');
     };
 
     document.getElementById('btn-game-to-levels').onclick = () => {
       clearInterval(timerInterval);
+      clearInterval(hazardInterval);
+      stopBGM();
       showScreen('levels');
+    };
+
+    document.getElementById('btn-restart').onclick = () => {
+      loadLevel(currentLevelIdx);
     };
 
     const btnFog = document.getElementById('btn-fog');
@@ -1708,36 +3130,47 @@
       };
     }
 
-    document.getElementById('btn-restart').onclick = () => {
-      loadLevel(currentLevelIdx);
-    };
-
     const btnSound = document.getElementById('btn-sound');
-    btnSound.onclick = () => {
-      soundEnabled = !soundEnabled;
-      btnSound.innerText = soundEnabled ? "🔊 Sound: ON" : "🔇 Sound: OFF";
-    };
+    if (btnSound) {
+      btnSound.onclick = () => {
+        soundEnabled = !soundEnabled;
+        btnSound.innerText = soundEnabled ? "🔊 SFX: ON" : "🔇 SFX: OFF";
+      };
+    }
+
+    const btnMusic = document.getElementById('btn-music');
+    if (btnMusic) {
+      btnMusic.onclick = () => {
+        musicEnabled = !musicEnabled;
+        btnMusic.innerText = musicEnabled ? "🎵 Music: ON" : "🔇 Music: OFF";
+        if (musicEnabled) startBGM();
+        else stopBGM();
+      };
+    }
 
     // Rules Modal
     function showRulesModal() {
-      modalTitle.innerText = "TACTICAL SURVIVAL RULES";
+      modalTitle.innerText = "TACTICAL SURVIVAL DIRECTIVES";
       modalTitle.style.color = "var(--yellow)";
       modalStars.style.display = 'none';
       modalMessage.innerHTML = `
-        <strong>Scout-X Survival Directives:</strong><br><br>
-        • <strong>50 Sectors Campaign</strong>: Choose any unlocked level from the Level Selector!<br>
-        • <strong>Move with D-Pad, Swipes, or WASD</strong>.<br>
-        • Every move drains <strong>-2% Battery</strong> (Strict planning required).<br>
-        • Collect <strong>Energy Cells (E)</strong> for strictly <strong>+10% Battery</strong> & <strong>+100 Pts</strong>.<br>
-        • 🌫️ <strong>Cyber Fog of War</strong>: From Sector 4+, distant corridors are shrouded in darkness! Memorize your path (Toggleable via Fog button).<br>
-        • 🌀 <strong>Quantum Warp Portals (@)</strong>: Step onto '@' to warp instantly across the sector!<br>
-        • ⚡ <strong>EMP Scrambler Nodes (?)</strong>: Gamble for battery or suffer 4-step inverted reverse controls!<br>
-        • ⚡ <strong>Pulsing Hazards (▲/▽)</strong>: Spikes alternate active (Red: -15%) & safe (Dim: 0%) every 2.5s!<br>
-        • ⏱️ <strong>Competition Timer</strong>: Speed bonus <strong>+10 Pts/sec</strong> remaining!<br>
-        • Earn up to <strong>⭐⭐⭐ 3 Stars</strong> based on battery efficiency!
+        <strong>Scout-X Survival Operations:</strong><br><br>
+        • <strong>50 Progressive Sectors</strong>: Select any sector from Sector Map.<br>
+        • <strong>Battery Consumption</strong>: -2% per move. Energy Cells (E) yield strictly <strong>+10%</strong>.<br>
+        • 🤖 <strong>Enemy Security Drones (S)</strong>: Menacing red patrol bots; contact deals <strong>-25% Damage</strong>!<br>
+        • 🔑 <strong>Cyber Access Key (K)</strong>: Must be collected to unlock barricaded Extraction Gates (🔒 -> X)!<br>
+        • ⚡ <strong>Tactical Gadgets (1 Use/Sector)</strong>:<br>
+          &nbsp;&nbsp;💡 <em>Radar Pulse</em>: Unshrouds entire facility fog for 3.5s.<br>
+          &nbsp;&nbsp;🛡️ <em>Kinetic Shield</em>: Complete invulnerability against hazards & drones for 5 moves!<br>
+          &nbsp;&nbsp;🏎️ <em>Turbo Dash</em>: Leaps 2 tiles forward in moving direction.<br>
+        • 🌫️ <strong>Cyber Fog of War</strong>: Heavy optical distortion; memorize maze paths.<br>
+        • 🌀 <strong>Quantum Warp Portals (@)</strong>: Step into '@' to teleport across the facility.<br>
+        • ⚡ <strong>EMP Mystery Nodes (?)</strong>: 65% inverted reverse controls gamble, 35% overcharge battery!<br>
+        • 🏆 <strong>Competitive Hall of Fame</strong>: Set callsign & battle for #1 global survivor rank!
       `;
       modalStats.innerHTML = `
-        <div>Total Stars Earned: <strong>${getTotalStars()} / 150</strong></div>
+        <div>Commander: <strong>${getPlayerCallsign()}</strong></div>
+        <div>Total Stars: <strong>${getTotalStars()} / 150</strong></div>
         <div>High Score: <strong>${getHighScore()}</strong></div>
       `;
       modalActions.innerHTML = `
@@ -1751,10 +3184,10 @@
 
     // Mobile Link / QR Modal
     function showMobileModal() {
-      const liveUrl = "https://salunkeprathmesh68-bot.github.io/tourist_hotel-reccomendation-system/game.html";
+      const liveUrl = "https://salunkeprathmesh68-bot.github.io/tourist_hotel-reccomendation-system/game.html?v=supercharged_v2";
       const currentUrl = window.location.href.startsWith('http') ? window.location.href : liveUrl;
       const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(currentUrl)}`;
-      const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent("🎮 Play Last Battery - Robot Survival Game (50 Sectors): " + liveUrl)}`;
+      const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent("🎮 Play Last Battery - Supercharged Robot Survival Game (50 Sectors): " + liveUrl)}`;
 
       modalTitle.innerText = "PLAY & SHARE ON MOBILE";
       modalTitle.style.color = "var(--cyan)";
