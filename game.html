@@ -1059,18 +1059,18 @@
           🌫️ <strong>Cyber Fog</strong> (अंधार) • 🌀 <strong>Warp Portals</strong> (@) • ⚡ <strong>Inverted Gyros</strong> (?) • 🔋 <strong>+10% Battery</strong>
         </div>
       </div>
-            <!-- Full Song Jukebox Bar in Menu -->
+            <!-- Spotify Music Jukebox Bar in Menu -->
       <div class="music-jukebox-bar">
-        <button class="jukebox-btn" id="btn-open-search-menu">🎵 गाणे निवडा (Full Songs)</button>
+        <button class="jukebox-btn" id="btn-open-search-menu" style="background: linear-gradient(135deg, #10b981, #00f3ff); color: #000; font-weight: 900;">🎧 Songs (Spotify)</button>
         <button class="jukebox-btn-sec" id="btn-play-pause-stream-menu" title="Play/Pause">▶️</button>
-        <button class="jukebox-btn-sec" id="btn-stop-music-menu" title="गाणे बंद करा (Stop)">⏹️</button>
+        <button class="jukebox-btn-sec" id="btn-stop-music-menu" title="Stop Music">⏹️</button>
         <div class="audio-wave" id="audio-wave-menu" style="display:none;">
           <span></span><span></span><span></span><span></span>
         </div>
-        <span class="jukebox-title" id="jukebox-now-playing-menu">गुलाबी साडी (Full Song)</span>
+        <span class="jukebox-title" id="jukebox-now-playing-menu">Gulabi Sadi (Full Song)</span>
         <div class="jukebox-vol-wrap">
           <span style="font-size:0.75rem;">🔊</span>
-          <input type="range" id="stream-vol-menu" min="0" max="1" step="0.05" value="1.0" class="jukebox-slider" title="Music Volume">
+          <input type="range" id="stream-vol-menu" min="0" max="1" step="0.05" value="1.0" class="jukebox-slider" title="Volume">
         </div>
       </div>
       <div class="menu-btn-group">
@@ -1168,18 +1168,18 @@
       </div>
 
       <!-- Status Message -->
-            <!-- Full Song Jukebox Bar in Game -->
+            <!-- Spotify Music Jukebox Bar in Game -->
       <div class="music-jukebox-bar">
-        <button class="jukebox-btn" id="btn-open-search-game">🎵 गाणे निवडा (Full Songs)</button>
+        <button class="jukebox-btn" id="btn-open-search-game" style="background: linear-gradient(135deg, #10b981, #00f3ff); color: #000; font-weight: 900;">🎧 Songs (Spotify)</button>
         <button class="jukebox-btn-sec" id="btn-play-pause-stream-game" title="Play/Pause">⏸️</button>
-        <button class="jukebox-btn-sec" id="btn-stop-music-game" title="गाणे बंद करा (Stop)">⏹️</button>
+        <button class="jukebox-btn-sec" id="btn-stop-music-game" title="Stop Music">⏹️</button>
         <div class="audio-wave" id="audio-wave-game" style="display:none;">
           <span></span><span></span><span></span><span></span>
         </div>
-        <span class="jukebox-title" id="jukebox-now-playing-game">गुलाबी साडी (Full Song)</span>
+        <span class="jukebox-title" id="jukebox-now-playing-game">Gulabi Sadi (Full Song)</span>
         <div class="jukebox-vol-wrap">
           <span style="font-size:0.75rem;">🔊</span>
-          <input type="range" id="stream-vol-game" min="0" max="1" step="0.05" value="1.0" class="jukebox-slider" title="Music Volume">
+          <input type="range" id="stream-vol-game" min="0" max="1" step="0.05" value="1.0" class="jukebox-slider" title="Volume">
         </div>
       </div>
       <div class="status-ticker" id="status-text">
@@ -1253,52 +1253,58 @@
     </div>
   </div>
 
-  <!-- Universal Full Song Search & Jukebox Modal -->
+  <!-- Spotify-Style Music Search & Stream Modal (English Interface) -->
   <div class="overlay" id="musicSearchModal">
-    <div class="modal-box" style="max-width: 490px; max-height: 88vh; display: flex; flex-direction: column; text-align: left;">
+    <div class="modal-box" style="max-width: 500px; max-height: 88vh; display: flex; flex-direction: column; text-align: left; background: #0b1120; border: 2px solid #10b981; box-shadow: 0 0 30px rgba(16,185,129,0.3);">
+      <!-- Header -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-        <div class="modal-title" style="color: var(--cyan); font-size: 1.2rem; margin-bottom: 0;">🎵 संपूर्ण गाणी (FULL 100% SONGS)</div>
-        <button class="mini-btn" id="btn-close-music-search" style="font-size: 1.1rem; padding: 2px 8px;">✕</button>
+        <div class="modal-title" style="color: #10b981; font-size: 1.25rem; font-weight: 900; margin-bottom: 0; display: flex; align-items: center; gap: 8px;">
+          <span>🎧</span> SPOTIFY MUSIC JUKEBOX
+        </div>
+        <button class="mini-btn" id="btn-close-music-search" style="font-size: 1.1rem; padding: 2px 8px; border-color: #10b981;">✕</button>
       </div>
       <div style="font-size: 0.74rem; color: #94a3b8; margin-bottom: 8px;">
-        ⚡ संपूर्ण ३ ते ५ मिनिटांचे गाणे ऐका (खेळताना बॅकग्राऊंडमध्ये चालू राहील):
+        Search and play <strong>ANY song</strong> in the background while playing:
       </div>
 
-      <!-- Search Input Form -->
+      <!-- Search Input Form (English) -->
       <div style="display: flex; gap: 6px; margin-bottom: 8px;">
-        <input type="text" id="songQueryInput" placeholder="उदा. Gulabi Sadi, Zingaat, Chhava, DJ Marathi..." 
-               style="flex: 1; background: #0b1120; border: 1px solid var(--cyan); color: #fff; border-radius: 8px; padding: 8px 12px; font-size: 0.88rem; font-weight: bold; outline: none;">
-        <button class="jukebox-btn" id="btn-execute-search" style="padding: 8px 14px;">🔍 शोधा</button>
+        <input type="text" id="songQueryInput" placeholder="Search any song, artist (e.g. Gulabi Sadi, Zingaat, Arijit)..." 
+               style="flex: 1; background: #030712; border: 1px solid #10b981; color: #fff; border-radius: 8px; padding: 8px 12px; font-size: 0.88rem; font-weight: bold; outline: none;">
+        <button class="jukebox-btn" id="btn-execute-search" style="background: linear-gradient(135deg, #10b981, #00f3ff); color: #000; font-weight: 900; padding: 8px 14px;">🔍 Search</button>
       </div>
 
-      <!-- Quick Category Buttons -->
+      <!-- Spotify Genre / Category Tabs (English) -->
       <div style="display: flex; gap: 5px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 8px;" id="quick-category-tags">
-        <button class="tag-btn" data-q="Gulabi Sadi">💃 गुलाबी साडी</button>
-        <button class="tag-btn" data-q="Zingaat Sairat">🔥 झिंगाट</button>
-        <button class="tag-btn" data-q="Taambdi Chaamdi">⚡ तांबडी चामडी</button>
-        <button class="tag-btn" data-q="Marathi DJ Remix Nonstop">🎶 DJ Remix</button>
-        <button class="tag-btn" data-q="KGF Monster Song">💥 KGF Action</button>
-        <button class="tag-btn" data-q="Gaming Phonk Drift">🎧 Gaming Phonk</button>
+        <button class="tag-btn active-tab" data-cat="all">🔥 All Songs</button>
+        <button class="tag-btn" data-cat="marathi">💃 Marathi Hits</button>
+        <button class="tag-btn" data-cat="bollywood">⚡ Bollywood</button>
+        <button class="tag-btn" data-cat="south">💥 South & KGF</button>
+        <button class="tag-btn" data-cat="phonk">🎧 Phonk & EDM</button>
+        <button class="tag-btn" data-cat="dj">🎶 DJ Remix</button>
+        <button class="tag-btn" data-cat="punjabi">🎙️ Punjabi</button>
+        <button class="tag-btn" data-cat="english">🕺 English Pop</button>
       </div>
 
-      <div id="search-status-bar" style="font-size: 0.74rem; color: var(--yellow); margin-bottom: 6px; min-height: 18px;">
-        👇 खालीलपैकी आवडत्या गाण्यावर <strong>'▶️ Play Full Song'</strong> दाबा:
+      <div id="search-status-bar" style="font-size: 0.74rem; color: #38bdf8; margin-bottom: 6px; min-height: 18px;">
+        Tap <strong>'▶ Play'</strong> on any song to start background streaming:
       </div>
 
-      <!-- Full Songs List -->
-      <div id="song-results-container" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; max-height: 270px; padding-right: 4px;">
+      <!-- Song Results Cards Container -->
+      <div id="song-results-container" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; max-height: 280px; padding-right: 4px;">
         <!-- Injected dynamically -->
       </div>
 
-      <!-- Local File Upload Fallback -->
+      <!-- Local MP3 Fallback (English) -->
       <div style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 0.74rem;">
-        <span style="color: var(--muted);">किंवा फोनमधील संपूर्ण MP3 निवडा:</span>
-        <label class="mini-btn" style="cursor: pointer; padding: 4px 10px; border-color: var(--cyan);">
+        <span style="color: var(--muted);">Play a downloaded MP3 from your phone:</span>
+        <label class="mini-btn" style="cursor: pointer; padding: 4px 10px; border-color: #10b981; color: #10b981; font-weight: bold;">
           📂 Local MP3
           <input type="file" id="localSongFallback" accept="audio/*" style="display:none;">
         </label>
       </div>
     </div>
+  </div>
   </div>
   </div>
 
@@ -3494,51 +3500,223 @@
 
     
     // =========================================================
-    // FULL LENGTH SONGS (100% COMPLETE) & AUTO-EXIT STOP ENGINE
+    // SPOTIFY MUSIC JUKEBOX ENGINE (ENGLISH & UNIVERSAL SEARCH)
     // =========================================================
-    const FULL_SONGS_CATALOG = [
+    const SPOTIFY_CATALOG = [
+      // MARATHI SUPERHITS
       {
-        trackName: "गुलाबी साडी (Gulabi Sadi)",
-        artistName: "संजू राठोड (Sanju Rathod) • 3:43 min (संपूर्ण गाणे)",
+        trackName: "Gulabi Sadi",
+        artistName: "Sanju Rathod • Full 3:43 min",
+        category: "marathi",
         videoId: "B_6d3RBiEN0",
         thumb: "https://i.ytimg.com/vi/B_6d3RBiEN0/mqdefault.jpg"
       },
       {
-        trackName: "झिंगाट (Zingaat)",
-        artistName: "अजय-अतुल (Sairat) • 3:46 min (संपूर्ण गाणे)",
+        trackName: "Zingaat",
+        artistName: "Ajay-Atul (Sairat) • Full 3:46 min",
+        category: "marathi",
         videoId: "luhVm60Wiro",
         thumb: "https://i.ytimg.com/vi/luhVm60Wiro/mqdefault.jpg"
       },
       {
-        trackName: "तांबडी चामडी (Taambdi Chaamdi)",
-        artistName: "Kratex & Shreyas • 3:15 min (संपूर्ण गाणे)",
+        trackName: "Taambdi Chaamdi",
+        artistName: "Kratex & Shreyas • Full 3:15 min",
+        category: "marathi",
         videoId: "kmjeMrjOjFA",
         thumb: "https://i.ytimg.com/vi/kmjeMrjOjFA/mqdefault.jpg"
       },
       {
-        trackName: "KGF Monster Theme",
-        artistName: "रॉकिंग यश (KGF Chapter 2) • 3:30 min (संपूर्ण गाणे)",
-        videoId: "R4He_Gcn7cA",
-        thumb: "https://i.ytimg.com/vi/R4He_Gcn7cA/mqdefault.jpg"
+        trackName: "Apsara Aali",
+        artistName: "Ajay-Atul (Natarang) • Full 4:10 min",
+        category: "marathi",
+        videoId: "a6iA2HgamOE",
+        thumb: "https://i.ytimg.com/vi/a6iA2HgamOE/mqdefault.jpg"
       },
       {
-        trackName: "Gaming Phonk (Bass Drift)",
-        artistName: "Drift Phonk Gaming • 3:00 min (संपूर्ण गाणे)",
-        videoId: "Pnq1_3BXIqA",
-        thumb: "https://i.ytimg.com/vi/Pnq1_3BXIqA/mqdefault.jpg"
+        trackName: "Chandra",
+        artistName: "Shreya Ghoshal & Ajay-Atul (Chandramukhi) • Full 3:30 min",
+        category: "marathi",
+        videoId: "D-wsXp_wC2Q",
+        thumb: "https://i.ytimg.com/vi/D-wsXp_wC2Q/mqdefault.jpg"
+      },
+      {
+        trackName: "Dolby Walya",
+        artistName: "Ajay-Atul (Jaundya Na Balasaheb) • Full 4:20 min",
+        category: "marathi",
+        videoId: "Z6U3tVjHcUI",
+        thumb: "https://i.ytimg.com/vi/Z6U3tVjHcUI/mqdefault.jpg"
+      },
+      {
+        trackName: "Deva Shree Ganesha",
+        artistName: "Ajay-Atul (Agneepath) • Full 5:56 min",
+        category: "marathi",
+        videoId: "RYqJ5w-GrfM",
+        thumb: "https://i.ytimg.com/vi/RYqJ5w-GrfM/mqdefault.jpg"
       },
       {
         trackName: "Non-Stop Marathi DJ Mashup",
         artistName: "High Energy Dance Remix • 30:00 min (Non-Stop DJ)",
+        category: "dj",
         videoId: "SecdlLzQLd0",
         thumb: "https://i.ytimg.com/vi/SecdlLzQLd0/mqdefault.jpg"
+      },
+
+      // BOLLYWOOD HITS
+      {
+        trackName: "Tauba Tauba",
+        artistName: "Karan Aujla (Bad Newz) • Full 3:28 min",
+        category: "bollywood",
+        videoId: "d_4x7wGqWzE",
+        thumb: "https://i.ytimg.com/vi/d_4x7wGqWzE/mqdefault.jpg"
+      },
+      {
+        trackName: "Kesariya",
+        artistName: "Arijit Singh (Brahmāstra) • Full 4:28 min",
+        category: "bollywood",
+        videoId: "BddP6PYo2gs",
+        thumb: "https://i.ytimg.com/vi/BddP6PYo2gs/mqdefault.jpg"
+      },
+      {
+        trackName: "Chaleya",
+        artistName: "Arijit Singh & Anirudh (Jawan) • Full 3:20 min",
+        category: "bollywood",
+        videoId: "VAdGW7QDJUI",
+        thumb: "https://i.ytimg.com/vi/VAdGW7QDJUI/mqdefault.jpg"
+      },
+      {
+        trackName: "Apna Bana Le",
+        artistName: "Arijit Singh (Bhediya) • Full 4:21 min",
+        category: "bollywood",
+        videoId: "ElZfdU54Cp8",
+        thumb: "https://i.ytimg.com/vi/ElZfdU54Cp8/mqdefault.jpg"
+      },
+      {
+        trackName: "Tum Hi Ho",
+        artistName: "Arijit Singh (Aashiqui 2) • Full 4:22 min",
+        category: "bollywood",
+        videoId: "Umqb9KENgmk",
+        thumb: "https://i.ytimg.com/vi/Umqb9KENgmk/mqdefault.jpg"
+      },
+
+      // SOUTH & ACTION
+      {
+        trackName: "The Monster Song (KGF 2)",
+        artistName: "Ravi Basrur & Adithi Sagar • Full 3:30 min",
+        category: "south",
+        videoId: "R4He_Gcn7cA",
+        thumb: "https://i.ytimg.com/vi/R4He_Gcn7cA/mqdefault.jpg"
+      },
+      {
+        trackName: "Pushpa Pushpa (Pushpa 2)",
+        artistName: "Devi Sri Prasad • Full 4:15 min",
+        category: "south",
+        videoId: "wQksDYahKZs",
+        thumb: "https://i.ytimg.com/vi/wQksDYahKZs/mqdefault.jpg"
+      },
+      {
+        trackName: "Illuminati (Aavesham)",
+        artistName: "Sushin Shyam & Dabzee • Full 3:20 min",
+        category: "south",
+        videoId: "yH7eDWTH5iM",
+        thumb: "https://i.ytimg.com/vi/yH7eDWTH5iM/mqdefault.jpg"
+      },
+      {
+        trackName: "Naatu Naatu (RRR)",
+        artistName: "M.M. Keeravaani (Oscar Winner) • Full 3:36 min",
+        category: "south",
+        videoId: "OsU0CGZoV8E",
+        thumb: "https://i.ytimg.com/vi/OsU0CGZoV8E/mqdefault.jpg"
+      },
+
+      // PHONK & EDM
+      {
+        trackName: "Gaming Phonk (Bass Drift)",
+        artistName: "Drift Phonk Gaming • Full 3:00 min",
+        category: "phonk",
+        videoId: "Pnq1_3BXIqA",
+        thumb: "https://i.ytimg.com/vi/Pnq1_3BXIqA/mqdefault.jpg"
+      },
+
+      // PUNJABI HITS
+      {
+        trackName: "295",
+        artistName: "Sidhu Moose Wala • Full 4:30 min",
+        category: "punjabi",
+        videoId: "n_FCrCQ6-9U",
+        thumb: "https://i.ytimg.com/vi/n_FCrCQ6-9U/mqdefault.jpg"
+      },
+      {
+        trackName: "Softly",
+        artistName: "Karan Aujla & Ikky • Full 2:35 min",
+        category: "punjabi",
+        videoId: "cWMxCE2HTag",
+        thumb: "https://i.ytimg.com/vi/cWMxCE2HTag/mqdefault.jpg"
+      },
+      {
+        trackName: "Winning Speech",
+        artistName: "Karan Aujla • Full 3:20 min",
+        category: "punjabi",
+        videoId: "vsWxs1tuwDk",
+        thumb: "https://i.ytimg.com/vi/vsWxs1tuwDk/mqdefault.jpg"
+      },
+      {
+        trackName: "Lover",
+        artistName: "Diljit Dosanjh • Full 3:12 min",
+        category: "punjabi",
+        videoId: "mH_LFkWxpI0",
+        thumb: "https://i.ytimg.com/vi/mH_LFkWxpI0/mqdefault.jpg"
+      },
+
+      // ENGLISH POP & GLOBAL
+      {
+        trackName: "Believer",
+        artistName: "Imagine Dragons • Full 3:24 min",
+        category: "english",
+        videoId: "7wtfhZwyrcc",
+        thumb: "https://i.ytimg.com/vi/7wtfhZwyrcc/mqdefault.jpg"
+      },
+      {
+        trackName: "Starboy",
+        artistName: "The Weeknd ft. Daft Punk • Full 3:50 min",
+        category: "english",
+        videoId: "34Na4j8AVgA",
+        thumb: "https://i.ytimg.com/vi/34Na4j8AVgA/mqdefault.jpg"
+      },
+      {
+        trackName: "Blinding Lights",
+        artistName: "The Weeknd • Full 3:20 min",
+        category: "english",
+        videoId: "4NRXx6U8ABQ",
+        thumb: "https://i.ytimg.com/vi/4NRXx6U8ABQ/mqdefault.jpg"
+      },
+      {
+        trackName: "Shape of You",
+        artistName: "Ed Sheeran • Full 3:53 min",
+        category: "english",
+        videoId: "JGwWNGJdvx8",
+        thumb: "https://i.ytimg.com/vi/JGwWNGJdvx8/mqdefault.jpg"
+      },
+      {
+        trackName: "Levitating",
+        artistName: "Dua Lipa • Full 3:23 min",
+        category: "english",
+        videoId: "TUVcZfQe-Kw",
+        thumb: "https://i.ytimg.com/vi/TUVcZfQe-Kw/mqdefault.jpg"
+      },
+      {
+        trackName: "Faded",
+        artistName: "Alan Walker • Full 3:32 min",
+        category: "english",
+        videoId: "60ItHLz5WEA",
+        thumb: "https://i.ytimg.com/vi/60ItHLz5WEA/mqdefault.jpg"
       }
     ];
 
     let currentPlayingType = 'none'; // 'youtube' or 'audio' or 'none'
     let currentFullVideoId = null;
-    let fullSongTitle = "गुलाबी साडी (Full Song)";
-    
+    let fullSongTitle = "Gulabi Sadi (Full Song)";
+    let activeCategory = 'all';
+
     const musicSearchModal = document.getElementById('musicSearchModal');
     const songQueryInput = document.getElementById('songQueryInput');
     const btnExecuteSearch = document.getElementById('btn-execute-search');
@@ -3546,16 +3724,15 @@
     const songResultsContainer = document.getElementById('song-results-container');
     const btnCloseMusicSearch = document.getElementById('btn-close-music-search');
     const localSongFallback = document.getElementById('localSongFallback');
+    const fullSongFrame = document.getElementById('fullSongFrame');
 
-        const fullSongFrame = document.getElementById('fullSongFrame');
-                
     const btnOpenSearchGame = document.getElementById('btn-open-search-game');
     const btnOpenSearchMenu = document.getElementById('btn-open-search-menu');
     const btnPlayPauseStreamGame = document.getElementById('btn-play-pause-stream-game');
     const btnPlayPauseStreamMenu = document.getElementById('btn-play-pause-stream-menu');
     const btnStopMusicGame = document.getElementById('btn-stop-music-game');
     const btnStopMusicMenu = document.getElementById('btn-stop-music-menu');
-        
+
     const titleNowPlayingGame = document.getElementById('jukebox-now-playing-game');
     const titleNowPlayingMenu = document.getElementById('jukebox-now-playing-menu');
     const waveGame = document.getElementById('audio-wave-game');
@@ -3566,31 +3743,71 @@
     // 1. OPEN / CLOSE SEARCH MODAL
     function openMusicSearchModal() {
       if (musicSearchModal) musicSearchModal.style.display = 'flex';
-      renderFullSongCards(FULL_SONGS_CATALOG);
+      filterAndRenderSongs();
     }
 
     if (btnOpenSearchGame) btnOpenSearchGame.onclick = openMusicSearchModal;
     if (btnOpenSearchMenu) btnOpenSearchMenu.onclick = openMusicSearchModal;
     if (btnCloseMusicSearch) btnCloseMusicSearch.onclick = () => { if (musicSearchModal) musicSearchModal.style.display = 'none'; };
 
-    // 2. RENDER FULL SONG CARDS
-    function renderFullSongCards(songs) {
+    // 2. FILTER & RENDER SONGS (SPOTIFY STYLE)
+    function filterAndRenderSongs(searchQuery = '') {
       if (!songResultsContainer) return;
       songResultsContainer.innerHTML = '';
 
-      songs.forEach((song, idx) => {
+      let list = SPOTIFY_CATALOG;
+      const q = searchQuery.trim().toLowerCase();
+
+      // If category filter is applied
+      if (activeCategory !== 'all') {
+        list = list.filter(s => s.category === activeCategory);
+      }
+
+      // If search query is entered
+      if (q.length > 0) {
+        list = SPOTIFY_CATALOG.filter(s => 
+          s.trackName.toLowerCase().includes(q) || 
+          s.artistName.toLowerCase().includes(q) || 
+          s.category.toLowerCase().includes(q)
+        );
+
+        // Always add a TOP UNIVERSAL SEARCH CARD so ANY song in the world can be played!
+        const globalCard = document.createElement('div');
+        globalCard.className = 'song-card';
+        globalCard.style.border = '2px solid #10b981';
+        globalCard.style.background = 'rgba(16, 185, 129, 0.15)';
+        globalCard.innerHTML = `
+          <div style="width: 44px; height: 44px; border-radius: 6px; background: #10b981; color: #000; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: bold; flex-shrink: 0;">
+            🔍
+          </div>
+          <div class="song-meta">
+            <div class="song-name" style="color: #38bdf8;">Play "${searchQuery.trim()}" (Global Spotify Stream)</div>
+            <div class="song-artist" style="color: #cbd5e1;">Online Full Track • Instant Background Audio</div>
+          </div>
+          <button class="btn-play-song" style="background: linear-gradient(135deg, #10b981, #00f3ff); color: #000;">
+            ▶ Play Now
+          </button>
+        `;
+        globalCard.querySelector('.btn-play-song').onclick = () => {
+          playUniversalSearchSong(searchQuery.trim());
+        };
+        songResultsContainer.appendChild(globalCard);
+      }
+
+      // Render catalog cards
+      list.forEach((song, idx) => {
         const isCurrent = (currentFullVideoId === song.videoId && isTrackPlaying);
         const card = document.createElement('div');
         card.className = `song-card ${isCurrent ? 'now-playing-card' : ''}`;
 
         card.innerHTML = `
-          <img src="${song.thumb}" class="song-thumb" alt="art" onerror="this.src='https://placehold.co/44x44/1e293b/00f3ff?text=🎵'">
+          <img src="${song.thumb}" class="song-thumb" alt="art" onerror="this.src='https://placehold.co/44x44/1e293b/10b981?text=🎵'">
           <div class="song-meta">
             <div class="song-name">${song.trackName}</div>
             <div class="song-artist">${song.artistName}</div>
           </div>
-          <button class="btn-play-song" id="song-btn-${idx}">
-            ${isCurrent ? '⏸️ Playing' : '▶️ Play Full Song'}
+          <button class="btn-play-song" id="song-btn-${idx}" style="${isCurrent ? 'background:#10b981; color:#000;' : ''}">
+            ${isCurrent ? '⏸️ Playing' : '▶ Play'}
           </button>
         `;
 
@@ -3601,98 +3818,106 @@
 
         songResultsContainer.appendChild(card);
       });
+
+      if (searchStatusBar) {
+        if (q.length > 0) {
+          searchStatusBar.innerHTML = `Found matching songs for <strong>"${searchQuery}"</strong>:`;
+        } else {
+          searchStatusBar.innerHTML = `Showing <strong>${list.length} songs</strong>. Tap '▶ Play' to stream:`;
+        }
+      }
     }
 
-    // 3. PLAY FULL LENGTH SONG (YOUTUBE / OFFICIAL STREAM)
+    // 3. PLAY CATALOG SONG (INVISIBLE BACKEND STREAM)
     function playFullLengthSong(videoId, title) {
       currentPlayingType = 'youtube';
       currentFullVideoId = videoId;
       fullSongTitle = title;
       isTrackPlaying = true;
 
-      // Stop native audio and procedural synth
       try { bgmAudio.pause(); } catch(e) {}
       stopBGM();
 
-
-      // Load official embed with autoplay & jsapi
       if (fullSongFrame) {
         fullSongFrame.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&enablejsapi=1&playsinline=1&rel=0`;
       }
 
       updatePlayerUI(title, true);
-      renderFullSongCards(FULL_SONGS_CATALOG);
+      filterAndRenderSongs(songQueryInput ? songQueryInput.value : '');
 
       if (searchStatusBar) {
-        searchStatusBar.innerHTML = `<span style="color:var(--green); font-weight:bold;">▶️ संपूर्ण गाणे सुरू झाले: ${title}</span>`;
+        searchStatusBar.innerHTML = `<span style="color:#10b981; font-weight:bold;">▶️ Now Playing: ${title}</span>`;
       }
       if (statusText) {
-        statusText.innerText = `🎵 Now Playing (Full): ${title}`;
-        statusText.style.borderLeftColor = 'var(--green)';
+        statusText.innerText = `🎵 Now Playing: ${title}`;
+        statusText.style.borderLeftColor = '#10b981';
       }
     }
 
-    // 4. SEARCH ANY SONG (FULL LENGTH YOUTUBE SEARCH)
-    function searchAnyFullSong(query) {
-      if (!query || query.trim() === '') {
-        renderFullSongCards(FULL_SONGS_CATALOG);
-        return;
-      }
+    // 4. PLAY UNIVERSAL SEARCH QUERY (ANY SONG IN THE WORLD)
+    function playUniversalSearchSong(query) {
+      if (!query || query.trim() === '') return;
+      const cleanQ = query.trim();
 
-      // Check if user entered a direct YouTube URL or ID
-      const ytMatch = query.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+      // Check if direct YouTube URL was entered
+      const ytMatch = cleanQ.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
       if (ytMatch) {
-        playFullLengthSong(ytMatch[1], "Custom YouTube Song");
-        if (musicSearchModal) musicSearchModal.style.display = 'none';
+        playFullLengthSong(ytMatch[1], "Custom Track");
         return;
       }
 
-      // Search matching local catalog first
-      const qLower = query.toLowerCase();
-      const matched = FULL_SONGS_CATALOG.filter(s => 
-        s.trackName.toLowerCase().includes(qLower) || s.artistName.toLowerCase().includes(qLower)
-      );
+      currentPlayingType = 'youtube';
+      currentFullVideoId = 'search_' + cleanQ;
+      fullSongTitle = cleanQ;
+      isTrackPlaying = true;
 
-      if (matched.length > 0) {
-        if (searchStatusBar) searchStatusBar.innerHTML = `✓ ${matched.length} गाणी सापडली:`;
-        renderFullSongCards(matched);
-      } else {
-        // Load YouTube Search list directly
-        currentPlayingType = 'youtube';
-        currentFullVideoId = 'search_' + query;
-        fullSongTitle = query + " (Full Search)";
-        isTrackPlaying = true;
+      try { bgmAudio.pause(); } catch(e) {}
+      stopBGM();
 
-        try { bgmAudio.pause(); } catch(e) {}
-        stopBGM();
+      if (fullSongFrame) {
+        fullSongFrame.src = `https://www.youtube-nocookie.com/embed?listType=search&list=${encodeURIComponent(cleanQ)}&autoplay=1&enablejsapi=1&playsinline=1`;
+      }
 
+      updatePlayerUI(cleanQ, true);
+      filterAndRenderSongs(cleanQ);
 
-        if (fullSongFrame) {
-          fullSongFrame.src = `https://www.youtube-nocookie.com/embed?listType=search&list=${encodeURIComponent(query)}&autoplay=1&enablejsapi=1&playsinline=1`;
-        }
-
-        updatePlayerUI(query, true);
-        if (searchStatusBar) {
-          searchStatusBar.innerHTML = `<span style="color:var(--green); font-weight:bold;">▶️ "${query}" सर्चचे संपूर्ण गाणे प्ले होत आहे!</span>`;
-        }
+      if (searchStatusBar) {
+        searchStatusBar.innerHTML = `<span style="color:#10b981; font-weight:bold;">▶️ Streaming "${cleanQ}" in background!</span>`;
+      }
+      if (statusText) {
+        statusText.innerText = `🎵 Now Playing: ${cleanQ}`;
+        statusText.style.borderLeftColor = '#10b981';
       }
     }
 
+    // Search Trigger Events
     if (btnExecuteSearch) {
-      btnExecuteSearch.onclick = () => searchAnyFullSong(songQueryInput ? songQueryInput.value : '');
-    }
-    if (songQueryInput) {
-      songQueryInput.onkeydown = (e) => {
-        if (e.key === 'Enter') searchAnyFullSong(songQueryInput.value);
+      btnExecuteSearch.onclick = () => {
+        const val = songQueryInput ? songQueryInput.value : '';
+        filterAndRenderSongs(val);
       };
     }
 
-    // Quick Category Tags
-    document.querySelectorAll('.tag-btn').forEach(btn => {
+    if (songQueryInput) {
+      songQueryInput.oninput = () => {
+        filterAndRenderSongs(songQueryInput.value);
+      };
+      songQueryInput.onkeydown = (e) => {
+        if (e.key === 'Enter') {
+          const val = songQueryInput.value.trim();
+          if (val) playUniversalSearchSong(val);
+        }
+      };
+    }
+
+    // Category Buttons
+    document.querySelectorAll('#quick-category-tags .tag-btn').forEach(btn => {
       btn.onclick = () => {
-        const q = btn.getAttribute('data-q');
-        if (songQueryInput) songQueryInput.value = q;
-        searchAnyFullSong(q);
+        document.querySelectorAll('#quick-category-tags .tag-btn').forEach(b => b.classList.remove('active-tab'));
+        btn.classList.add('active-tab');
+        activeCategory = btn.getAttribute('data-cat') || 'all';
+        if (songQueryInput) songQueryInput.value = '';
+        filterAndRenderSongs('');
       };
     });
 
@@ -3719,7 +3944,7 @@
           isTrackPlaying = true;
           updatePlayerUI(fullSongTitle, true);
         }
-        renderFullSongCards(FULL_SONGS_CATALOG);
+        filterAndRenderSongs(songQueryInput ? songQueryInput.value : '');
       } else if (currentPlayingType === 'audio' && bgmAudio.src) {
         if (bgmAudio.paused) {
           bgmAudio.play().then(() => {
@@ -3732,8 +3957,8 @@
           updatePlayerUI(fullSongTitle, false);
         }
       } else {
-        // If nothing is playing, start first full song (Gulabi Sadi) immediately!
-        playFullLengthSong(FULL_SONGS_CATALOG[0].videoId, FULL_SONGS_CATALOG[0].trackName);
+        // If nothing is playing, start first track (Gulabi Sadi)
+        playFullLengthSong(SPOTIFY_CATALOG[0].videoId, SPOTIFY_CATALOG[0].trackName);
       }
     }
 
@@ -3756,19 +3981,18 @@
         fullSongFrame.src = "";
       }
 
-            updatePlayerUI("गाणे बंद आहे", false);
-      renderFullSongCards(FULL_SONGS_CATALOG);
+      updatePlayerUI("Music Stopped", false);
+      filterAndRenderSongs(songQueryInput ? songQueryInput.value : '');
 
       if (statusText) {
-        statusText.innerText = "⏹️ गाणे बंद केले.";
+        statusText.innerText = "⏹️ Music Stopped";
       }
     }
 
     if (btnStopMusicGame) btnStopMusicGame.onclick = stopFullMusic;
     if (btnStopMusicMenu) btnStopMusicMenu.onclick = stopFullMusic;
-    
 
-    // 9. VOLUME CONTROLS
+    // 8. VOLUME CONTROLS
     function setFullMusicVolume(val) {
       const v = parseFloat(val);
       if (bgmAudio) bgmAudio.volume = v;
@@ -3779,7 +4003,7 @@
     if (volSliderGame) volSliderGame.oninput = (e) => setFullMusicVolume(e.target.value);
     if (volSliderMenu) volSliderMenu.oninput = (e) => setFullMusicVolume(e.target.value);
 
-    // 10. LOCAL FULL MP3 UPLOAD
+    // 9. LOCAL FULL MP3 UPLOAD
     if (localSongFallback) {
       localSongFallback.onchange = (e) => {
         if (e.target.files && e.target.files[0]) {
@@ -3789,7 +4013,7 @@
           currentFullVideoId = null;
           fullSongTitle = file.name;
 
-                    if (fullSongFrame) fullSongFrame.src = "";
+          if (fullSongFrame) fullSongFrame.src = "";
 
           bgmAudio.pause();
           bgmAudio.src = localUrl;
@@ -3807,22 +4031,17 @@
     }
 
     // =========================================================
-    // 11. CRITICAL REQUIREMENT: AUTO-STOP MUSIC WHEN USER EXITS/LEAVES GAME!
+    // 10. AUTO-STOP MUSIC WHEN USER EXITS/LEAVES GAME
     // =========================================================
     function handleUserExitGame() {
-      console.log("User switched away or exited game. Stopping music immediately!");
-      // Pause YouTube player
       if (fullSongFrame && fullSongFrame.contentWindow) {
         try {
           fullSongFrame.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
         } catch(e) {}
       }
-      // Pause native HTML5 audio
       try {
         if (bgmAudio) bgmAudio.pause();
       } catch(e) {}
-
-      // Stop synth sound effects
       try { stopBGM(); } catch(e) {}
 
       isTrackPlaying = false;
@@ -3831,17 +4050,10 @@
       if (waveMenu) waveMenu.style.display = 'none';
     }
 
-    // When tab is hidden / minimized / switched
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        handleUserExitGame();
-      }
+      if (document.hidden) handleUserExitGame();
     });
-
-    // When window loses focus / app switches
     window.addEventListener('blur', handleUserExitGame);
-
-    // When page is unloading or closed
     window.addEventListener('pagehide', handleUserExitGame);
     window.addEventListener('beforeunload', handleUserExitGame);
 
