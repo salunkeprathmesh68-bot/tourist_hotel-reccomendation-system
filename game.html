@@ -1096,7 +1096,7 @@
           🌫️ <strong>Cyber Fog</strong> (अंधार) • 🌀 <strong>Warp Portals</strong> (@) • ⚡ <strong>Inverted Gyros</strong> (?) • 🔋 <strong>+10% Battery</strong>
         </div>
       </div>
-            <!-- Cyber Music Player Bar in Menu -->
+            <!-- Music Player Bar in Menu -->
       <div class="music-jukebox-bar">
         <button class="jukebox-btn" id="btn-open-search-menu" style="background: linear-gradient(135deg, #10b981, #00f3ff); color: #000; font-weight: 900;">🎵 Music Player</button>
         <button class="jukebox-btn-sec" id="btn-play-pause-stream-menu" title="Play/Pause">▶️</button>
@@ -1205,7 +1205,7 @@
       </div>
 
       <!-- Status Message -->
-            <!-- Cyber Music Player Bar in Game -->
+            <!-- Music Player Bar in Game -->
       <div class="music-jukebox-bar">
         <button class="jukebox-btn" id="btn-open-search-game" style="background: linear-gradient(135deg, #10b981, #00f3ff); color: #000; font-weight: 900;">🎵 Music Player</button>
         <button class="jukebox-btn-sec" id="btn-play-pause-stream-game" title="Play/Pause">⏸️</button>
@@ -1290,13 +1290,13 @@
     </div>
   </div>
 
-  <!-- Cyber Music Search & Live Suggest Modal (English Interface) -->
+  <!-- Music Search & Live Suggest Modal (English Interface) -->
   <div class="overlay" id="musicSearchModal">
     <div class="modal-box" style="max-width: 500px; max-height: 88vh; display: flex; flex-direction: column; text-align: left; background: #0b1120; border: 2px solid var(--cyan); box-shadow: 0 0 30px rgba(0,243,255,0.3);">
       <!-- Header -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
         <div class="modal-title" style="color: var(--cyan); font-size: 1.25rem; font-weight: 900; margin-bottom: 0; display: flex; align-items: center; gap: 8px;">
-          <span>🎵</span> CYBER MUSIC JUKEBOX
+          <span>🎵</span> MUSIC JUKEBOX
         </div>
         <button class="mini-btn" id="btn-close-music-search" style="font-size: 1.1rem; padding: 2px 8px; border-color: var(--cyan);">✕</button>
       </div>
@@ -3546,12 +3546,14 @@
     // =========================================================
     // CYBER MUSIC JUKEBOX ENGINE (LIVE TYPE-AHEAD SUGGESTIONS & FULL SONGS)
     // =========================================================
+    // Dual-Engine Music Catalog: directAudio plays in <50ms with ZERO DELAY!
     const MUSIC_CATALOG = [
-      // MARATHI SUPERHITS
+      // MARATHI SUPERHITS (Instant Zero-Delay Audio)
       {
         trackName: "Gulabi Sadi",
         artistName: "Sanju Rathod • Full 3:43 min",
         category: "marathi",
+        directAudio: "audio/gulabi_sadi.m4a",
         videoId: "B_6d3RBiEN0",
         thumb: "https://i.ytimg.com/vi/B_6d3RBiEN0/mqdefault.jpg"
       },
@@ -3559,6 +3561,7 @@
         trackName: "Zingaat",
         artistName: "Ajay-Atul (Sairat) • Full 3:46 min",
         category: "marathi",
+        directAudio: "audio/zingaat.m4a",
         videoId: "luhVm60Wiro",
         thumb: "https://i.ytimg.com/vi/luhVm60Wiro/mqdefault.jpg"
       },
@@ -3566,6 +3569,7 @@
         trackName: "Taambdi Chaamdi",
         artistName: "Kratex & Shreyas • Full 3:15 min",
         category: "marathi",
+        directAudio: "audio/taambdi_chaamdi.m4a",
         videoId: "kmjeMrjOjFA",
         thumb: "https://i.ytimg.com/vi/kmjeMrjOjFA/mqdefault.jpg"
       },
@@ -3573,6 +3577,7 @@
         trackName: "Apsara Aali",
         artistName: "Ajay-Atul (Natarang) • Full 4:10 min",
         category: "marathi",
+        directAudio: "audio/apsara_aali.m4a",
         videoId: "a6iA2HgamOE",
         thumb: "https://i.ytimg.com/vi/a6iA2HgamOE/mqdefault.jpg"
       },
@@ -3607,18 +3612,19 @@
 
       // BOLLYWOOD HITS
       {
+        trackName: "Kesariya",
+        artistName: "Arijit Singh (Brahmāstra) • Full 4:28 min",
+        category: "bollywood",
+        directAudio: "audio/kesariya.m4a",
+        videoId: "BddP6PYo2gs",
+        thumb: "https://i.ytimg.com/vi/BddP6PYo2gs/mqdefault.jpg"
+      },
+      {
         trackName: "Tauba Tauba",
         artistName: "Karan Aujla (Bad Newz) • Full 3:28 min",
         category: "bollywood",
         videoId: "d_4x7wGqWzE",
         thumb: "https://i.ytimg.com/vi/d_4x7wGqWzE/mqdefault.jpg"
-      },
-      {
-        trackName: "Kesariya",
-        artistName: "Arijit Singh (Brahmāstra) • Full 4:28 min",
-        category: "bollywood",
-        videoId: "BddP6PYo2gs",
-        thumb: "https://i.ytimg.com/vi/BddP6PYo2gs/mqdefault.jpg"
       },
       {
         trackName: "Chaleya",
@@ -3647,6 +3653,7 @@
         trackName: "The Monster Song (KGF 2)",
         artistName: "Ravi Basrur & Adithi Sagar • Full 3:30 min",
         category: "south",
+        directAudio: "audio/kgf_monster.m4a",
         videoId: "R4He_Gcn7cA",
         thumb: "https://i.ytimg.com/vi/R4He_Gcn7cA/mqdefault.jpg"
       },
@@ -3677,6 +3684,7 @@
         trackName: "Gaming Phonk (Bass Drift)",
         artistName: "Drift Phonk Gaming • Full 3:00 min",
         category: "phonk",
+        directAudio: "audio/gaming_phonk.m4a",
         videoId: "Pnq1_3BXIqA",
         thumb: "https://i.ytimg.com/vi/Pnq1_3BXIqA/mqdefault.jpg"
       },
@@ -3869,7 +3877,7 @@
       // Catalog Matches (Instant 1-Tap Play)
       catalogMatches.forEach(song => {
         html += `
-          <div class="suggest-item" onclick="selectSuggestionAndPlay('${escapeQuotes(song.trackName)}', '${song.videoId}')">
+          <div class="suggest-item" onclick="selectSuggestionAndPlay('${escapeQuotes(song.trackName)}', '${song.videoId}', '${song.directAudio || ''}')">
             <div class="suggest-item-left">
               <span style="color:var(--cyan); font-weight:bold;">🎵</span>
               <div>
@@ -3902,16 +3910,17 @@
       liveSuggestBox.style.display = 'block';
     }
 
-    function selectSuggestionAndPlay(title, videoId) {
+    function selectSuggestionAndPlay(title, videoId, directAudio) {
       if (songQueryInput) songQueryInput.value = title;
       if (liveSuggestBox) liveSuggestBox.style.display = 'none';
 
       if (videoId) {
-        playFullLengthSong(videoId, title);
+        playFullLengthSong(videoId, title, directAudio);
       } else {
         playUniversalSearchSong(title);
       }
     }
+
 
     function escapeHtml(str) {
       return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -3992,7 +4001,7 @@
         card.querySelector('.btn-play-song').onclick = (e) => {
           e.stopPropagation();
           if (liveSuggestBox) liveSuggestBox.style.display = 'none';
-          playFullLengthSong(song.videoId, song.trackName);
+          playFullLengthSong(song.videoId, song.trackName, song.directAudio);
         };
 
         songResultsContainer.appendChild(card);
@@ -4007,18 +4016,38 @@
       }
     }
 
-    // 4. PLAY CATALOG SONG (INVISIBLE BACKEND STREAM)
-    function playFullLengthSong(videoId, title) {
-      currentPlayingType = 'youtube';
-      currentFullVideoId = videoId;
+    // 4. PLAY CATALOG SONG (INSTANT ZERO-DELAY PLAYBACK!)
+    function playFullLengthSong(videoId, title, directAudio) {
       fullSongTitle = title;
       isTrackPlaying = true;
-
-      try { bgmAudio.pause(); } catch(e) {}
       stopBGM();
 
-      if (fullSongFrame) {
-        fullSongFrame.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&enablejsapi=1&playsinline=1&rel=0`;
+      // If direct audio exists, play in native HTML5 audio element (<50ms delay, instantaneous!)
+      if (directAudio) {
+        currentPlayingType = 'audio';
+        currentFullVideoId = videoId;
+        if (fullSongFrame) fullSongFrame.src = "";
+
+        bgmAudio.pause();
+        bgmAudio.src = directAudio;
+        bgmAudio.currentTime = 0;
+        bgmAudio.volume = parseFloat(volSliderGame?.value || 1.0);
+        bgmAudio.muted = false;
+
+        bgmAudio.play().then(() => {
+          updatePlayerUI(title, true);
+          filterAndRenderSongs(songQueryInput ? songQueryInput.value : '');
+        }).catch(err => {
+          console.warn("Direct audio error, falling back to stream:", err);
+          playViaYouTubeStream(videoId, title);
+        });
+
+        bgmAudio.onended = () => {
+          bgmAudio.currentTime = 0;
+          bgmAudio.play().catch(() => {});
+        };
+      } else {
+        playViaYouTubeStream(videoId, title);
       }
 
       updatePlayerUI(title, true);
@@ -4033,7 +4062,18 @@
       }
     }
 
-    // 5. PLAY UNIVERSAL SEARCH QUERY (ANY SONG IN THE WORLD)
+    function playViaYouTubeStream(videoId, title) {
+      currentPlayingType = 'youtube';
+      currentFullVideoId = videoId;
+      try { bgmAudio.pause(); } catch(e) {}
+
+      if (fullSongFrame) {
+        fullSongFrame.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&enablejsapi=1&playsinline=1&rel=0`;
+      }
+      updatePlayerUI(title, true);
+      filterAndRenderSongs(songQueryInput ? songQueryInput.value : '');
+    }
+
     function playUniversalSearchSong(query) {
       if (!query || query.trim() === '') return;
       const cleanQ = query.trim();
@@ -4142,7 +4182,7 @@
         }
       } else {
         // If nothing playing, start first track (Gulabi Sadi)
-        playFullLengthSong(MUSIC_CATALOG[0].videoId, MUSIC_CATALOG[0].trackName);
+        playFullLengthSong(MUSIC_CATALOG[0].videoId, MUSIC_CATALOG[0].trackName, MUSIC_CATALOG[0].directAudio);
       }
     }
 
