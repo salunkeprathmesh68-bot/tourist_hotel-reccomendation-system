@@ -792,6 +792,43 @@
       color: #000;
     }
 
+    
+    /* LIVE AUTO-SUGGEST DROPDOWN STYLING */
+    .suggest-item {
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      cursor: pointer;
+      font-size: 0.8rem;
+      color: #e2e8f0;
+      transition: background 0.15s;
+    }
+    .suggest-item:hover, .suggest-item:active {
+      background: rgba(0, 243, 255, 0.15);
+      color: var(--cyan);
+    }
+    .suggest-item-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .suggest-item-play {
+      background: var(--cyan);
+      color: #000;
+      font-weight: 800;
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
     /* Message ticker */
     .status-ticker {
       font-size: 0.74rem;
@@ -1059,9 +1096,9 @@
           🌫️ <strong>Cyber Fog</strong> (अंधार) • 🌀 <strong>Warp Portals</strong> (@) • ⚡ <strong>Inverted Gyros</strong> (?) • 🔋 <strong>+10% Battery</strong>
         </div>
       </div>
-            <!-- Spotify Music Jukebox Bar in Menu -->
+            <!-- Cyber Music Player Bar in Menu -->
       <div class="music-jukebox-bar">
-        <button class="jukebox-btn" id="btn-open-search-menu" style="background: linear-gradient(135deg, #10b981, #00f3ff); color: #000; font-weight: 900;">🎧 Songs (Spotify)</button>
+        <button class="jukebox-btn" id="btn-open-search-menu" style="background: linear-gradient(135deg, #10b981, #00f3ff); color: #000; font-weight: 900;">🎵 Music Player</button>
         <button class="jukebox-btn-sec" id="btn-play-pause-stream-menu" title="Play/Pause">▶️</button>
         <button class="jukebox-btn-sec" id="btn-stop-music-menu" title="Stop Music">⏹️</button>
         <div class="audio-wave" id="audio-wave-menu" style="display:none;">
@@ -1168,9 +1205,9 @@
       </div>
 
       <!-- Status Message -->
-            <!-- Spotify Music Jukebox Bar in Game -->
+            <!-- Cyber Music Player Bar in Game -->
       <div class="music-jukebox-bar">
-        <button class="jukebox-btn" id="btn-open-search-game" style="background: linear-gradient(135deg, #10b981, #00f3ff); color: #000; font-weight: 900;">🎧 Songs (Spotify)</button>
+        <button class="jukebox-btn" id="btn-open-search-game" style="background: linear-gradient(135deg, #10b981, #00f3ff); color: #000; font-weight: 900;">🎵 Music Player</button>
         <button class="jukebox-btn-sec" id="btn-play-pause-stream-game" title="Play/Pause">⏸️</button>
         <button class="jukebox-btn-sec" id="btn-stop-music-game" title="Stop Music">⏹️</button>
         <div class="audio-wave" id="audio-wave-game" style="display:none;">
@@ -1253,28 +1290,34 @@
     </div>
   </div>
 
-  <!-- Spotify-Style Music Search & Stream Modal (English Interface) -->
+  <!-- Cyber Music Search & Live Suggest Modal (English Interface) -->
   <div class="overlay" id="musicSearchModal">
-    <div class="modal-box" style="max-width: 500px; max-height: 88vh; display: flex; flex-direction: column; text-align: left; background: #0b1120; border: 2px solid #10b981; box-shadow: 0 0 30px rgba(16,185,129,0.3);">
+    <div class="modal-box" style="max-width: 500px; max-height: 88vh; display: flex; flex-direction: column; text-align: left; background: #0b1120; border: 2px solid var(--cyan); box-shadow: 0 0 30px rgba(0,243,255,0.3);">
       <!-- Header -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-        <div class="modal-title" style="color: #10b981; font-size: 1.25rem; font-weight: 900; margin-bottom: 0; display: flex; align-items: center; gap: 8px;">
-          <span>🎧</span> SPOTIFY MUSIC JUKEBOX
+        <div class="modal-title" style="color: var(--cyan); font-size: 1.25rem; font-weight: 900; margin-bottom: 0; display: flex; align-items: center; gap: 8px;">
+          <span>🎵</span> CYBER MUSIC JUKEBOX
         </div>
-        <button class="mini-btn" id="btn-close-music-search" style="font-size: 1.1rem; padding: 2px 8px; border-color: #10b981;">✕</button>
+        <button class="mini-btn" id="btn-close-music-search" style="font-size: 1.1rem; padding: 2px 8px; border-color: var(--cyan);">✕</button>
       </div>
       <div style="font-size: 0.74rem; color: #94a3b8; margin-bottom: 8px;">
-        Search and play <strong>ANY song</strong> in the background while playing:
+        Type <strong>1 or 2 letters</strong> to instantly find & play any song in the background:
       </div>
 
-      <!-- Search Input Form (English) -->
-      <div style="display: flex; gap: 6px; margin-bottom: 8px;">
-        <input type="text" id="songQueryInput" placeholder="Search any song, artist (e.g. Gulabi Sadi, Zingaat, Arijit)..." 
-               style="flex: 1; background: #030712; border: 1px solid #10b981; color: #fff; border-radius: 8px; padding: 8px 12px; font-size: 0.88rem; font-weight: bold; outline: none;">
-        <button class="jukebox-btn" id="btn-execute-search" style="background: linear-gradient(135deg, #10b981, #00f3ff); color: #000; font-weight: 900; padding: 8px 14px;">🔍 Search</button>
+      <!-- Search Input with Live Suggestion Box -->
+      <div style="position: relative; margin-bottom: 8px;">
+        <div style="display: flex; gap: 6px;">
+          <input type="text" id="songQueryInput" autocomplete="off" placeholder="Type 1-2 letters (e.g. gu, zi, ta, kg, ar, ch)..." 
+                 style="flex: 1; background: #030712; border: 1px solid var(--cyan); color: #fff; border-radius: 8px; padding: 8px 12px; font-size: 0.88rem; font-weight: bold; outline: none;">
+          <button class="jukebox-btn" id="btn-execute-search" style="padding: 8px 14px;">🔍 Search</button>
+        </div>
+        <!-- Instant Auto-Suggest Dropdown (Populates on 1-2 letters) -->
+        <div id="liveSuggestBox" style="display: none; position: absolute; top: 105%; left: 0; right: 0; background: #0f172a; border: 1px solid var(--cyan); border-radius: 8px; z-index: 10000; box-shadow: 0 10px 30px rgba(0,0,0,0.9); max-height: 220px; overflow-y: auto;">
+          <!-- Suggestions injected dynamically -->
+        </div>
       </div>
 
-      <!-- Spotify Genre / Category Tabs (English) -->
+      <!-- Genre / Category Filter Tabs -->
       <div style="display: flex; gap: 5px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 8px;" id="quick-category-tags">
         <button class="tag-btn active-tab" data-cat="all">🔥 All Songs</button>
         <button class="tag-btn" data-cat="marathi">💃 Marathi Hits</button>
@@ -1286,7 +1329,7 @@
         <button class="tag-btn" data-cat="english">🕺 English Pop</button>
       </div>
 
-      <div id="search-status-bar" style="font-size: 0.74rem; color: #38bdf8; margin-bottom: 6px; min-height: 18px;">
+      <div id="search-status-bar" style="font-size: 0.74rem; color: var(--yellow); margin-bottom: 6px; min-height: 18px;">
         Tap <strong>'▶ Play'</strong> on any song to start background streaming:
       </div>
 
@@ -1295,15 +1338,16 @@
         <!-- Injected dynamically -->
       </div>
 
-      <!-- Local MP3 Fallback (English) -->
+      <!-- Local MP3 Fallback -->
       <div style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 0.74rem;">
         <span style="color: var(--muted);">Play a downloaded MP3 from your phone:</span>
-        <label class="mini-btn" style="cursor: pointer; padding: 4px 10px; border-color: #10b981; color: #10b981; font-weight: bold;">
+        <label class="mini-btn" style="cursor: pointer; padding: 4px 10px; border-color: var(--cyan); color: var(--cyan); font-weight: bold;">
           📂 Local MP3
           <input type="file" id="localSongFallback" accept="audio/*" style="display:none;">
         </label>
       </div>
     </div>
+  </div>
   </div>
   </div>
   </div>
@@ -3500,9 +3544,9 @@
 
     
     // =========================================================
-    // SPOTIFY MUSIC JUKEBOX ENGINE (ENGLISH & UNIVERSAL SEARCH)
+    // CYBER MUSIC JUKEBOX ENGINE (LIVE TYPE-AHEAD SUGGESTIONS & FULL SONGS)
     // =========================================================
-    const SPOTIFY_CATALOG = [
+    const MUSIC_CATALOG = [
       // MARATHI SUPERHITS
       {
         trackName: "Gulabi Sadi",
@@ -3719,6 +3763,7 @@
 
     const musicSearchModal = document.getElementById('musicSearchModal');
     const songQueryInput = document.getElementById('songQueryInput');
+    const liveSuggestBox = document.getElementById('liveSuggestBox');
     const btnExecuteSearch = document.getElementById('btn-execute-search');
     const searchStatusBar = document.getElementById('search-status-bar');
     const songResultsContainer = document.getElementById('song-results-container');
@@ -3743,52 +3788,185 @@
     // 1. OPEN / CLOSE SEARCH MODAL
     function openMusicSearchModal() {
       if (musicSearchModal) musicSearchModal.style.display = 'flex';
-      filterAndRenderSongs();
+      filterAndRenderSongs('');
+      if (songQueryInput) songQueryInput.focus();
     }
 
     if (btnOpenSearchGame) btnOpenSearchGame.onclick = openMusicSearchModal;
     if (btnOpenSearchMenu) btnOpenSearchMenu.onclick = openMusicSearchModal;
-    if (btnCloseMusicSearch) btnCloseMusicSearch.onclick = () => { if (musicSearchModal) musicSearchModal.style.display = 'none'; };
+    if (btnCloseMusicSearch) btnCloseMusicSearch.onclick = () => { 
+      if (musicSearchModal) musicSearchModal.style.display = 'none';
+      if (liveSuggestBox) liveSuggestBox.style.display = 'none';
+    };
 
-    // 2. FILTER & RENDER SONGS (SPOTIFY STYLE)
+    // 2. LIVE AUTO-SUGGEST ENGINE (Triggers on 1-2 Letters!)
+    let suggestDebounce = null;
+
+    function handleLiveSuggestions(query) {
+      if (!liveSuggestBox) return;
+      const q = query.trim().toLowerCase();
+
+      // If less than 1 letter, hide suggestions
+      if (q.length === 0) {
+        liveSuggestBox.style.display = 'none';
+        return;
+      }
+
+      // Step A: Local Catalog Instant Matches
+      const localMatches = MUSIC_CATALOG.filter(s => 
+        s.trackName.toLowerCase().includes(q) || 
+        s.artistName.toLowerCase().includes(q)
+      );
+
+      renderSuggestionsUI(q, localMatches.slice(0, 5), []);
+
+      // Step B: Live Online YouTube Suggestions via JSONP
+      if (suggestDebounce) clearTimeout(suggestDebounce);
+      suggestDebounce = setTimeout(() => {
+        fetchOnlineSuggestions(q, (onlineItems) => {
+          renderSuggestionsUI(q, localMatches.slice(0, 4), onlineItems.slice(0, 4));
+        });
+      }, 150);
+    }
+
+    // JSONP Suggestion Callback
+    window.handleYTSuggestions = function(data) {
+      if (window.pendingSuggestCallback && data && data[1]) {
+        const list = data[1].map(item => Array.isArray(item) ? item[0] : item).filter(Boolean);
+        window.pendingSuggestCallback(list);
+      }
+    };
+
+    function fetchOnlineSuggestions(q, callback) {
+      window.pendingSuggestCallback = callback;
+      const existingScript = document.getElementById('yt-suggest-script');
+      if (existingScript) existingScript.remove();
+
+      const script = document.createElement('script');
+      script.id = 'yt-suggest-script';
+      script.src = `https://suggestqueries.google.com/complete/search?client=youtube&ds=yt&jsonp=handleYTSuggestions&q=${encodeURIComponent(q)}`;
+      script.onerror = () => callback([]);
+      document.body.appendChild(script);
+    }
+
+    function renderSuggestionsUI(query, catalogMatches, onlineMatches) {
+      if (!liveSuggestBox) return;
+
+      const totalItems = catalogMatches.length + onlineMatches.length;
+      if (totalItems === 0) {
+        liveSuggestBox.innerHTML = `
+          <div class="suggest-item" style="color:var(--cyan); cursor:pointer;" onclick="playUniversalSearchSong('${escapeQuotes(query)}')">
+            <span>🔍 Search global track for <strong>"${escapeHtml(query)}"</strong></span>
+            <button class="suggest-item-play">▶ Play</button>
+          </div>
+        `;
+        liveSuggestBox.style.display = 'block';
+        return;
+      }
+
+      let html = '';
+
+      // Catalog Matches (Instant 1-Tap Play)
+      catalogMatches.forEach(song => {
+        html += `
+          <div class="suggest-item" onclick="selectSuggestionAndPlay('${escapeQuotes(song.trackName)}', '${song.videoId}')">
+            <div class="suggest-item-left">
+              <span style="color:var(--cyan); font-weight:bold;">🎵</span>
+              <div>
+                <strong>${escapeHtml(song.trackName)}</strong>
+                <span style="color:var(--muted); font-size:0.7rem; margin-left:6px;">${escapeHtml(song.artistName.split('•')[0])}</span>
+              </div>
+            </div>
+            <button class="suggest-item-play">▶ Play</button>
+          </div>
+        `;
+      });
+
+      // Online YouTube Matches
+      onlineMatches.forEach(title => {
+        // avoid duplicating catalog matches
+        if (!catalogMatches.some(c => c.trackName.toLowerCase() === title.toLowerCase())) {
+          html += `
+            <div class="suggest-item" onclick="selectSuggestionAndPlay('${escapeQuotes(title)}')">
+              <div class="suggest-item-left">
+                <span style="color:#94a3b8;">🔍</span>
+                <span>${escapeHtml(title)}</span>
+              </div>
+              <button class="suggest-item-play" style="background:#38bdf8;">▶ Play</button>
+            </div>
+          `;
+        }
+      });
+
+      liveSuggestBox.innerHTML = html;
+      liveSuggestBox.style.display = 'block';
+    }
+
+    function selectSuggestionAndPlay(title, videoId) {
+      if (songQueryInput) songQueryInput.value = title;
+      if (liveSuggestBox) liveSuggestBox.style.display = 'none';
+
+      if (videoId) {
+        playFullLengthSong(videoId, title);
+      } else {
+        playUniversalSearchSong(title);
+      }
+    }
+
+    function escapeHtml(str) {
+      return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    function escapeQuotes(str) {
+      return (str || '').replace(/'/g, "\'").replace(/"/g, '&quot;');
+    }
+
+    // Close suggestions when clicking outside
+    document.addEventListener('click', (e) => {
+      if (liveSuggestBox && !liveSuggestBox.contains(e.target) && e.target !== songQueryInput) {
+        liveSuggestBox.style.display = 'none';
+      }
+    });
+
+    // 3. FILTER & RENDER SONGS IN MAIN LIST (INSTANT 1-LETTER MATCH)
     function filterAndRenderSongs(searchQuery = '') {
       if (!songResultsContainer) return;
       songResultsContainer.innerHTML = '';
 
-      let list = SPOTIFY_CATALOG;
+      let list = MUSIC_CATALOG;
       const q = searchQuery.trim().toLowerCase();
 
-      // If category filter is applied
+      // Category tab filter
       if (activeCategory !== 'all') {
         list = list.filter(s => s.category === activeCategory);
       }
 
-      // If search query is entered
+      // Live search filter on 1 or more letters
       if (q.length > 0) {
-        list = SPOTIFY_CATALOG.filter(s => 
+        list = MUSIC_CATALOG.filter(s => 
           s.trackName.toLowerCase().includes(q) || 
           s.artistName.toLowerCase().includes(q) || 
           s.category.toLowerCase().includes(q)
         );
 
-        // Always add a TOP UNIVERSAL SEARCH CARD so ANY song in the world can be played!
+        // Top Universal Search Card (Plays ANY song in the world!)
         const globalCard = document.createElement('div');
         globalCard.className = 'song-card';
-        globalCard.style.border = '2px solid #10b981';
-        globalCard.style.background = 'rgba(16, 185, 129, 0.15)';
+        globalCard.style.border = '2px solid var(--cyan)';
+        globalCard.style.background = 'rgba(0, 243, 255, 0.12)';
         globalCard.innerHTML = `
-          <div style="width: 44px; height: 44px; border-radius: 6px; background: #10b981; color: #000; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: bold; flex-shrink: 0;">
+          <div style="width: 44px; height: 44px; border-radius: 6px; background: var(--cyan); color: #000; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: bold; flex-shrink: 0;">
             🔍
           </div>
           <div class="song-meta">
-            <div class="song-name" style="color: #38bdf8;">Play "${searchQuery.trim()}" (Global Spotify Stream)</div>
-            <div class="song-artist" style="color: #cbd5e1;">Online Full Track • Instant Background Audio</div>
+            <div class="song-name" style="color: var(--cyan);">Play "${searchQuery.trim()}" (Global Online Stream)</div>
+            <div class="song-artist" style="color: #cbd5e1;">Instant Background Audio • Full Song</div>
           </div>
-          <button class="btn-play-song" style="background: linear-gradient(135deg, #10b981, #00f3ff); color: #000;">
+          <button class="btn-play-song">
             ▶ Play Now
           </button>
         `;
         globalCard.querySelector('.btn-play-song').onclick = () => {
+          if (liveSuggestBox) liveSuggestBox.style.display = 'none';
           playUniversalSearchSong(searchQuery.trim());
         };
         songResultsContainer.appendChild(globalCard);
@@ -3801,18 +3979,19 @@
         card.className = `song-card ${isCurrent ? 'now-playing-card' : ''}`;
 
         card.innerHTML = `
-          <img src="${song.thumb}" class="song-thumb" alt="art" onerror="this.src='https://placehold.co/44x44/1e293b/10b981?text=🎵'">
+          <img src="${song.thumb}" class="song-thumb" alt="art" onerror="this.src='https://placehold.co/44x44/1e293b/00f3ff?text=🎵'">
           <div class="song-meta">
             <div class="song-name">${song.trackName}</div>
             <div class="song-artist">${song.artistName}</div>
           </div>
-          <button class="btn-play-song" id="song-btn-${idx}" style="${isCurrent ? 'background:#10b981; color:#000;' : ''}">
+          <button class="btn-play-song" id="song-btn-${idx}">
             ${isCurrent ? '⏸️ Playing' : '▶ Play'}
           </button>
         `;
 
         card.querySelector('.btn-play-song').onclick = (e) => {
           e.stopPropagation();
+          if (liveSuggestBox) liveSuggestBox.style.display = 'none';
           playFullLengthSong(song.videoId, song.trackName);
         };
 
@@ -3821,14 +4000,14 @@
 
       if (searchStatusBar) {
         if (q.length > 0) {
-          searchStatusBar.innerHTML = `Found matching songs for <strong>"${searchQuery}"</strong>:`;
+          searchStatusBar.innerHTML = `Found <strong>${list.length} matches</strong> for "<strong>${searchQuery}</strong>":`;
         } else {
           searchStatusBar.innerHTML = `Showing <strong>${list.length} songs</strong>. Tap '▶ Play' to stream:`;
         }
       }
     }
 
-    // 3. PLAY CATALOG SONG (INVISIBLE BACKEND STREAM)
+    // 4. PLAY CATALOG SONG (INVISIBLE BACKEND STREAM)
     function playFullLengthSong(videoId, title) {
       currentPlayingType = 'youtube';
       currentFullVideoId = videoId;
@@ -3846,20 +4025,19 @@
       filterAndRenderSongs(songQueryInput ? songQueryInput.value : '');
 
       if (searchStatusBar) {
-        searchStatusBar.innerHTML = `<span style="color:#10b981; font-weight:bold;">▶️ Now Playing: ${title}</span>`;
+        searchStatusBar.innerHTML = `<span style="color:var(--green); font-weight:bold;">▶️ Now Playing: ${title}</span>`;
       }
       if (statusText) {
         statusText.innerText = `🎵 Now Playing: ${title}`;
-        statusText.style.borderLeftColor = '#10b981';
+        statusText.style.borderLeftColor = 'var(--green)';
       }
     }
 
-    // 4. PLAY UNIVERSAL SEARCH QUERY (ANY SONG IN THE WORLD)
+    // 5. PLAY UNIVERSAL SEARCH QUERY (ANY SONG IN THE WORLD)
     function playUniversalSearchSong(query) {
       if (!query || query.trim() === '') return;
       const cleanQ = query.trim();
 
-      // Check if direct YouTube URL was entered
       const ytMatch = cleanQ.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
       if (ytMatch) {
         playFullLengthSong(ytMatch[1], "Custom Track");
@@ -3882,46 +4060,52 @@
       filterAndRenderSongs(cleanQ);
 
       if (searchStatusBar) {
-        searchStatusBar.innerHTML = `<span style="color:#10b981; font-weight:bold;">▶️ Streaming "${cleanQ}" in background!</span>`;
+        searchStatusBar.innerHTML = `<span style="color:var(--green); font-weight:bold;">▶️ Streaming "${cleanQ}" in background!</span>`;
       }
       if (statusText) {
         statusText.innerText = `🎵 Now Playing: ${cleanQ}`;
-        statusText.style.borderLeftColor = '#10b981';
+        statusText.style.borderLeftColor = 'var(--green)';
       }
     }
 
-    // Search Trigger Events
-    if (btnExecuteSearch) {
-      btnExecuteSearch.onclick = () => {
-        const val = songQueryInput ? songQueryInput.value : '';
-        filterAndRenderSongs(val);
-      };
-    }
-
+    // Input & Search Events (Real-time live typing on 1-2 letters!)
     if (songQueryInput) {
       songQueryInput.oninput = () => {
-        filterAndRenderSongs(songQueryInput.value);
+        const val = songQueryInput.value;
+        filterAndRenderSongs(val);
+        handleLiveSuggestions(val);
       };
+
       songQueryInput.onkeydown = (e) => {
         if (e.key === 'Enter') {
+          if (liveSuggestBox) liveSuggestBox.style.display = 'none';
           const val = songQueryInput.value.trim();
           if (val) playUniversalSearchSong(val);
         }
       };
     }
 
-    // Category Buttons
+    if (btnExecuteSearch) {
+      btnExecuteSearch.onclick = () => {
+        if (liveSuggestBox) liveSuggestBox.style.display = 'none';
+        const val = songQueryInput ? songQueryInput.value.trim() : '';
+        if (val) playUniversalSearchSong(val);
+      };
+    }
+
+    // Category Tabs
     document.querySelectorAll('#quick-category-tags .tag-btn').forEach(btn => {
       btn.onclick = () => {
         document.querySelectorAll('#quick-category-tags .tag-btn').forEach(b => b.classList.remove('active-tab'));
         btn.classList.add('active-tab');
         activeCategory = btn.getAttribute('data-cat') || 'all';
         if (songQueryInput) songQueryInput.value = '';
+        if (liveSuggestBox) liveSuggestBox.style.display = 'none';
         filterAndRenderSongs('');
       };
     });
 
-    // 5. UPDATE PLAYER UI
+    // 6. UPDATE PLAYER UI
     function updatePlayerUI(title, isPlaying) {
       const displayTitle = title.length > 20 ? title.substring(0, 18) + '...' : title;
       if (titleNowPlayingGame) titleNowPlayingGame.innerText = displayTitle;
@@ -3932,7 +4116,7 @@
       if (waveMenu) waveMenu.style.display = isPlaying ? 'inline-flex' : 'none';
     }
 
-    // 6. TOGGLE PLAY / PAUSE
+    // 7. TOGGLE PLAY / PAUSE
     function toggleFullSongPlayback() {
       if (currentPlayingType === 'youtube' && fullSongFrame && fullSongFrame.contentWindow) {
         if (isTrackPlaying) {
@@ -3957,15 +4141,15 @@
           updatePlayerUI(fullSongTitle, false);
         }
       } else {
-        // If nothing is playing, start first track (Gulabi Sadi)
-        playFullLengthSong(SPOTIFY_CATALOG[0].videoId, SPOTIFY_CATALOG[0].trackName);
+        // If nothing playing, start first track (Gulabi Sadi)
+        playFullLengthSong(MUSIC_CATALOG[0].videoId, MUSIC_CATALOG[0].trackName);
       }
     }
 
     if (btnPlayPauseStreamGame) btnPlayPauseStreamGame.onclick = toggleFullSongPlayback;
     if (btnPlayPauseStreamMenu) btnPlayPauseStreamMenu.onclick = toggleFullSongPlayback;
 
-    // 7. STOP MUSIC COMPLETELY (⏹️)
+    // 8. STOP MUSIC COMPLETELY (⏹️)
     function stopFullMusic() {
       isTrackPlaying = false;
       currentPlayingType = 'none';
@@ -3992,7 +4176,7 @@
     if (btnStopMusicGame) btnStopMusicGame.onclick = stopFullMusic;
     if (btnStopMusicMenu) btnStopMusicMenu.onclick = stopFullMusic;
 
-    // 8. VOLUME CONTROLS
+    // 9. VOLUME CONTROLS
     function setFullMusicVolume(val) {
       const v = parseFloat(val);
       if (bgmAudio) bgmAudio.volume = v;
@@ -4003,7 +4187,7 @@
     if (volSliderGame) volSliderGame.oninput = (e) => setFullMusicVolume(e.target.value);
     if (volSliderMenu) volSliderMenu.oninput = (e) => setFullMusicVolume(e.target.value);
 
-    // 9. LOCAL FULL MP3 UPLOAD
+    // 10. LOCAL FULL MP3 UPLOAD
     if (localSongFallback) {
       localSongFallback.onchange = (e) => {
         if (e.target.files && e.target.files[0]) {
@@ -4031,7 +4215,7 @@
     }
 
     // =========================================================
-    // 10. AUTO-STOP MUSIC WHEN USER EXITS/LEAVES GAME
+    // 11. AUTO-STOP MUSIC WHEN USER EXITS/LEAVES GAME
     // =========================================================
     function handleUserExitGame() {
       if (fullSongFrame && fullSongFrame.contentWindow) {
