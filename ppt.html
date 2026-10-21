@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+<title>Smart Kolhapur Guide — Project Presentation (13 Slides)</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    background: #0a0f1d;
+    color: #f1f5f9;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Top Navigation Bar */
+  .header-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    background: rgba(10, 15, 29, 0.94);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 10px 16px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+  .header-title-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .header-logo {
+    width: 32px;
+    height: 32px;
+    background: #ffce00;
+    color: #06283e;
+    font-weight: 900;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+  .header-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.3px;
+  }
+  .header-sub {
+    font-size: 12px;
+    color: #94a3b8;
+  }
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 24px;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+  }
+  .btn-pdf {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #ffffff;
+    box-shadow: 0 3px 10px rgba(239, 68, 68, 0.3);
+  }
+  .btn-pdf:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(239, 68, 68, 0.45);
+  }
+  .btn-whatsapp {
+    background: linear-gradient(135deg, #25d366, #128c7e);
+    color: #ffffff;
+    box-shadow: 0 3px 10px rgba(37, 211, 102, 0.3);
+  }
+  .btn-whatsapp:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(37, 211, 102, 0.45);
+  }
+  .btn-pptx {
+    background: rgba(255, 255, 255, 0.12);
+    color: #f1f5f9;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  .btn-pptx:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  .btn-toggle {
+    background: #0284c7;
+    color: #ffffff;
+  }
+
+  /* Slide Viewer Container */
+  .viewer-container {
+    width: 100%;
+    max-width: 1100px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  /* Interactive Presentation Mode */
+  .slide-display-card {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000000;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .slide-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    user-select: none;
+  }
+
+  /* Slide Controls */
+  .controls-bar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(8px);
+    padding: 10px 18px;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .nav-arrow-btn {
+    background: #ffce00;
+    color: #06283e;
+    border: none;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 8px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+  .nav-arrow-btn:active {
+    transform: scale(0.96);
+  }
+  .nav-arrow-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+  .counter-badge {
+    font-size: 14px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+  }
+  .slide-topic-badge {
+    color: #38bdf8;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 250px;
+  }
+
+  /* Thumbnail Strip */
+  .thumbs-strip {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 8px 4px;
+    scrollbar-width: thin;
+    scrollbar-color: #334155 transparent;
+  }
+  .thumbs-strip::-webkit-scrollbar {
+    height: 6px;
+  }
+  .thumbs-strip::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 4px;
+  }
+  .thumb-item {
+    flex: 0 0 90px;
+    aspect-ratio: 16 / 9;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    opacity: 0.55;
+    transition: all 0.2s ease;
+  }
+  .thumb-item.active {
+    border-color: #ffce00;
+    opacity: 1;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(255, 206, 0, 0.4);
+  }
+  .thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Full Scroll Mode */
+  .scroll-deck-view {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .scroll-slide-card {
+    width: 100%;
+    background: #111827;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  }
+  .scroll-slide-header {
+    padding: 10px 16px;
+    background: rgba(15, 23, 42, 0.85);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #94a3b8;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .scroll-slide-header strong {
+    color: #38bdf8;
+  }
+  .scroll-slide-img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    display: block;
+    object-fit: contain;
+    background: #000;
+  }
+
+  /* Mobile specific enhancements */
+  @media (max-width: 640px) {
+    .header-bar {
+      padding: 8px 12px;
+    }
+    .header-title {
+      font-size: 14px;
+    }
+    .btn {
+      font-size: 12px;
+      padding: 6px 11px;
+    }
+    .slide-topic-badge {
+      display: none;
+    }
+    .controls-bar {
+      padding: 8px 12px;
+    }
+    .nav-arrow-btn {
+      padding: 7px 14px;
+      font-size: 13px;
+    }
+    .viewer-container {
+      padding: 10px 8px;
+    }
+    .thumb-item {
+      flex: 0 0 70px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header Navigation -->
+<header class="header-bar">
+  <div class="header-title-box">
+    <div class="header-logo">&#127968;</div>
+    <div>
+      <div class="header-title">Smart Kolhapur Guide</div>
+      <div class="header-sub">Presentation &bull; 13 Slides</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <a href="Smart_Kolhapur_Guide_Presentation.pdf" target="_blank" class="btn btn-pdf" title="Opens PDF directly on any phone without PowerPoint">
+      &#128196; Open PDF
+    </a>
+    <a href="https://api.whatsapp.com/send?text=Smart%20Kolhapur%20Guide%20Project%20Presentation%3A%20https://salunkeprathmesh68-bot.github.io/tourist_hotel-reccomendation-system/presentation.html" target="_blank" class="btn btn-whatsapp" title="Share link on WhatsApp">
+      &#128172; WhatsApp
+    </a>
+    <a href="Smart_Kolhapur_Guide_Presentation.pptx" class="btn btn-pptx" title="Download PowerPoint file for laptop">
+      &#128229; PPTX
+    </a>
+    <button id="toggleViewBtn" class="btn btn-toggle" onclick="toggleViewMode()">
+      &#128220; Scroll All
+    </button>
+  </div>
+</header>
+
+<!-- Main Viewer Container -->
+<main class="viewer-container">
+
+  <!-- Interactive Slide Mode (Default) -->
+  <div id="interactiveMode" style="width: 100%; display: flex; flex-direction: column; gap: 14px; align-items: center;">
+    
+    <div class="slide-display-card" id="slideCard">
+      <img id="currentSlideImg" class="slide-img" src="slides/slide_1.png" alt="Slide 1">
+    </div>
+
+    <!-- Controls Bar -->
+    <div class="controls-bar">
+      <button id="prevBtn" class="nav-arrow-btn" onclick="prevSlide()" disabled>
+        &#10094; Prev
+      </button>
+      
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
+        <span id="counterBadge" class="counter-badge">Slide 1 of 13</span>
+        <span id="topicBadge" class="slide-topic-badge">Introduction</span>
+      </div>
+
+      <button id="nextBtn" class="nav-arrow-btn" onclick="nextSlide()">
+        Next &#10095;
+      </button>
+    </div>
+
+    <!-- Horizontal Thumbnail Strip -->
+    <div class="thumbs-strip" id="thumbsStrip"></div>
+  </div>
+
+  <!-- Full Scroll Mode (All 13 slides stacked) -->
+  <div id="scrollMode" class="scroll-deck-view"></div>
+
+</main>
+
+<script>
+  const TOTAL_SLIDES = 13;
+  const SLIDE_TOPICS = [
+    "Introduction",
+    "Problem Statement",
+    "Objectives",
+    "Proposed Solution",
+    "Key Features",
+    "Technology / Tech Stack",
+    "System Architecture",
+    "Workflow",
+    "Feature Scope",
+    "Impact",
+    "References",
+    "Conclusion",
+    "Thank You"
+  ];
+
+  let currentSlide = 1;
+  let isScrollMode = false;
+
+  // Initialize Thumbnails & Scroll view
+  const thumbsStrip = document.getElementById('thumbsStrip');
+  const scrollMode = document.getElementById('scrollMode');
+
+  for (let i = 1; i <= TOTAL_SLIDES; i++) {
+    // Thumbnail item
+    const thumb = document.createElement('div');
+    thumb.className = `thumb-item ${i === 1 ? 'active' : ''}`;
+    thumb.id = `thumb-${i}`;
+    thumb.onclick = () => goToSlide(i);
+    thumb.innerHTML = `<img src="slides/slide_${i}.png" alt="Slide ${i}" class="thumb-img" loading="lazy">`;
+    thumbsStrip.appendChild(thumb);
+
+    // Scroll card
+    const card = document.createElement('div');
+    card.className = 'scroll-slide-card';
+    card.innerHTML = `
+      <div class="scroll-slide-header">
+        <span>SLIDE ${i.toString().padStart(2, '0')}</span>
+        <strong>${SLIDE_TOPICS[i-1]}</strong>
+      </div>
+      <img src="slides/slide_${i}.png" alt="Slide ${i}" class="scroll-slide-img" loading="lazy">
+    `;
+    scrollMode.appendChild(card);
+  }
+
+  function goToSlide(n) {
+    if (n < 1 || n > TOTAL_SLIDES) return;
+    currentSlide = n;
+    
+    // Update image
+    document.getElementById('currentSlideImg').src = `slides/slide_${n}.png`;
+    
+    // Update labels
+    document.getElementById('counterBadge').innerText = `Slide ${n} of ${TOTAL_SLIDES}`;
+    document.getElementById('topicBadge').innerText = SLIDE_TOPICS[n-1];
+
+    // Update buttons
+    document.getElementById('prevBtn').disabled = (currentSlide === 1);
+    document.getElementById('nextBtn').disabled = (currentSlide === TOTAL_SLIDES);
+
+    // Update thumbs
+    document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('active'));
+    const activeThumb = document.getElementById(`thumb-${n}`);
+    if (activeThumb) {
+      activeThumb.classList.add('active');
+      activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+  }
+
+  function nextSlide() {
+    if (currentSlide < TOTAL_SLIDES) {
+      goToSlide(currentSlide + 1);
+    }
+  }
+
+  function prevSlide() {
+    if (currentSlide > 1) {
+      goToSlide(currentSlide - 1);
+    }
+  }
+
+  function toggleViewMode() {
+    isScrollMode = !isScrollMode;
+    const interactive = document.getElementById('interactiveMode');
+    const scroll = document.getElementById('scrollMode');
+    const btn = document.getElementById('toggleViewBtn');
+
+    if (isScrollMode) {
+      interactive.style.display = 'none';
+      scroll.style.display = 'flex';
+      btn.innerHTML = '&#128444; Single Slide';
+    } else {
+      interactive.style.display = 'flex';
+      scroll.style.display = 'none';
+      btn.innerHTML = '&#128220; Scroll All';
+      goToSlide(currentSlide);
+    }
+  }
+
+  // Keyboard navigation
+  window.addEventListener('keydown', (e) => {
+    if (isScrollMode) return;
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      nextSlide();
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      prevSlide();
+    }
+  });
+
+  // Touch Swipe for Mobile Devices
+  let touchStartX = 0;
+  let touchEndX = 0;
+  const slideCard = document.getElementById('slideCard');
+
+  slideCard.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  slideCard.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleGesture();
+  }, { passive: true });
+
+  function handleGesture() {
+    const diff = touchEndX - touchStartX;
+    if (Math.abs(diff) > 40) {
+      if (diff < 0) {
+        nextSlide(); // Swiped left -> next
+      } else {
+        prevSlide(); // Swiped right -> prev
+      }
+    }
+  }
+</script>
+
+</body>
+</html>
