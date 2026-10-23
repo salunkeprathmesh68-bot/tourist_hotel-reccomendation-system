@@ -1234,7 +1234,7 @@
 
       <!-- Mini Legend -->
       <div class="legend-bar">
-        <div class="legend-item"><span class="dot robot"></span> Robot</div>
+        <div class="legend-item"><span class="dot robot" style="background:#00f3ff; box-shadow:0 0 8px #00f3ff;"></span> 🤖 Robot Man</div>
         <div class="legend-item"><span class="dot energy"></span> +10% Energy</div>
         <div class="legend-item"><span class="dot key"></span> 🔑 Key</div>
         <div class="legend-item"><span class="dot drone"></span> 🤖 Drone</div>
@@ -3182,20 +3182,49 @@
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText('E', px + cellW/2, py + cellH/2 + 1);
-          } else if (char === 'K') {
-            // Cyber Key
-            ctx.shadowBlur = 12;
-            ctx.shadowColor = '#eab308';
-            ctx.fillStyle = '#eab308';
-            ctx.beginPath();
-            ctx.arc(px + cellW/2, py + cellH/2, Math.min(cellW, cellH)*0.32, 0, Math.PI*2);
-            ctx.fill();
-            ctx.shadowBlur = 0;
+                    } else if (char === 'K') {
+            // High-Tech Golden Cyber Key (No seed circle, authentic golden keycard/master key)
+            const kx = px + cellW / 2;
+            const ky = py + cellH / 2;
+            const kSize = Math.min(cellW, cellH) * 0.42;
+            const kBob = Math.sin(Date.now() / 240) * 2.5;
 
-            ctx.font = `${Math.floor(cellH * 0.5)}px sans-serif`;
+            ctx.save();
+            ctx.translate(kx, ky + kBob);
+
+            // Shimmering Golden Diamond Energy Field
+            ctx.save();
+            ctx.shadowBlur = 16;
+            ctx.shadowColor = '#eab308';
+            ctx.strokeStyle = 'rgba(250, 204, 21, 0.7)';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(0, -kSize * 0.95);
+            ctx.lineTo(kSize * 0.85, 0);
+            ctx.moveTo(0, kSize * 0.95);
+            ctx.lineTo(-kSize * 0.85, 0);
+            ctx.closePath();
+            ctx.stroke();
+            ctx.fillStyle = 'rgba(234, 179, 8, 0.15)';
+            ctx.fill();
+            ctx.restore();
+
+            // Golden Key Icon & Glow
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = '#facc15';
+            ctx.font = `bold ${Math.floor(cellH * 0.58)}px sans-serif`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText('🔑', px + cellW/2, py + cellH/2);
+            ctx.fillText('🔑', 0, 0);
+
+            // Cyber Sparkles
+            const sparkT = (Date.now() / 300) % (Math.PI * 2);
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(Math.cos(sparkT) * kSize * 0.7, Math.sin(sparkT) * kSize * 0.7, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
           } else if (char === 'X') {
             // Exit Portal (Locked or Open)
             const isLocked = (levelRequiresKey && !hasKey);
@@ -3289,36 +3318,234 @@
         ctx.fillRect(dpx + cellW*0.45, dpy + cellH*0.42, cellW*0.1, cellH*0.1);
       });
 
-      // Render Robot
+            // =========================================================
+      // HUMANOID ROBOT MAN (Real Walking Cyborg Character)
+      // =========================================================
       const rpx = robot.x * cellW;
       const rpy = robot.y * cellH;
+      const rcx = rpx + cellW / 2;
+      const rcy = rpy + cellH / 2;
+      const rScale = Math.min(cellW, cellH) * 0.95;
+      const now = Date.now();
 
-      ctx.shadowBlur = 14;
-      ctx.shadowColor = scrambleMovesLeft > 0 ? '#f43f5e' : (shieldMovesLeft > 0 ? '#00f3ff' : '#00f3ff');
-      ctx.fillStyle = scrambleMovesLeft > 0 ? '#f43f5e' : '#00f3ff';
+      // Walking stride & idle breathing bob
+      const isScrambled = (scrambleMovesLeft > 0);
+      const isShielded = (shieldMovesLeft > 0);
+      const idleBob = Math.sin(now / 220) * (rScale * 0.035);
+      const walkStride = Math.sin(now / 140) * (rScale * 0.08);
+
+      ctx.save();
+      ctx.translate(rcx, rcy + idleBob);
+
+      // Facing direction flip (-1 = left, 1 = right)
+      const facingLeft = (lastHeading && lastHeading.dx < 0);
+      if (facingLeft) {
+        ctx.scale(-1, 1);
+      }
+
+      // Theme Colors
+      const primaryColor = isScrambled ? '#f43f5e' : (isShielded ? '#38bdf8' : '#00f3ff');
+      const armorDark = isScrambled ? '#4c0519' : '#0f172a';
+      const armorPlate = isScrambled ? '#9f1239' : '#1e293b';
+      const glowColor = isScrambled ? '#ff0055' : '#00f3ff';
+
+      // 1. Soft Character Ground Shadow
+      ctx.save();
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
       ctx.beginPath();
-      ctx.arc(rpx + cellW/2, rpy + cellH/2, Math.min(cellW, cellH)*0.36, 0, Math.PI*2);
+      ctx.ellipse(0, rScale * 0.42, rScale * 0.32, rScale * 0.1, 0, 0, Math.PI * 2);
       ctx.fill();
+      ctx.restore();
+
+      // 2. Bipedal Cyber Legs & Thruster Boots (Humanoid Walking Stance)
+      const legW = rScale * 0.12;
+      const legH = rScale * 0.24;
+
+      // Left Leg
+      ctx.save();
+      ctx.fillStyle = armorPlate;
+      ctx.strokeStyle = primaryColor;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.roundRect(-rScale * 0.18, rScale * 0.15 + walkStride, legW, legH, [2, 2, 4, 4]);
+      ctx.fill();
+      ctx.stroke();
+
+      // Left Boot Thruster Glow
+      ctx.fillStyle = primaryColor;
+      ctx.fillRect(-rScale * 0.20, rScale * 0.37 + walkStride, legW + 3, rScale * 0.05);
+      ctx.restore();
+
+      // Right Leg
+      ctx.save();
+      ctx.fillStyle = armorPlate;
+      ctx.strokeStyle = primaryColor;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.roundRect(rScale * 0.06, rScale * 0.15 - walkStride, legW, legH, [2, 2, 4, 4]);
+      ctx.fill();
+      ctx.stroke();
+
+      // Right Boot Thruster Glow
+      ctx.fillStyle = primaryColor;
+      ctx.fillRect(rScale * 0.04, rScale * 0.37 - walkStride, legW + 3, rScale * 0.05);
+      ctx.restore();
+
+      // 3. Humanoid Armored Torso / Chassis
+      ctx.save();
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = glowColor;
+      ctx.fillStyle = armorPlate;
+      ctx.strokeStyle = primaryColor;
+      ctx.lineWidth = 1.5;
+
+      // V-Taper Torso Armor
+      ctx.beginPath();
+      ctx.moveTo(-rScale * 0.22, -rScale * 0.14);
+      ctx.lineTo(rScale * 0.22, -rScale * 0.14);
+      ctx.lineTo(rScale * 0.15, rScale * 0.16);
+      ctx.lineTo(-rScale * 0.15, rScale * 0.16);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
       ctx.shadowBlur = 0;
 
-      // Robot visor
-      ctx.fillStyle = '#000';
-      ctx.fillRect(rpx + cellW*0.35, rpy + cellH*0.4, cellW*0.3, cellH*0.16);
-      ctx.fillStyle = '#fff';
-      ctx.fillRect(rpx + cellW*0.42, rpy + cellH*0.44, cellW*0.08, cellH*0.08);
-      ctx.fillRect(rpx + cellW*0.52, rpy + cellH*0.44, cellW*0.08, cellH*0.08);
+      // Cyber Belt
+      ctx.fillStyle = armorDark;
+      ctx.fillRect(-rScale * 0.14, rScale * 0.11, rScale * 0.28, rScale * 0.05);
 
-      // Kinetic Shield Bubble if active
-      if (shieldMovesLeft > 0) {
-        ctx.strokeStyle = '#00f3ff';
-        ctx.lineWidth = 3;
-        ctx.shadowBlur = 15;
+      // Central Glowing Arc Reactor (Power Core Heart)
+      const corePulse = 0.8 + Math.sin(now / 180) * 0.25;
+      ctx.shadowBlur = 16 * corePulse;
+      ctx.shadowColor = glowColor;
+      ctx.fillStyle = primaryColor;
+      ctx.beginPath();
+      ctx.arc(0, 0, rScale * 0.08, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Reactor Inner Core Spark
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(0, 0, rScale * 0.04, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.restore();
+
+      // 4. Robotic Arms & Cyber Hands
+      const armW = rScale * 0.09;
+      const armH = rScale * 0.22;
+
+      // Left Arm (Swings opposite to leg)
+      ctx.save();
+      ctx.fillStyle = armorPlate;
+      ctx.strokeStyle = primaryColor;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.roundRect(-rScale * 0.32, -rScale * 0.12 - walkStride * 0.8, armW, armH, 3);
+      ctx.fill();
+      ctx.stroke();
+      // Left Hand Gripper
+      ctx.fillStyle = primaryColor;
+      ctx.beginPath();
+      ctx.arc(-rScale * 0.275, rScale * 0.10 - walkStride * 0.8, rScale * 0.045, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // Right Arm (Swings opposite to left)
+      ctx.save();
+      ctx.fillStyle = armorPlate;
+      ctx.strokeStyle = primaryColor;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.roundRect(rScale * 0.23, -rScale * 0.12 + walkStride * 0.8, armW, armH, 3);
+      ctx.fill();
+      ctx.stroke();
+      // Right Hand Gripper
+      ctx.fillStyle = primaryColor;
+      ctx.beginPath();
+      ctx.arc(rScale * 0.275, rScale * 0.10 + walkStride * 0.8, rScale * 0.045, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // 5. Humanoid Head & Combat Cyber Visor
+      ctx.save();
+      // Neck Joint
+      ctx.fillStyle = '#475569';
+      ctx.fillRect(-rScale * 0.06, -rScale * 0.18, rScale * 0.12, rScale * 0.06);
+
+      // Cyber Helmet
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = glowColor;
+      ctx.fillStyle = armorPlate;
+      ctx.strokeStyle = primaryColor;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.roundRect(-rScale * 0.17, -rScale * 0.42, rScale * 0.34, rScale * 0.26, [8, 8, 4, 4]);
+      ctx.fill();
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Ear Communicator / Antenna
+      ctx.fillStyle = primaryColor;
+      ctx.fillRect(rScale * 0.16, -rScale * 0.38, rScale * 0.04, rScale * 0.16);
+      ctx.beginPath();
+      ctx.moveTo(rScale * 0.18, -rScale * 0.38);
+      ctx.lineTo(rScale * 0.22, -rScale * 0.50);
+      ctx.stroke();
+      // Blinking Antenna Light
+      const blinkOn = (Math.floor(now / 350) % 2 === 0);
+      ctx.fillStyle = blinkOn ? (isScrambled ? '#ff0033' : '#10b981') : '#475569';
+      ctx.beginPath();
+      ctx.arc(rScale * 0.22, -rScale * 0.50, rScale * 0.035, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Futuristic Glowing Visor (Cyber Eyes)
+      ctx.fillStyle = '#050b14';
+      ctx.beginPath();
+      ctx.roundRect(-rScale * 0.13, -rScale * 0.34, rScale * 0.26, rScale * 0.11, 3);
+      ctx.fill();
+
+      // Dual Visor Neon Lenses
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = glowColor;
+      ctx.fillStyle = primaryColor;
+      ctx.fillRect(-rScale * 0.09, -rScale * 0.31, rScale * 0.07, rScale * 0.05);
+      ctx.fillRect(rScale * 0.02, -rScale * 0.31, rScale * 0.07, rScale * 0.05);
+
+      // Scanning HUD Beam across visor
+      const scanX = -rScale * 0.11 + ((now / 20) % (rScale * 0.22));
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(scanX, -rScale * 0.32, 2, rScale * 0.07);
+      ctx.shadowBlur = 0;
+      ctx.restore();
+
+      // 6. Kinetic Shield Sphere (If Shield active)
+      if (isShielded) {
+        ctx.save();
+        const shieldPulse = Math.sin(now / 150) * 0.15;
+        const sRad = rScale * (0.54 + shieldPulse);
+        ctx.shadowBlur = 20;
         ctx.shadowColor = '#00f3ff';
+        ctx.strokeStyle = '#00f3ff';
+        ctx.lineWidth = 2.5;
         ctx.beginPath();
-        ctx.arc(rpx + cellW/2, rpy + cellH/2, Math.min(cellW, cellH)*0.46, 0, Math.PI*2);
+        ctx.arc(0, 0, sRad, 0, Math.PI * 2);
         ctx.stroke();
-        ctx.shadowBlur = 0;
+
+        ctx.fillStyle = 'rgba(0, 243, 255, 0.12)';
+        ctx.fill();
+
+        // Hex Shield Ring
+        ctx.setLineDash([6, 8]);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(0, 0, sRad * 0.88, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
       }
+
+      ctx.restore(); // restore translated origin
 
       // Cyber Fog of War (Darkness & Flashlight Scanner)
       const isRadarPulseActive = (Date.now() < radarPulseTime);
