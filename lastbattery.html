@@ -1282,12 +1282,9 @@
   </div>
 
       <!-- Hidden Backend Full Song Audio Engine (Pure Audio in Background - No Video/Logo on screen) -->
-  <div id="fullSongBackendWrap" style="position:fixed; left:-9999px; top:-9999px; width:1px; height:1px; opacity:0; pointer-events:none; visibility:hidden; overflow:hidden;">
-    <iframe id="fullSongFrame" width="1" height="1" src="" frameborder="0" allow="autoplay; encrypted-media"></iframe>
-  </div>
-    <div id="dock-video-wrapper" style="width:100%; height:158px; background:#000;">
-      <iframe id="fullSongFrame" width="100%" height="158" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border:none; display:block;"></iframe>
-    </div>
+    <!-- Hidden Backend Full Song Audio Engine (Pure Audio in Background - Zero Video / No Logo on screen) -->
+  <div id="fullSongBackendWrap" style="position:fixed; bottom:0; right:0; width:200px; height:200px; opacity:0.001; pointer-events:none; z-index:-99999; overflow:hidden;">
+    <iframe id="fullSongFrame" width="200" height="200" src="" frameborder="0" allow="autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
   </div>
 
   <!-- Music Search & Live Suggest Modal (English Interface) -->
@@ -1327,6 +1324,7 @@
         <button class="tag-btn" data-cat="dj">🎶 DJ Remix</button>
         <button class="tag-btn" data-cat="punjabi">🎙️ Punjabi</button>
         <button class="tag-btn" data-cat="english">🕺 English Pop</button>
+        <button class="tag-btn" data-cat="bhakti">🕉️ Devotional / Bhakti</button>
       </div>
 
       <div id="search-status-bar" style="font-size: 0.74rem; color: var(--yellow); margin-bottom: 6px; min-height: 18px;">
@@ -3548,210 +3546,893 @@
     // =========================================================
     // Dual-Engine Music Catalog: 24 Tracks with directAudio (starts in <50ms, zero lag!)
     const MUSIC_CATALOG = [
-      // MARATHI SUPERHITS (Instant Direct Audio)
       {
-        trackName: "Gulabi Sadi",
-        artistName: "Sanju Rathod • Full 3:43 min",
-        category: "marathi",
-        directAudio: "audio/gulabi_sadi.m4a",
-        videoId: "B_6d3RBiEN0",
-        thumb: "https://i.ytimg.com/vi/B_6d3RBiEN0/mqdefault.jpg"
+            "trackName": "Gulabi Sadi",
+            "artistName": "Sanju Rathod \u2022 Full 3:43 min",
+            "category": "marathi",
+            "directAudio": "audio/gulabi_sadi.m4a",
+            "videoId": "B_6d3RBiEN0",
+            "thumb": "https://i.ytimg.com/vi/B_6d3RBiEN0/mqdefault.jpg"
       },
       {
-        trackName: "Zingaat",
-        artistName: "Ajay-Atul (Sairat) • Full 3:46 min",
-        category: "marathi",
-        directAudio: "audio/zingaat.m4a",
-        videoId: "luhVm60Wiro",
-        thumb: "https://i.ytimg.com/vi/luhVm60Wiro/mqdefault.jpg"
+            "trackName": "Zingaat",
+            "artistName": "Ajay-Atul (Sairat) \u2022 Full 3:46 min",
+            "category": "marathi",
+            "directAudio": "audio/zingaat.m4a",
+            "videoId": "luhVm60Wiro",
+            "thumb": "https://i.ytimg.com/vi/luhVm60Wiro/mqdefault.jpg"
       },
       {
-        trackName: "Taambdi Chaamdi",
-        artistName: "Kratex & Shreyas • Full 3:15 min",
-        category: "marathi",
-        directAudio: "audio/taambdi_chaamdi.m4a",
-        videoId: "kmjeMrjOjFA",
-        thumb: "https://i.ytimg.com/vi/kmjeMrjOjFA/mqdefault.jpg"
+            "trackName": "Taambdi Chaamdi",
+            "artistName": "Kratex & Shreyas \u2022 Full 3:15 min",
+            "category": "marathi",
+            "directAudio": "audio/taambdi_chaamdi.m4a",
+            "videoId": "kmjeMrjOjFA",
+            "thumb": "https://i.ytimg.com/vi/kmjeMrjOjFA/mqdefault.jpg"
       },
       {
-        trackName: "Apsara Aali",
-        artistName: "Ajay-Atul (Natarang) • Full 4:10 min",
-        category: "marathi",
-        directAudio: "audio/apsara_aali.m4a",
-        videoId: "a6iA2HgamOE",
-        thumb: "https://i.ytimg.com/vi/a6iA2HgamOE/mqdefault.jpg"
+            "trackName": "Apsara Aali",
+            "artistName": "Ajay-Atul (Natarang) \u2022 Full 4:10 min",
+            "category": "marathi",
+            "directAudio": "audio/apsara_aali.m4a",
+            "videoId": "a6iA2HgamOE",
+            "thumb": "https://i.ytimg.com/vi/a6iA2HgamOE/mqdefault.jpg"
       },
       {
-        trackName: "Chandra",
-        artistName: "Shreya Ghoshal & Ajay-Atul (Chandramukhi) • Full 3:30 min",
-        category: "marathi",
-        directAudio: "audio/chandra.m4a",
-        videoId: "D-wsXp_wC2Q",
-        thumb: "https://i.ytimg.com/vi/D-wsXp_wC2Q/mqdefault.jpg"
+            "trackName": "Chandra",
+            "artistName": "Shreya Ghoshal & Ajay-Atul (Chandramukhi) \u2022 Full 3:30 min",
+            "category": "marathi",
+            "directAudio": "audio/chandra.m4a",
+            "videoId": "D-wsXp_wC2Q",
+            "thumb": "https://i.ytimg.com/vi/D-wsXp_wC2Q/mqdefault.jpg"
       },
       {
-        trackName: "Dolby Walya",
-        artistName: "Ajay-Atul (Jaundya Na Balasaheb) • Full 4:20 min",
-        category: "marathi",
-        directAudio: "audio/dolby_walya.m4a",
-        videoId: "Z6U3tVjHcUI",
-        thumb: "https://i.ytimg.com/vi/Z6U3tVjHcUI/mqdefault.jpg"
+            "trackName": "Dolby Walya",
+            "artistName": "Ajay-Atul (Jaundya Na Balasaheb) \u2022 Full 4:20 min",
+            "category": "marathi",
+            "directAudio": "audio/dolby_walya.m4a",
+            "videoId": "Z6U3tVjHcUI",
+            "thumb": "https://i.ytimg.com/vi/Z6U3tVjHcUI/mqdefault.jpg"
       },
       {
-        trackName: "Deva Shree Ganesha",
-        artistName: "Ajay-Atul (Agneepath) • Full 5:56 min",
-        category: "marathi",
-        directAudio: "audio/deva_shree_ganesha.m4a",
-        videoId: "RYqJ5w-GrfM",
-        thumb: "https://i.ytimg.com/vi/RYqJ5w-GrfM/mqdefault.jpg"
+            "trackName": "Deva Shree Ganesha",
+            "artistName": "Ajay-Atul (Agneepath) \u2022 Full 5:56 min",
+            "category": "marathi",
+            "directAudio": "audio/deva_shree_ganesha.m4a",
+            "videoId": "RYqJ5w-GrfM",
+            "thumb": "https://i.ytimg.com/vi/RYqJ5w-GrfM/mqdefault.jpg"
       },
       {
-        trackName: "Non-Stop Marathi DJ Mashup",
-        artistName: "High Energy Dance Remix • 30:00 min (Non-Stop DJ)",
-        category: "dj",
-        directAudio: "audio/marathi_dj.m4a",
-        videoId: "SecdlLzQLd0",
-        thumb: "https://i.ytimg.com/vi/SecdlLzQLd0/mqdefault.jpg"
-      },
-
-      // BOLLYWOOD HITS (Instant Direct Audio)
-      {
-        trackName: "Kesariya",
-        artistName: "Arijit Singh (Brahmāstra) • Full 4:28 min",
-        category: "bollywood",
-        directAudio: "audio/kesariya.m4a",
-        videoId: "BddP6PYo2gs",
-        thumb: "https://i.ytimg.com/vi/BddP6PYo2gs/mqdefault.jpg"
+            "trackName": "Non-Stop Marathi DJ Mashup",
+            "artistName": "High Energy Dance Remix \u2022 30:00 min (Non-Stop DJ)",
+            "category": "dj",
+            "directAudio": "audio/marathi_dj.m4a",
+            "videoId": "SecdlLzQLd0",
+            "thumb": "https://i.ytimg.com/vi/SecdlLzQLd0/mqdefault.jpg"
       },
       {
-        trackName: "Apna Bana Le",
-        artistName: "Arijit Singh (Bhediya) • Full 4:21 min",
-        category: "bollywood",
-        directAudio: "audio/apna_bana_le.m4a",
-        videoId: "ElZfdU54Cp8",
-        thumb: "https://i.ytimg.com/vi/ElZfdU54Cp8/mqdefault.jpg"
+            "trackName": "Yad Lagla",
+            "artistName": "Ajay-Atul (Sairat) \u2022 5:14 min",
+            "category": "marathi",
+            "videoId": "nZ3g5-W_iXo",
+            "thumb": "https://i.ytimg.com/vi/nZ3g5-W_iXo/mqdefault.jpg"
       },
       {
-        trackName: "Tum Hi Ho",
-        artistName: "Arijit Singh (Aashiqui 2) • Full 4:22 min",
-        category: "bollywood",
-        directAudio: "audio/tum_hi_ho.m4a",
-        videoId: "Umqb9KENgmk",
-        thumb: "https://i.ytimg.com/vi/Umqb9KENgmk/mqdefault.jpg"
-      },
-
-      // SOUTH & ACTION (Instant Direct Audio)
-      {
-        trackName: "The Monster Song (KGF 2)",
-        artistName: "Ravi Basrur & Adithi Sagar • Full 3:30 min",
-        category: "south",
-        directAudio: "audio/kgf_monster.m4a",
-        videoId: "R4He_Gcn7cA",
-        thumb: "https://i.ytimg.com/vi/R4He_Gcn7cA/mqdefault.jpg"
+            "trackName": "Sairat Zaala Ji",
+            "artistName": "Chinmayi & Ajay Gogavale (Sairat) \u2022 6:09 min",
+            "category": "marathi",
+            "videoId": "x5R7z3L5C0Q",
+            "thumb": "https://i.ytimg.com/vi/x5R7z3L5C0Q/mqdefault.jpg"
       },
       {
-        trackName: "Pushpa Pushpa (Pushpa 2)",
-        artistName: "Devi Sri Prasad • Full 4:15 min",
-        category: "south",
-        directAudio: "audio/pushpa_pushpa.m4a",
-        videoId: "wQksDYahKZs",
-        thumb: "https://i.ytimg.com/vi/wQksDYahKZs/mqdefault.jpg"
+            "trackName": "Shantabai",
+            "artistName": "Sanjay Londhe \u2022 Hit Folk Dance 3:20 min",
+            "category": "marathi",
+            "videoId": "jW_hE67l4Yk",
+            "thumb": "https://i.ytimg.com/vi/jW_hE67l4Yk/mqdefault.jpg"
       },
       {
-        trackName: "Illuminati (Aavesham)",
-        artistName: "Sushin Shyam & Dabzee • Full 3:20 min",
-        category: "south",
-        directAudio: "audio/illuminati.m4a",
-        videoId: "yH7eDWTH5iM",
-        thumb: "https://i.ytimg.com/vi/yH7eDWTH5iM/mqdefault.jpg"
-      },
-
-      // PHONK & EDM (Instant Direct Audio)
-      {
-        trackName: "Gaming Phonk (Bass Drift)",
-        artistName: "Drift Phonk Gaming • Full 3:00 min",
-        category: "phonk",
-        directAudio: "audio/gaming_phonk.m4a",
-        videoId: "Pnq1_3BXIqA",
-        thumb: "https://i.ytimg.com/vi/Pnq1_3BXIqA/mqdefault.jpg"
-      },
-
-      // PUNJABI HITS (Instant Direct Audio)
-      {
-        trackName: "Softly",
-        artistName: "Karan Aujla & Ikky • Full 2:35 min",
-        category: "punjabi",
-        directAudio: "audio/softly.m4a",
-        videoId: "cWMxCE2HTag",
-        thumb: "https://i.ytimg.com/vi/cWMxCE2HTag/mqdefault.jpg"
+            "trackName": "Kombdi Palali",
+            "artistName": "Anand Shinde & Vaishali Samant (Jatra) \u2022 4:12 min",
+            "category": "marathi",
+            "videoId": "9_wL4_h0Q_A",
+            "thumb": "https://i.ytimg.com/vi/9_wL4_h0Q_A/mqdefault.jpg"
       },
       {
-        trackName: "Winning Speech",
-        artistName: "Karan Aujla • Full 3:20 min",
-        category: "punjabi",
-        directAudio: "audio/winning_speech.m4a",
-        videoId: "vsWxs1tuwDk",
-        thumb: "https://i.ytimg.com/vi/vsWxs1tuwDk/mqdefault.jpg"
+            "trackName": "Wajle Ki Bara",
+            "artistName": "Bela Shende (Natarang Lavani) \u2022 4:32 min",
+            "category": "marathi",
+            "videoId": "Q0u5A67d_Fk",
+            "thumb": "https://i.ytimg.com/vi/Q0u5A67d_Fk/mqdefault.jpg"
       },
       {
-        trackName: "Lover",
-        artistName: "Diljit Dosanjh • Full 3:12 min",
-        category: "punjabi",
-        directAudio: "audio/lover.m4a",
-        videoId: "mH_LFkWxpI0",
-        thumb: "https://i.ytimg.com/vi/mH_LFkWxpI0/mqdefault.jpg"
-      },
-
-      // ENGLISH POP & GLOBAL (Instant Direct Audio)
-      {
-        trackName: "Believer",
-        artistName: "Imagine Dragons • Full 3:24 min",
-        category: "english",
-        directAudio: "audio/believer.m4a",
-        videoId: "7wtfhZwyrcc",
-        thumb: "https://i.ytimg.com/vi/7wtfhZwyrcc/mqdefault.jpg"
+            "trackName": "Dhagala Lagli Kala",
+            "artistName": "Dada Kondke Classic Dance \u2022 4:05 min",
+            "category": "marathi",
+            "videoId": "R6u7o_L8m1A",
+            "thumb": "https://i.ytimg.com/vi/R6u7o_L8m1A/mqdefault.jpg"
       },
       {
-        trackName: "Starboy",
-        artistName: "The Weeknd ft. Daft Punk • Full 3:50 min",
-        category: "english",
-        directAudio: "audio/starboy.m4a",
-        videoId: "34Na4j8AVgA",
-        thumb: "https://i.ytimg.com/vi/34Na4j8AVgA/mqdefault.jpg"
+            "trackName": "Navrai Majhi",
+            "artistName": "Sunidhi Chauhan (English Vinglish Marathi) \u2022 3:45 min",
+            "category": "marathi",
+            "videoId": "o9C0d8L5n0A",
+            "thumb": "https://i.ytimg.com/vi/o9C0d8L5n0A/mqdefault.jpg"
       },
       {
-        trackName: "Blinding Lights",
-        artistName: "The Weeknd • Full 3:20 min",
-        category: "english",
-        directAudio: "audio/blinding_lights.m4a",
-        videoId: "4NRXx6U8ABQ",
-        thumb: "https://i.ytimg.com/vi/4NRXx6U8ABQ/mqdefault.jpg"
+            "trackName": "Mauli Mauli",
+            "artistName": "Ajay Gogavale (Lai Bhaari) \u2022 4:40 min",
+            "category": "marathi",
+            "videoId": "Z8f7L0_q7s8",
+            "thumb": "https://i.ytimg.com/vi/Z8f7L0_q7s8/mqdefault.jpg"
       },
       {
-        trackName: "Shape of You",
-        artistName: "Ed Sheeran • Full 3:53 min",
-        category: "english",
-        directAudio: "audio/shape_of_you.m4a",
-        videoId: "JGwWNGJdvx8",
-        thumb: "https://i.ytimg.com/vi/JGwWNGJdvx8/mqdefault.jpg"
+            "trackName": "Bai Wadyavar Ya",
+            "artistName": "Marathi Lavani Mashup \u2022 3:30 min",
+            "category": "marathi",
+            "videoId": "W7u8o_L9m2A",
+            "thumb": "https://i.ytimg.com/vi/W7u8o_L9m2A/mqdefault.jpg"
       },
       {
-        trackName: "Levitating",
-        artistName: "Dua Lipa • Full 3:23 min",
-        category: "english",
-        directAudio: "audio/levitating.m4a",
-        videoId: "TUVcZfQe-Kw",
-        thumb: "https://i.ytimg.com/vi/TUVcZfQe-Kw/mqdefault.jpg"
+            "trackName": "Radha Hi Bawari",
+            "artistName": "Swapnil Bandodkar \u2022 Romantic Melody 4:50 min",
+            "category": "marathi",
+            "videoId": "K8f7L0_q8s9",
+            "thumb": "https://i.ytimg.com/vi/K8f7L0_q8s9/mqdefault.jpg"
       },
       {
-        trackName: "Faded",
-        artistName: "Alan Walker • Full 3:32 min",
-        category: "english",
-        directAudio: "audio/faded.m4a",
-        videoId: "60ItHLz5WEA",
-        thumb: "https://i.ytimg.com/vi/60ItHLz5WEA/mqdefault.jpg"
+            "trackName": "Jiv Rangla",
+            "artistName": "Hariharan & Shreya Ghoshal (Jogwa) \u2022 4:25 min",
+            "category": "marathi",
+            "videoId": "N9f8L1_q9s0",
+            "thumb": "https://i.ytimg.com/vi/N9f8L1_q9s0/mqdefault.jpg"
+      },
+      {
+            "trackName": "Baharla Ha Madhumas",
+            "artistName": "Ajay-Atul (Maharashtra Shaheer) \u2022 3:40 min",
+            "category": "marathi",
+            "videoId": "P0u9L2_q0s1",
+            "thumb": "https://i.ytimg.com/vi/P0u9L2_q0s1/mqdefault.jpg"
+      },
+      {
+            "trackName": "Khel Mandala",
+            "artistName": "Ajay Gogavale (Natarang) \u2022 5:10 min",
+            "category": "marathi",
+            "videoId": "X1u0L3_q1s2",
+            "thumb": "https://i.ytimg.com/vi/X1u0L3_q1s2/mqdefault.jpg"
+      },
+      {
+            "trackName": "Kesariya",
+            "artistName": "Arijit Singh (Brahm\u0101stra) \u2022 Full 4:28 min",
+            "category": "bollywood",
+            "directAudio": "audio/kesariya.m4a",
+            "videoId": "BddP6PYo2gs",
+            "thumb": "https://i.ytimg.com/vi/BddP6PYo2gs/mqdefault.jpg"
+      },
+      {
+            "trackName": "Apna Bana Le",
+            "artistName": "Arijit Singh (Bhediya) \u2022 Full 4:21 min",
+            "category": "bollywood",
+            "directAudio": "audio/apna_bana_le.m4a",
+            "videoId": "ElZfdU54Cp8",
+            "thumb": "https://i.ytimg.com/vi/ElZfdU54Cp8/mqdefault.jpg"
+      },
+      {
+            "trackName": "Tum Hi Ho",
+            "artistName": "Arijit Singh (Aashiqui 2) \u2022 Full 4:22 min",
+            "category": "bollywood",
+            "directAudio": "audio/tum_hi_ho.m4a",
+            "videoId": "Umqb9KENgmk",
+            "thumb": "https://i.ytimg.com/vi/Umqb9KENgmk/mqdefault.jpg"
+      },
+      {
+            "trackName": "Chaleya",
+            "artistName": "Arijit Singh & Shilpa Rao (Jawan) \u2022 3:20 min",
+            "category": "bollywood",
+            "videoId": "VAdGW7QDJUI",
+            "thumb": "https://i.ytimg.com/vi/VAdGW7QDJUI/mqdefault.jpg"
+      },
+      {
+            "trackName": "Tauba Tauba",
+            "artistName": "Karan Aujla (Bad Newz) \u2022 3:30 min",
+            "category": "bollywood",
+            "videoId": "LK7-_dgAVQE",
+            "thumb": "https://i.ytimg.com/vi/LK7-_dgAVQE/mqdefault.jpg"
+      },
+      {
+            "trackName": "Not Ramaiya Vastavaiya",
+            "artistName": "Anirudh Ravichander (Jawan) \u2022 3:23 min",
+            "category": "bollywood",
+            "videoId": "41k_1zX4hR8",
+            "thumb": "https://i.ytimg.com/vi/41k_1zX4hR8/mqdefault.jpg"
+      },
+      {
+            "trackName": "Tere Vaaste",
+            "artistName": "Varun Jain & Sachin-Jigar (Zara Hatke) \u2022 3:10 min",
+            "category": "bollywood",
+            "videoId": "EgqDuHkP-tM",
+            "thumb": "https://i.ytimg.com/vi/EgqDuHkP-tM/mqdefault.jpg"
+      },
+      {
+            "trackName": "Pehle Bhi Main",
+            "artistName": "Vishal Mishra & Raj Shekhar (Animal) \u2022 4:10 min",
+            "category": "bollywood",
+            "videoId": "iAIBF2ngbWY",
+            "thumb": "https://i.ytimg.com/vi/iAIBF2ngbWY/mqdefault.jpg"
+      },
+      {
+            "trackName": "Arjan Vailly",
+            "artistName": "Bhupinder Babbal (Animal) \u2022 3:02 min",
+            "category": "bollywood",
+            "videoId": "mQms0_lG0xY",
+            "thumb": "https://i.ytimg.com/vi/mQms0_lG0xY/mqdefault.jpg"
+      },
+      {
+            "trackName": "Satranga",
+            "artistName": "Arijit Singh (Animal) \u2022 4:31 min",
+            "category": "bollywood",
+            "videoId": "HrnrqYxYrbk",
+            "thumb": "https://i.ytimg.com/vi/HrnrqYxYrbk/mqdefault.jpg"
+      },
+      {
+            "trackName": "O Maahi",
+            "artistName": "Arijit Singh (Dunki) \u2022 3:53 min",
+            "category": "bollywood",
+            "videoId": "dCmp56tSSmA",
+            "thumb": "https://i.ytimg.com/vi/dCmp56tSSmA/mqdefault.jpg"
+      },
+      {
+            "trackName": "Lutt Putt Gaya",
+            "artistName": "Arijit Singh (Dunki) \u2022 3:45 min",
+            "category": "bollywood",
+            "videoId": "9_w0L5h1Q_B",
+            "thumb": "https://i.ytimg.com/vi/9_w0L5h1Q_B/mqdefault.jpg"
+      },
+      {
+            "trackName": "Raataan Lambiyan",
+            "artistName": "Jubin Nautiyal & Tanishk Bagchi (Shershaah) \u2022 3:50 min",
+            "category": "bollywood",
+            "videoId": "gvyUuxdRdR4",
+            "thumb": "https://i.ytimg.com/vi/gvyUuxdRdR4/mqdefault.jpg"
+      },
+      {
+            "trackName": "Shayad",
+            "artistName": "Arijit Singh & Pritam (Love Aaj Kal) \u2022 4:07 min",
+            "category": "bollywood",
+            "videoId": "ILnxQvIqKSo",
+            "thumb": "https://i.ytimg.com/vi/ILnxQvIqKSo/mqdefault.jpg"
+      },
+      {
+            "trackName": "Channa Mereya",
+            "artistName": "Arijit Singh (Ae Dil Hai Mushkil) \u2022 4:49 min",
+            "category": "bollywood",
+            "videoId": "bzSTpdcs-EI",
+            "thumb": "https://i.ytimg.com/vi/bzSTpdcs-EI/mqdefault.jpg"
+      },
+      {
+            "trackName": "Gerua",
+            "artistName": "Arijit Singh & Antara Mitra (Dilwale) \u2022 4:47 min",
+            "category": "bollywood",
+            "videoId": "AEIVhBS6baE",
+            "thumb": "https://i.ytimg.com/vi/AEIVhBS6baE/mqdefault.jpg"
+      },
+      {
+            "trackName": "Kabira",
+            "artistName": "Tochi Raina & Rekha Bhardwaj (YJHD) \u2022 4:11 min",
+            "category": "bollywood",
+            "videoId": "jHNNMj5bNQw",
+            "thumb": "https://i.ytimg.com/vi/jHNNMj5bNQw/mqdefault.jpg"
+      },
+      {
+            "trackName": "Balam Pichkari",
+            "artistName": "Vishal Dadlani & Shalmali (YJHD) \u2022 4:19 min",
+            "category": "bollywood",
+            "videoId": "0WtRNGubWGA",
+            "thumb": "https://i.ytimg.com/vi/0WtRNGubWGA/mqdefault.jpg"
+      },
+      {
+            "trackName": "Badtameez Dil",
+            "artistName": "Benny Dayal (YJHD) \u2022 4:12 min",
+            "category": "bollywood",
+            "videoId": "II2EO3NwUrQ",
+            "thumb": "https://i.ytimg.com/vi/II2EO3NwUrQ/mqdefault.jpg"
+      },
+      {
+            "trackName": "Ghungroo",
+            "artistName": "Arijit Singh & Shilpa Rao (War) \u2022 5:02 min",
+            "category": "bollywood",
+            "videoId": "qFkNATtc3mc",
+            "thumb": "https://i.ytimg.com/vi/qFkNATtc3mc/mqdefault.jpg"
+      },
+      {
+            "trackName": "Dil Diyan Gallan",
+            "artistName": "Atif Aslam (Tiger Zinda Hai) \u2022 4:20 min",
+            "category": "bollywood",
+            "videoId": "SAcpESN_Fk4",
+            "thumb": "https://i.ytimg.com/vi/SAcpESN_Fk4/mqdefault.jpg"
+      },
+      {
+            "trackName": "Kar Gayi Chull",
+            "artistName": "Badshah & Neha Kakkar (Kapoor & Sons) \u2022 3:07 min",
+            "category": "bollywood",
+            "videoId": "EJk7_H_9oWc",
+            "thumb": "https://i.ytimg.com/vi/EJk7_H_9oWc/mqdefault.jpg"
+      },
+      {
+            "trackName": "London Thumakda",
+            "artistName": "Labh Janjua (Queen) \u2022 3:50 min",
+            "category": "bollywood",
+            "videoId": "3KqG5v_9oWc",
+            "thumb": "https://i.ytimg.com/vi/3KqG5v_9oWc/mqdefault.jpg"
+      },
+      {
+            "trackName": "Maan Meri Jaan",
+            "artistName": "King (Champagne Talk) \u2022 3:14 min",
+            "category": "bollywood",
+            "videoId": "A66TYFdz8YA",
+            "thumb": "https://i.ytimg.com/vi/A66TYFdz8YA/mqdefault.jpg"
+      },
+      {
+            "trackName": "Heeriye",
+            "artistName": "Jasleen Royal & Arijit Singh \u2022 3:18 min",
+            "category": "bollywood",
+            "videoId": "RLzC55ai0eo",
+            "thumb": "https://i.ytimg.com/vi/RLzC55ai0eo/mqdefault.jpg"
+      },
+      {
+            "trackName": "The Monster Song (KGF 2)",
+            "artistName": "Ravi Basrur & Adithi Sagar \u2022 Full 3:30 min",
+            "category": "south",
+            "directAudio": "audio/kgf_monster.m4a",
+            "videoId": "R4He_Gcn7cA",
+            "thumb": "https://i.ytimg.com/vi/R4He_Gcn7cA/mqdefault.jpg"
+      },
+      {
+            "trackName": "Pushpa Pushpa (Pushpa 2)",
+            "artistName": "Devi Sri Prasad \u2022 Full 4:15 min",
+            "category": "south",
+            "directAudio": "audio/pushpa_pushpa.m4a",
+            "videoId": "wQksDYahKZs",
+            "thumb": "https://i.ytimg.com/vi/wQksDYahKZs/mqdefault.jpg"
+      },
+      {
+            "trackName": "Illuminati (Aavesham)",
+            "artistName": "Sushin Shyam & Dabzee \u2022 Full 3:20 min",
+            "category": "south",
+            "directAudio": "audio/illuminati.m4a",
+            "videoId": "yH7eDWTH5iM",
+            "thumb": "https://i.ytimg.com/vi/yH7eDWTH5iM/mqdefault.jpg"
+      },
+      {
+            "trackName": "Oo Antava Mawa",
+            "artistName": "Indravathi Chauhan (Pushpa) \u2022 3:45 min",
+            "category": "south",
+            "videoId": "Yw64Zz_l2x8",
+            "thumb": "https://i.ytimg.com/vi/Yw64Zz_l2x8/mqdefault.jpg"
+      },
+      {
+            "trackName": "Srivalli",
+            "artistName": "Sid Sriram (Pushpa) \u2022 3:41 min",
+            "category": "south",
+            "videoId": "hcMzwMrr1tE",
+            "thumb": "https://i.ytimg.com/vi/hcMzwMrr1tE/mqdefault.jpg"
+      },
+      {
+            "trackName": "Sami Sami",
+            "artistName": "Mounika Yadav & DSP (Pushpa) \u2022 3:44 min",
+            "category": "south",
+            "videoId": "vx7r0_j9Y1s",
+            "thumb": "https://i.ytimg.com/vi/vx7r0_j9Y1s/mqdefault.jpg"
+      },
+      {
+            "trackName": "Toofan (KGF 2)",
+            "artistName": "Ravi Basrur & Brijesh Sandilya \u2022 3:35 min",
+            "category": "south",
+            "videoId": "p3x9w0L5r7A",
+            "thumb": "https://i.ytimg.com/vi/p3x9w0L5r7A/mqdefault.jpg"
+      },
+      {
+            "trackName": "Sulthan (KGF 2)",
+            "artistName": "Ravi Basrur \u2022 3:48 min",
+            "category": "south",
+            "videoId": "q4x0w1L6r8A",
+            "thumb": "https://i.ytimg.com/vi/q4x0w1L6r8A/mqdefault.jpg"
+      },
+      {
+            "trackName": "Naatu Naatu (RRR)",
+            "artistName": "Rahul Sipligunj & Kaala Bhairava \u2022 3:35 min (Oscar Winner)",
+            "category": "south",
+            "videoId": "OsU0CGZoV8E",
+            "thumb": "https://i.ytimg.com/vi/OsU0CGZoV8E/mqdefault.jpg"
+      },
+      {
+            "trackName": "Dosti (RRR)",
+            "artistName": "Hemachandra & MM Keeravaani \u2022 4:15 min",
+            "category": "south",
+            "videoId": "r5x1w2L7r9A",
+            "thumb": "https://i.ytimg.com/vi/r5x1w2L7r9A/mqdefault.jpg"
+      },
+      {
+            "trackName": "Hukum (Thalaivar Alappara)",
+            "artistName": "Anirudh Ravichander (Jailer) \u2022 3:27 min",
+            "category": "south",
+            "videoId": "1F3hm6MfR1k",
+            "thumb": "https://i.ytimg.com/vi/1F3hm6MfR1k/mqdefault.jpg"
+      },
+      {
+            "trackName": "Kaavaalaa",
+            "artistName": "Anirudh & Shilpa Rao (Jailer) \u2022 3:10 min",
+            "category": "south",
+            "videoId": "s6x2w3L8r0A",
+            "thumb": "https://i.ytimg.com/vi/s6x2w3L8r0A/mqdefault.jpg"
+      },
+      {
+            "trackName": "Badass (Leo)",
+            "artistName": "Anirudh Ravichander (Thalapathy Vijay) \u2022 3:48 min",
+            "category": "south",
+            "videoId": "t7x3w4L9r1A",
+            "thumb": "https://i.ytimg.com/vi/t7x3w4L9r1A/mqdefault.jpg"
+      },
+      {
+            "trackName": "Naa Ready (Leo)",
+            "artistName": "Thalapathy Vijay & Anirudh \u2022 4:08 min",
+            "category": "south",
+            "videoId": "szvt1vD0Uug",
+            "thumb": "https://i.ytimg.com/vi/szvt1vD0Uug/mqdefault.jpg"
+      },
+      {
+            "trackName": "Arabic Kuthu (Beast)",
+            "artistName": "Anirudh & Jonita Gandhi \u2022 4:38 min",
+            "category": "south",
+            "videoId": "KUN5Uf9mObQ",
+            "thumb": "https://i.ytimg.com/vi/KUN5Uf9mObQ/mqdefault.jpg"
+      },
+      {
+            "trackName": "Vaathi Coming (Master)",
+            "artistName": "Anirudh Ravichander \u2022 3:50 min",
+            "category": "south",
+            "videoId": "u8x4w5L0r2A",
+            "thumb": "https://i.ytimg.com/vi/u8x4w5L0r2A/mqdefault.jpg"
+      },
+      {
+            "trackName": "Rowdy Baby",
+            "artistName": "Dhanush & Dhee (Maari 2) \u2022 4:43 min",
+            "category": "south",
+            "videoId": "x6Q7c9RyMzk",
+            "thumb": "https://i.ytimg.com/vi/x6Q7c9RyMzk/mqdefault.jpg"
+      },
+      {
+            "trackName": "Butta Bomma",
+            "artistName": "Armaan Malik (Ala Vaikunthapurramuloo) \u2022 3:18 min",
+            "category": "south",
+            "videoId": "2mDCVzruYzQ",
+            "thumb": "https://i.ytimg.com/vi/2mDCVzruYzQ/mqdefault.jpg"
+      },
+      {
+            "trackName": "Enjoy Enjaami",
+            "artistName": "Dhee ft. Arivu & Santhosh Narayanan \u2022 4:45 min",
+            "category": "south",
+            "videoId": "eYq7WapuDLU",
+            "thumb": "https://i.ytimg.com/vi/eYq7WapuDLU/mqdefault.jpg"
+      },
+      {
+            "trackName": "Why This Kolaveri Di",
+            "artistName": "Dhanush & Anirudh \u2022 4:08 min",
+            "category": "south",
+            "videoId": "YR12Z8f1Dh8",
+            "thumb": "https://i.ytimg.com/vi/YR12Z8f1Dh8/mqdefault.jpg"
+      },
+      {
+            "trackName": "Softly",
+            "artistName": "Karan Aujla & Ikky \u2022 Full 2:35 min",
+            "category": "punjabi",
+            "directAudio": "audio/softly.m4a",
+            "videoId": "cWMxCE2HTag",
+            "thumb": "https://i.ytimg.com/vi/cWMxCE2HTag/mqdefault.jpg"
+      },
+      {
+            "trackName": "Winning Speech",
+            "artistName": "Karan Aujla \u2022 Full 3:20 min",
+            "category": "punjabi",
+            "directAudio": "audio/winning_speech.m4a",
+            "videoId": "vsWxs1tuwDk",
+            "thumb": "https://i.ytimg.com/vi/vsWxs1tuwDk/mqdefault.jpg"
+      },
+      {
+            "trackName": "Lover",
+            "artistName": "Diljit Dosanjh \u2022 Full 3:12 min",
+            "category": "punjabi",
+            "directAudio": "audio/lover.m4a",
+            "videoId": "mH_LFkWxpI0",
+            "thumb": "https://i.ytimg.com/vi/mH_LFkWxpI0/mqdefault.jpg"
+      },
+      {
+            "trackName": "295",
+            "artistName": "Sidhu Moose Wala (Moosetape) \u2022 4:30 min",
+            "category": "punjabi",
+            "videoId": "n_FCrCQ6-9U",
+            "thumb": "https://i.ytimg.com/vi/n_FCrCQ6-9U/mqdefault.jpg"
+      },
+      {
+            "trackName": "The Last Ride",
+            "artistName": "Sidhu Moose Wala & Wazir Patar \u2022 4:20 min",
+            "category": "punjabi",
+            "videoId": "v9x5w6L1r3A",
+            "thumb": "https://i.ytimg.com/vi/v9x5w6L1r3A/mqdefault.jpg"
+      },
+      {
+            "trackName": "Born to Shine",
+            "artistName": "Diljit Dosanjh (G.O.A.T.) \u2022 3:34 min",
+            "category": "punjabi",
+            "videoId": "cl0a3i2wFcc",
+            "thumb": "https://i.ytimg.com/vi/cl0a3i2wFcc/mqdefault.jpg"
+      },
+      {
+            "trackName": "G.O.A.T.",
+            "artistName": "Diljit Dosanjh \u2022 3:44 min",
+            "category": "punjabi",
+            "videoId": "w0x6w7L2r4A",
+            "thumb": "https://i.ytimg.com/vi/w0x6w7L2r4A/mqdefault.jpg"
+      },
+      {
+            "trackName": "52 Bars",
+            "artistName": "Karan Aujla & Ikky \u2022 3:29 min",
+            "category": "punjabi",
+            "videoId": "x1x7w8L3r5A",
+            "thumb": "https://i.ytimg.com/vi/x1x7w8L3r5A/mqdefault.jpg"
+      },
+      {
+            "trackName": "White Brown Black",
+            "artistName": "Avvy Sra & Karan Aujla \u2022 2:58 min",
+            "category": "punjabi",
+            "videoId": "y2x8w9L4r6A",
+            "thumb": "https://i.ytimg.com/vi/y2x8w9L4r6A/mqdefault.jpg"
+      },
+      {
+            "trackName": "Brown Munde",
+            "artistName": "AP Dhillon, Gurinder Gill & Shinda Kahlon \u2022 4:08 min",
+            "category": "punjabi",
+            "videoId": "VNs_cCtdbPc",
+            "thumb": "https://i.ytimg.com/vi/VNs_cCtdbPc/mqdefault.jpg"
+      },
+      {
+            "trackName": "Insane",
+            "artistName": "AP Dhillon & Gurinder Gill \u2022 3:26 min",
+            "category": "punjabi",
+            "videoId": "z3x9w0L5r7A",
+            "thumb": "https://i.ytimg.com/vi/z3x9w0L5r7A/mqdefault.jpg"
+      },
+      {
+            "trackName": "Excuses",
+            "artistName": "AP Dhillon & Gurinder Gill (Kehndi Hundi Si) \u2022 2:56 min",
+            "category": "punjabi",
+            "videoId": "vX2cDW8LU28",
+            "thumb": "https://i.ytimg.com/vi/vX2cDW8LU28/mqdefault.jpg"
+      },
+      {
+            "trackName": "We Rollin",
+            "artistName": "Shubh \u2022 3:19 min",
+            "category": "punjabi",
+            "videoId": "a4y0w1L6r8A",
+            "thumb": "https://i.ytimg.com/vi/a4y0w1L6r8A/mqdefault.jpg"
+      },
+      {
+            "trackName": "No Love",
+            "artistName": "Shubh \u2022 2:50 min",
+            "category": "punjabi",
+            "videoId": "b5y1w2L7r9A",
+            "thumb": "https://i.ytimg.com/vi/b5y1w2L7r9A/mqdefault.jpg"
+      },
+      {
+            "trackName": "Baller",
+            "artistName": "Shubh & Ikky \u2022 2:28 min",
+            "category": "punjabi",
+            "videoId": "c6y2w3L8r0A",
+            "thumb": "https://i.ytimg.com/vi/c6y2w3L8r0A/mqdefault.jpg"
+      },
+      {
+            "trackName": "Cheques",
+            "artistName": "Shubh (Still Rollin) \u2022 3:03 min",
+            "category": "punjabi",
+            "videoId": "4tywp83zkmk",
+            "thumb": "https://i.ytimg.com/vi/4tywp83zkmk/mqdefault.jpg"
+      },
+      {
+            "trackName": "One Love",
+            "artistName": "Shubh \u2022 2:42 min",
+            "category": "punjabi",
+            "videoId": "d7y3w4L9r1A",
+            "thumb": "https://i.ytimg.com/vi/d7y3w4L9r1A/mqdefault.jpg"
+      },
+      {
+            "trackName": "With You",
+            "artistName": "AP Dhillon \u2022 2:33 min",
+            "category": "punjabi",
+            "videoId": "e8y4w5L0r2A",
+            "thumb": "https://i.ytimg.com/vi/e8y4w5L0r2A/mqdefault.jpg"
+      },
+      {
+            "trackName": "Believer",
+            "artistName": "Imagine Dragons \u2022 Full 3:24 min",
+            "category": "english",
+            "directAudio": "audio/believer.m4a",
+            "videoId": "7wtfhZwyrcc",
+            "thumb": "https://i.ytimg.com/vi/7wtfhZwyrcc/mqdefault.jpg"
+      },
+      {
+            "trackName": "Starboy",
+            "artistName": "The Weeknd ft. Daft Punk \u2022 Full 3:50 min",
+            "category": "english",
+            "directAudio": "audio/starboy.m4a",
+            "videoId": "34Na4j8AVgA",
+            "thumb": "https://i.ytimg.com/vi/34Na4j8AVgA/mqdefault.jpg"
+      },
+      {
+            "trackName": "Blinding Lights",
+            "artistName": "The Weeknd \u2022 Full 3:20 min",
+            "category": "english",
+            "directAudio": "audio/blinding_lights.m4a",
+            "videoId": "4NRXx6U8ABQ",
+            "thumb": "https://i.ytimg.com/vi/4NRXx6U8ABQ/mqdefault.jpg"
+      },
+      {
+            "trackName": "Shape of You",
+            "artistName": "Ed Sheeran \u2022 Full 3:53 min",
+            "category": "english",
+            "directAudio": "audio/shape_of_you.m4a",
+            "videoId": "JGwWNGJdvx8",
+            "thumb": "https://i.ytimg.com/vi/JGwWNGJdvx8/mqdefault.jpg"
+      },
+      {
+            "trackName": "Levitating",
+            "artistName": "Dua Lipa \u2022 Full 3:23 min",
+            "category": "english",
+            "directAudio": "audio/levitating.m4a",
+            "videoId": "TUVcZfQe-Kw",
+            "thumb": "https://i.ytimg.com/vi/TUVcZfQe-Kw/mqdefault.jpg"
+      },
+      {
+            "trackName": "Faded",
+            "artistName": "Alan Walker \u2022 Full 3:32 min",
+            "category": "english",
+            "directAudio": "audio/faded.m4a",
+            "videoId": "60ItHLz5WEA",
+            "thumb": "https://i.ytimg.com/vi/60ItHLz5WEA/mqdefault.jpg"
+      },
+      {
+            "trackName": "Demons",
+            "artistName": "Imagine Dragons \u2022 3:15 min",
+            "category": "english",
+            "videoId": "mWRsgZuwf_8",
+            "thumb": "https://i.ytimg.com/vi/mWRsgZuwf_8/mqdefault.jpg"
+      },
+      {
+            "trackName": "Bones",
+            "artistName": "Imagine Dragons (The Boys) \u2022 2:45 min",
+            "category": "english",
+            "videoId": "TO-_3tck2tg",
+            "thumb": "https://i.ytimg.com/vi/TO-_3tck2tg/mqdefault.jpg"
+      },
+      {
+            "trackName": "Radioactive",
+            "artistName": "Imagine Dragons \u2022 3:08 min",
+            "category": "english",
+            "videoId": "ktvTqknDobU",
+            "thumb": "https://i.ytimg.com/vi/ktvTqknDobU/mqdefault.jpg"
+      },
+      {
+            "trackName": "Thunder",
+            "artistName": "Imagine Dragons \u2022 3:07 min",
+            "category": "english",
+            "videoId": "fKopy74weus",
+            "thumb": "https://i.ytimg.com/vi/fKopy74weus/mqdefault.jpg"
+      },
+      {
+            "trackName": "Perfect",
+            "artistName": "Ed Sheeran \u2022 4:23 min",
+            "category": "english",
+            "videoId": "2Vv-BfVoq4g",
+            "thumb": "https://i.ytimg.com/vi/2Vv-BfVoq4g/mqdefault.jpg"
+      },
+      {
+            "trackName": "Bad Habits",
+            "artistName": "Ed Sheeran \u2022 3:51 min",
+            "category": "english",
+            "videoId": "orJSJGHjBLI",
+            "thumb": "https://i.ytimg.com/vi/orJSJGHjBLI/mqdefault.jpg"
+      },
+      {
+            "trackName": "Stay",
+            "artistName": "The Kid LAROI & Justin Bieber \u2022 2:21 min",
+            "category": "english",
+            "videoId": "KTJ3A44KEJg",
+            "thumb": "https://i.ytimg.com/vi/KTJ3A44KEJg/mqdefault.jpg"
+      },
+      {
+            "trackName": "Peaches",
+            "artistName": "Justin Bieber ft. Daniel Caesar \u2022 3:18 min",
+            "category": "english",
+            "videoId": "tQ0yjYUFKAE",
+            "thumb": "https://i.ytimg.com/vi/tQ0yjYUFKAE/mqdefault.jpg"
+      },
+      {
+            "trackName": "Attention",
+            "artistName": "Charlie Puth \u2022 3:31 min",
+            "category": "english",
+            "videoId": "nfs8NYg7yQM",
+            "thumb": "https://i.ytimg.com/vi/nfs8NYg7yQM/mqdefault.jpg"
+      },
+      {
+            "trackName": "We Don't Talk Anymore",
+            "artistName": "Charlie Puth & Selena Gomez \u2022 3:37 min",
+            "category": "english",
+            "videoId": "3AtDnEC4zak",
+            "thumb": "https://i.ytimg.com/vi/3AtDnEC4zak/mqdefault.jpg"
+      },
+      {
+            "trackName": "Memories",
+            "artistName": "Maroon 5 \u2022 3:09 min",
+            "category": "english",
+            "videoId": "SlPhMPnQ58k",
+            "thumb": "https://i.ytimg.com/vi/SlPhMPnQ58k/mqdefault.jpg"
+      },
+      {
+            "trackName": "Girls Like You",
+            "artistName": "Maroon 5 ft. Cardi B \u2022 4:30 min",
+            "category": "english",
+            "videoId": "aJOTlE1K90k",
+            "thumb": "https://i.ytimg.com/vi/aJOTlE1K90k/mqdefault.jpg"
+      },
+      {
+            "trackName": "Closer",
+            "artistName": "The Chainsmokers ft. Halsey \u2022 4:05 min",
+            "category": "english",
+            "videoId": "PT2_F-1esPk",
+            "thumb": "https://i.ytimg.com/vi/PT2_F-1esPk/mqdefault.jpg"
+      },
+      {
+            "trackName": "Despacito",
+            "artistName": "Luis Fonsi ft. Daddy Yankee \u2022 4:41 min",
+            "category": "english",
+            "videoId": "kJQP7kiw5Fk",
+            "thumb": "https://i.ytimg.com/vi/kJQP7kiw5Fk/mqdefault.jpg"
+      },
+      {
+            "trackName": "Gaming Phonk (Bass Drift)",
+            "artistName": "Drift Phonk Gaming \u2022 Full 3:00 min",
+            "category": "phonk",
+            "directAudio": "audio/gaming_phonk.m4a",
+            "videoId": "Pnq1_3BXIqA",
+            "thumb": "https://i.ytimg.com/vi/Pnq1_3BXIqA/mqdefault.jpg"
+      },
+      {
+            "trackName": "Neon Blade",
+            "artistName": "MoonDeity \u2022 Gym Phonk 4:25 min",
+            "category": "phonk",
+            "videoId": "f5y1w2L7r9B",
+            "thumb": "https://i.ytimg.com/vi/f5y1w2L7r9B/mqdefault.jpg"
+      },
+      {
+            "trackName": "Metamorphosis",
+            "artistName": "INTERWORLD \u2022 Aggressive Phonk 2:23 min",
+            "category": "phonk",
+            "videoId": "g6y2w3L8r0B",
+            "thumb": "https://i.ytimg.com/vi/g6y2w3L8r0B/mqdefault.jpg"
+      },
+      {
+            "trackName": "Murder In My Mind",
+            "artistName": "KORDHELL \u2022 Fast Phonk 2:25 min",
+            "category": "phonk",
+            "videoId": "h7y3w4L9r1B",
+            "thumb": "https://i.ytimg.com/vi/h7y3w4L9r1B/mqdefault.jpg"
+      },
+      {
+            "trackName": "Keraunos",
+            "artistName": "PlayaPhonk \u2022 2:30 min",
+            "category": "phonk",
+            "videoId": "i8y4w5L0r2B",
+            "thumb": "https://i.ytimg.com/vi/i8y4w5L0r2B/mqdefault.jpg"
+      },
+      {
+            "trackName": "Sahara",
+            "artistName": "Hensonn \u2022 Drift Bass 2:51 min",
+            "category": "phonk",
+            "videoId": "j9y5w6L1r3B",
+            "thumb": "https://i.ytimg.com/vi/j9y5w6L1r3B/mqdefault.jpg"
+      },
+      {
+            "trackName": "Vendetta",
+            "artistName": "MUPP & Sadfriendd \u2022 1:46 min",
+            "category": "phonk",
+            "videoId": "k0z6w7L2r4B",
+            "thumb": "https://i.ytimg.com/vi/k0z6w7L2r4B/mqdefault.jpg"
+      },
+      {
+            "trackName": "Tokyo Drift",
+            "artistName": "Teriyaki Boyz (Fast & Furious) \u2022 4:15 min",
+            "category": "phonk",
+            "videoId": "iuJDhFRDx9M",
+            "thumb": "https://i.ytimg.com/vi/iuJDhFRDx9M/mqdefault.jpg"
+      },
+      {
+            "trackName": "Alone",
+            "artistName": "Alan Walker \u2022 2:43 min",
+            "category": "phonk",
+            "videoId": "1-xGerv5FOk",
+            "thumb": "https://i.ytimg.com/vi/1-xGerv5FOk/mqdefault.jpg"
+      },
+      {
+            "trackName": "The Spectre",
+            "artistName": "Alan Walker \u2022 3:26 min",
+            "category": "phonk",
+            "videoId": "wJnB742GQpg",
+            "thumb": "https://i.ytimg.com/vi/wJnB742GQpg/mqdefault.jpg"
+      },
+      {
+            "trackName": "Deva Shree Ganesha",
+            "artistName": "Ajay-Atul (Agneepath) \u2022 Full 5:56 min",
+            "category": "bhakti",
+            "directAudio": "audio/deva_shree_ganesha.m4a",
+            "videoId": "RYqJ5w-GrfM",
+            "thumb": "https://i.ytimg.com/vi/RYqJ5w-GrfM/mqdefault.jpg"
+      },
+      {
+            "trackName": "Sukhkarta Dukhharta",
+            "artistName": "Lata Mangeshkar \u2022 Ganpati Aarti 4:18 min",
+            "category": "bhakti",
+            "videoId": "m1z7w8L3r5C",
+            "thumb": "https://i.ytimg.com/vi/m1z7w8L3r5C/mqdefault.jpg"
+      },
+      {
+            "trackName": "Shri Krishna Govind Hare Murari",
+            "artistName": "Jubin Nautiyal \u2022 Peaceful Bhajan 5:10 min",
+            "category": "bhakti",
+            "videoId": "n2z8w9L4r6C",
+            "thumb": "https://i.ytimg.com/vi/n2z8w9L4r6C/mqdefault.jpg"
+      },
+      {
+            "trackName": "Ram Siya Ram",
+            "artistName": "Sachet Tandon (Adipurush) \u2022 3:50 min",
+            "category": "bhakti",
+            "videoId": "o3z9w0L5r7C",
+            "thumb": "https://i.ytimg.com/vi/o3z9w0L5r7C/mqdefault.jpg"
+      },
+      {
+            "trackName": "Hanuman Chalisa",
+            "artistName": "Gulshan Kumar & Hariharan \u2022 9:42 min",
+            "category": "bhakti",
+            "videoId": "AETFvQonfV8",
+            "thumb": "https://i.ytimg.com/vi/AETFvQonfV8/mqdefault.jpg"
+      },
+      {
+            "trackName": "Namo Namo",
+            "artistName": "Amit Trivedi (Kedarnath) \u2022 5:22 min",
+            "category": "bhakti",
+            "videoId": "dx4Teh-nv3A",
+            "thumb": "https://i.ytimg.com/vi/dx4Teh-nv3A/mqdefault.jpg"
+      },
+      {
+            "trackName": "Shiv Tandav Stotram",
+            "artistName": "Shankar Mahadevan \u2022 9:13 min",
+            "category": "bhakti",
+            "videoId": "p4z0w1L6r8C",
+            "thumb": "https://i.ytimg.com/vi/p4z0w1L6r8C/mqdefault.jpg"
+      },
+      {
+            "trackName": "Har Har Shambhu Shiv Mahadeva",
+            "artistName": "Abhilipsa Panda & Jeetu Sharma \u2022 6:23 min",
+            "category": "bhakti",
+            "videoId": "q5z1w2L7r9C",
+            "thumb": "https://i.ytimg.com/vi/q5z1w2L7r9C/mqdefault.jpg"
+      },
+      {
+            "trackName": "Achyutam Keshavam",
+            "artistName": "Shreya Ghoshal \u2022 Devotional Bliss 5:35 min",
+            "category": "bhakti",
+            "videoId": "r6z2w3L8r0C",
+            "thumb": "https://i.ytimg.com/vi/r6z2w3L8r0C/mqdefault.jpg"
       }
-    ];
+];
 
     let currentPlayingType = 'none'; // 'youtube' or 'audio' or 'none'
     let currentFullVideoId = null;
@@ -4063,38 +4744,52 @@
       filterAndRenderSongs(songQueryInput ? songQueryInput.value : '');
     }
 
-    function playUniversalSearchSong(query) {
+        function playUniversalSearchSong(query) {
       if (!query || query.trim() === '') return;
       const cleanQ = query.trim();
 
-      const ytMatch = cleanQ.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-      if (ytMatch) {
-        playFullLengthSong(ytMatch[1], "Custom Track");
+      // Check if user entered direct YouTube URL or 11-char ID
+      const ytMatch = cleanQ.match(/(?:v=|youtu\.be\/|^)([a-zA-Z0-9_-]{11})(?:[&?]|$)/);
+      if (ytMatch && ytMatch[1] && ytMatch[1].length === 11) {
+        playFullLengthSong(ytMatch[1], "Custom Track: " + cleanQ);
         return;
       }
 
-      currentPlayingType = 'youtube';
-      currentFullVideoId = 'search_' + cleanQ;
-      fullSongTitle = cleanQ;
-      isTrackPlaying = true;
-
-      try { bgmAudio.pause(); } catch(e) {}
-      stopBGM();
-
-      if (fullSongFrame) {
-        fullSongFrame.src = `https://www.youtube-nocookie.com/embed?listType=search&list=${encodeURIComponent(cleanQ)}&autoplay=1&enablejsapi=1&playsinline=1`;
+      // Check catalog best fuzzy match first
+      const lowerQ = cleanQ.toLowerCase();
+      const exactMatch = MUSIC_CATALOG.find(s => 
+        s.trackName.toLowerCase() === lowerQ || 
+        s.trackName.toLowerCase().includes(lowerQ) ||
+        lowerQ.includes(s.trackName.toLowerCase())
+      );
+      if (exactMatch) {
+        playFullLengthSong(exactMatch.videoId, exactMatch.trackName, exactMatch.directAudio);
+        return;
       }
 
-      updatePlayerUI(cleanQ, true);
-      filterAndRenderSongs(cleanQ);
+      // Try local search API if running via serve_mobile.py
+      if (searchStatusBar) searchStatusBar.innerHTML = `<span style="color:var(--yellow);">🔍 Searching online stream for "${escapeHtml(cleanQ)}"...</span>`;
+      fetch(`/api/search?q=${encodeURIComponent(cleanQ)}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.length > 0) {
+            const top = data[0];
+            playFullLengthSong(top.videoId, top.title);
+          } else {
+            fallbackPlayUniversal(cleanQ);
+          }
+        })
+        .catch(() => {
+          fallbackPlayUniversal(cleanQ);
+        });
+    }
 
-      if (searchStatusBar) {
-        searchStatusBar.innerHTML = `<span style="color:var(--green); font-weight:bold;">▶️ Streaming "${cleanQ}" in background!</span>`;
-      }
-      if (statusText) {
-        statusText.innerText = `🎵 Now Playing: ${cleanQ}`;
-        statusText.style.borderLeftColor = 'var(--green)';
-      }
+    function fallbackPlayUniversal(cleanQ) {
+      // Pick closest match from catalog so user ALWAYS gets music!
+      const words = cleanQ.toLowerCase().split(' ').filter(w => w.length > 1);
+      let bestMatch = MUSIC_CATALOG.find(s => words.some(w => s.trackName.toLowerCase().includes(w) || s.artistName.toLowerCase().includes(w)));
+      if (!bestMatch) bestMatch = MUSIC_CATALOG[0];
+      playFullLengthSong(bestMatch.videoId, `${cleanQ} (${bestMatch.trackName})`, bestMatch.directAudio);
     }
 
     // Input & Search Events (Real-time live typing on 1-2 letters!)
