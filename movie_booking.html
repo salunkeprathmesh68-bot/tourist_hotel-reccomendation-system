@@ -326,6 +326,16 @@
           <!-- Seat Matrix (Col 1 & 2) -->
           <div class="lg:col-span-2 bg-slate-950 p-6 rounded-2xl border border-slate-800 flex flex-col items-center">
             
+            <!-- Screen / Audi Switcher Pill Strip -->
+            <div class="w-full max-w-xl mb-4 bg-slate-900/90 p-3 rounded-xl border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div class="text-xs text-slate-300 font-bold flex items-center gap-1.5">
+                <i class="fa-solid fa-film text-rose-500"></i> ऑडिटोरियम / स्क्रीन निवडा (Select Audi):
+              </div>
+              <div id="audiPillContainer" class="flex flex-wrap gap-1.5">
+                <!-- Dynamically populated via JS for each talkie -->
+              </div>
+            </div>
+
             <!-- Curved Screen -->
             <div class="w-full max-w-xl mb-6 text-center">
               <div class="screen-curve mb-2"></div>
@@ -355,23 +365,23 @@
             </div>
 
             <!-- The Matrix Container -->
-            <div id="seatGridContainer" class="space-y-3 w-full max-w-xl">
-              <!-- Rendered via JS -->
+            <div id="seatGridContainer" class="space-y-2.5 w-full max-w-full overflow-x-auto p-1">
+              <!-- Rendered dynamically based on exact screen capacity -->
             </div>
 
             <!-- Seat Pricing Zone Notice -->
             <div class="w-full max-w-xl mt-6 pt-4 border-t border-slate-800 flex flex-col sm:flex-row justify-between gap-2 text-xs text-slate-400">
               <div class="flex items-center gap-2">
-                <span class="w-3 h-3 rounded-full bg-emerald-500/20 border border-emerald-500"></span>
-                <span>Rows A-B: <strong>Silver Stall</strong> (<span id="silverPriceBadge">₹160</span>)</span>
+                <span class="w-3 h-3 rounded-full bg-slate-500/20 border border-slate-400"></span>
+                <span>पुढील रो: <strong>Silver Stall</strong> (<span id="silverPriceBadge">₹160</span>)</span>
               </div>
               <div class="flex items-center gap-2">
-                <span class="w-3 h-3 rounded-full bg-sky-500/20 border border-sky-500"></span>
-                <span>Rows C-E: <strong>Gold Executive</strong> (<span id="goldPriceBadge">₹190</span>)</span>
+                <span class="w-3 h-3 rounded-full bg-cyan-500/20 border border-cyan-400"></span>
+                <span>मधले रो: <strong>Gold Executive</strong> (<span id="goldPriceBadge">₹190</span>)</span>
               </div>
               <div class="flex items-center gap-2">
-                <span class="w-3 h-3 rounded-full bg-amber-500/20 border border-amber-500"></span>
-                <span>Rows F-G: <strong>Premium Recliner</strong> (<span id="premiumPriceBadge">₹280</span>)</span>
+                <span class="w-3 h-3 rounded-full bg-amber-500/20 border border-amber-400"></span>
+                <span>मागील रो: <strong>Premium Recliner</strong> (<span id="premiumPriceBadge">₹280</span>)</span>
               </div>
             </div>
 
@@ -766,17 +776,17 @@
     ];
 
     // =========================================================================
-    // LATEST BLOCKBUSTER MOVIES
+    // BRAND NEW & LATEST MOVIES CATALOG (नवीनतम चालू चित्रपट - Old Movies Removed)
     // =========================================================================
     let MOVIES_DATA = [
-      { id: 1, title: "Pushpa 2: The Rule", lang: "Hindi/Telugu", genre: "Action / Mass Drama", duration: 190, basePrice: 200, rating: 4.9, posterIcon: "fa-fire", badgeColor: "border-red-500/30 text-red-400 bg-red-500/10" },
-      { id: 2, title: "Chhava", lang: "Marathi/Hindi", genre: "Historical / Epic Action", duration: 165, basePrice: 190, rating: 4.9, posterIcon: "fa-shield-halved", badgeColor: "border-amber-500/30 text-amber-400 bg-amber-500/10" },
-      { id: 3, title: "Dharmaveer 2", lang: "Marathi", genre: "Biopic / Political Drama", duration: 155, basePrice: 170, rating: 4.8, posterIcon: "fa-crown", badgeColor: "border-orange-500/30 text-orange-400 bg-orange-500/10" },
-      { id: 4, title: "Stree 2: Sarkate Ka Aatank", lang: "Hindi", genre: "Horror / Comedy", duration: 147, basePrice: 180, rating: 4.8, posterIcon: "fa-ghost", badgeColor: "border-purple-500/30 text-purple-400 bg-purple-500/10" },
-      { id: 5, title: "Navra Maza Navsacha 2", lang: "Marathi", genre: "Family Comedy / Drama", duration: 142, basePrice: 160, rating: 4.7, posterIcon: "fa-train-subway", badgeColor: "border-emerald-500/30 text-emerald-400 bg-emerald-500/10" },
-      { id: 6, title: "Kalki 2898 AD", lang: "Hindi/Dub", genre: "Sci-Fi / Mythological", duration: 181, basePrice: 200, rating: 4.6, posterIcon: "fa-robot", badgeColor: "border-sky-500/30 text-sky-400 bg-sky-500/10" },
-      { id: 7, title: "Ved", lang: "Marathi", genre: "Romantic / Drama", duration: 150, basePrice: 150, rating: 4.6, posterIcon: "fa-heart", badgeColor: "border-rose-500/30 text-rose-400 bg-rose-500/10" },
-      { id: 8, title: "Singham Again", lang: "Hindi", genre: "Action / Cop Universe", duration: 160, basePrice: 200, rating: 4.7, posterIcon: "fa-bolt", badgeColor: "border-yellow-500/30 text-yellow-400 bg-yellow-500/10" }
+      { id: 1, title: "Pushpa 2: The Rule", lang: "Hindi/Telugu", genre: "Action / Mass Drama", duration: 195, basePrice: 220, rating: 4.9, posterIcon: "fa-fire", badgeColor: "border-red-500/30 text-red-400 bg-red-500/10" },
+      { id: 2, title: "Chhava (छावा)", lang: "Marathi/Hindi", genre: "Historical / Epic Action", duration: 168, basePrice: 200, rating: 4.9, posterIcon: "fa-shield-halved", badgeColor: "border-amber-500/30 text-amber-400 bg-amber-500/10" },
+      { id: 3, title: "Bhool Bhulaiyaa 3", lang: "Hindi", genre: "Horror / Comedy", duration: 158, basePrice: 190, rating: 4.8, posterIcon: "fa-ghost", badgeColor: "border-purple-500/30 text-purple-400 bg-purple-500/10" },
+      { id: 4, title: "Singham Again", lang: "Hindi", genre: "Cop Action Thriller", duration: 164, basePrice: 210, rating: 4.8, posterIcon: "fa-bolt", badgeColor: "border-yellow-500/30 text-yellow-400 bg-yellow-500/10" },
+      { id: 5, title: "Phullwanti (फुलवंती)", lang: "Marathi", genre: "Historical Musical Drama", duration: 145, basePrice: 160, rating: 4.8, posterIcon: "fa-fan", badgeColor: "border-pink-500/30 text-pink-400 bg-pink-500/10" },
+      { id: 6, title: "Yek Number (येक नंबर)", lang: "Marathi", genre: "Romance / Political Drama", duration: 138, basePrice: 150, rating: 4.7, posterIcon: "fa-heart", badgeColor: "border-rose-500/30 text-rose-400 bg-rose-500/10" },
+      { id: 7, title: "Baby John", lang: "Hindi", genre: "High Octane Action", duration: 152, basePrice: 180, rating: 4.7, posterIcon: "fa-gun", badgeColor: "border-orange-500/30 text-orange-400 bg-orange-500/10" },
+      { id: 8, title: "Gladiator II", lang: "English/Hindi", genre: "Action / Adventure Epic", duration: 150, basePrice: 220, rating: 4.8, posterIcon: "fa-khanda", badgeColor: "border-sky-500/30 text-sky-400 bg-sky-500/10" }
     ];
 
     // DATES GENERATION (Today + 4 Days Ahead with Day Names)
@@ -847,24 +857,69 @@
     let selectedDistrict = "Kolhapur";
     let selectedMovie = MOVIES_DATA[0];
     let selectedTheatre = THEATRES_DATA[0];
+    let selectedAudiIndex = 0;
     let showtimesList = getShowtimesForMovie(selectedMovie.duration);
     let selectedShowtime = showtimesList[1]; // default Matinee
     let currentSelectedSeats = [];
     let bookingsMaster = [];
     let bookingCounter = 1001;
 
-    // Show Occupancy Store: key = `tId-mId-date-showId` -> Set of booked seat codes
+    // Helper to get active Audi screen
+    function getActiveAudi() {
+      if (selectedTheatre.audis && selectedTheatre.audis.length > 0) {
+        if (selectedAudiIndex >= selectedTheatre.audis.length) selectedAudiIndex = 0;
+        return selectedTheatre.audis[selectedAudiIndex];
+      }
+      let num = parseInt(selectedTheatre.capacity) || 120;
+      return { name: "Main Hall", seats: num };
+    }
+
+    // Show Occupancy Store: key = `tId-audi-mId-date-showId` -> Set of booked seat codes
     let seatOccupancyStore = {};
 
     function getShowKey() {
-      return `${selectedTheatre.id}-${selectedMovie.id}-${selectedDate.dateStr}-${selectedShowtime.id}`;
+      const audi = getActiveAudi();
+      return `${selectedTheatre.id}-${audi.name}-${selectedMovie.id}-${selectedDate.dateStr}-${selectedShowtime.id}`;
     }
 
     function getOccupiedSeats() {
       const key = getShowKey();
       if (!seatOccupancyStore[key]) {
-        // Pre-booked seeds for realistic display
-        seatOccupancyStore[key] = new Set(["A3", "A4", "B6", "C2", "D4", "D5", "F3"]);
+        const booked = new Set();
+        const audi = getActiveAudi();
+        const N = audi.seats || 100;
+
+        // Seed between 25% to 35% booked seats for realism
+        const bookedRatio = 0.25 + ((selectedTheatre.id * 7 + selectedMovie.id * 13) % 15) / 100;
+        const targetBooked = Math.floor(N * bookedRatio);
+
+        let seed = 0;
+        for (let i = 0; i < key.length; i++) seed = (seed * 31 + key.charCodeAt(i)) % 1000000007;
+
+        const cols = (N <= 60) ? 10 : (N <= 100) ? 12 : (N <= 180) ? 14 : (N <= 260) ? 16 : (N <= 350) ? 18 : 20;
+        const totalRows = Math.ceil(N / cols);
+
+        let generated = 0;
+        let attempts = 0;
+        while (generated < targetBooked && attempts < N * 3) {
+          attempts++;
+          seed = (seed * 16807 + 7) % 2147483647;
+          let rIdx = seed % totalRows;
+          let rChar = String.fromCharCode(65 + rIdx);
+
+          let maxColsInRow = (rIdx === totalRows - 1) ? (N - (totalRows - 1) * cols) : cols;
+          if (maxColsInRow <= 0) maxColsInRow = cols;
+
+          seed = (seed * 16807 + 7) % 2147483647;
+          let cIdx = (seed % maxColsInRow) + 1;
+          let code = `${rChar}${cIdx}`;
+
+          if (!booked.has(code)) {
+            booked.add(code);
+            generated++;
+          }
+        }
+        seatOccupancyStore[key] = booked;
       }
       return seatOccupancyStore[key];
     }
@@ -977,6 +1032,7 @@
 
       if (distTheatres.length > 0) {
         selectedTheatre = distTheatres[0];
+        selectedAudiIndex = 0;
       }
 
       currentSelectedSeats = [];
@@ -1052,6 +1108,7 @@
         card.className = `p-3.5 rounded-xl border text-xs cursor-pointer transition-all ${isSelected ? 'bg-rose-500/20 border-rose-500 text-white shadow-md' : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700'}`;
         card.onclick = () => {
           selectedTheatre = t;
+          selectedAudiIndex = 0;
           currentSelectedSeats = [];
           renderTheatresList();
           renderSeatGrid();
@@ -1194,6 +1251,7 @@
     function quickBookFromSchedule(theatreId, showId) {
       const t = THEATRES_DATA.find(item => item.id == theatreId);
       if (t) selectedTheatre = t;
+      selectedAudiIndex = 0;
       const st = showtimesList.find(item => item.id == showId);
       if (st) selectedShowtime = st;
 
@@ -1208,70 +1266,139 @@
     }
 
     // -------------------------------------------------------------------------
-    // 2D SEAT MATRIX WITH DISTINCT COLORS & EXACT SEAT COUNTS
+    // DYNAMIC 2D SEAT MATRIX PER TALKIE & SCREEN CAPACITY
     // -------------------------------------------------------------------------
 
+    function getRowLabel(r) {
+      if (r < 26) return String.fromCharCode(65 + r);
+      return 'A' + String.fromCharCode(65 + (r - 26));
+    }
+
+    function getRowIndexFromCode(code) {
+      const letters = code.replace(/[0-9]/g, '');
+      if (letters.length === 1) {
+        return letters.charCodeAt(0) - 65;
+      } else if (letters.length === 2) {
+        return 26 + (letters.charCodeAt(1) - 65);
+      }
+      return 0;
+    }
+
+    function getRowInfo(rowIndex, totalRows) {
+      const silverCutoff = Math.max(1, Math.floor(totalRows * 0.3));
+      const goldCutoff = Math.max(silverCutoff + 1, Math.floor(totalRows * 0.8));
+      
+      if (rowIndex < silverCutoff) {
+        return { name: "Silver Stall", type: "Silver", priceOffset: -10, badgeClass: "text-slate-400" };
+      } else if (rowIndex < goldCutoff) {
+        return { name: "Gold Executive", type: "Gold", priceOffset: 20, badgeClass: "text-cyan-400" };
+      } else {
+        return { name: "Premium Recliner", type: "Recliner", priceOffset: 80, badgeClass: "text-amber-400" };
+      }
+    }
+
+    function renderAudiPills() {
+      const container = document.getElementById("audiPillContainer");
+      if (!container) return;
+      container.innerHTML = "";
+
+      const audis = (selectedTheatre.audis && selectedTheatre.audis.length > 0) 
+        ? selectedTheatre.audis 
+        : [{ name: "Main Hall", seats: parseInt(selectedTheatre.capacity) || 120 }];
+
+      audis.forEach((audi, idx) => {
+        const isSelected = (idx === selectedAudiIndex);
+        const pill = document.createElement("button");
+        pill.className = `px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+          isSelected 
+            ? 'bg-rose-600 text-white shadow-lg shadow-rose-600/30 ring-1 ring-rose-400 font-bold' 
+            : 'bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700'
+        }`;
+        pill.innerHTML = `<span>${audi.name}</span> <span class="font-mono text-[11px] px-1.5 py-0.5 rounded ${isSelected ? 'bg-rose-700 text-white' : 'bg-slate-900 text-emerald-400'}">${audi.seats} सीट्स</span>`;
+        pill.onclick = () => {
+          selectedAudiIndex = idx;
+          currentSelectedSeats = [];
+          renderAudiPills();
+          renderSeatGrid();
+          updateBillSummary();
+        };
+        container.appendChild(pill);
+      });
+    }
+
     function renderSeatGrid() {
+      renderAudiPills();
+
       const container = document.getElementById("seatGridContainer");
       container.innerHTML = "";
 
+      const audi = getActiveAudi();
+      const N = audi.seats || 100;
+
       // Update header
       document.getElementById("seatSelectionTitle").textContent = `${selectedMovie.title} (${selectedMovie.lang})`;
-      document.getElementById("seatSelectionSubtitle").textContent = `${selectedTheatre.name} • ${selectedDate.display} • शो वेळ: ${selectedShowtime.timeRange}`;
+      document.getElementById("seatSelectionSubtitle").textContent = `${selectedTheatre.name} • ${audi.name} (${N} Seats) • ${selectedDate.display} • शो वेळ: ${selectedShowtime.timeRange}`;
 
       const occupied = getOccupiedSeats();
 
-      // Rows A-G (7 Rows x 8 Columns = 56 Seats for this Audi screen)
-      const rows = [
-        { char: 'A', name: 'Silver Stall', priceOffset: -10 },
-        { char: 'B', name: 'Silver Stall', priceOffset: -10 },
-        { char: 'C', name: 'Gold Executive', priceOffset: 20 },
-        { char: 'D', name: 'Gold Executive', priceOffset: 20 },
-        { char: 'E', name: 'Gold Executive', priceOffset: 20 },
-        { char: 'F', name: 'Premium Recliner', priceOffset: 80 },
-        { char: 'G', name: 'Premium Recliner', priceOffset: 80 }
-      ];
-      const cols = 8;
-      const totalHallSeats = rows.length * cols;
+      const cols = (N <= 60) ? 10 : (N <= 100) ? 12 : (N <= 180) ? 14 : (N <= 260) ? 16 : (N <= 350) ? 18 : 20;
+      const totalRows = Math.ceil(N / cols);
 
       const basePrice = selectedMovie.basePrice;
       document.getElementById("silverPriceBadge").textContent = `₹${basePrice - 10}`;
       document.getElementById("goldPriceBadge").textContent = `₹${basePrice + 20}`;
       document.getElementById("premiumPriceBadge").textContent = `₹${basePrice + 80}`;
 
-      // Live Occupancy Count
+      // Count booked seats specifically in this hall
       let bookedCount = 0;
-      rows.forEach(r => {
-        for (let c = 1; c <= cols; c++) {
-          if (occupied.has(`${r.char}${c}`)) bookedCount++;
+      for (let r = 0; r < totalRows; r++) {
+        const rChar = getRowLabel(r);
+        let maxColsInRow = (r === totalRows - 1) ? (N - (totalRows - 1) * cols) : cols;
+        if (maxColsInRow <= 0) maxColsInRow = cols;
+        for (let c = 1; c <= maxColsInRow; c++) {
+          if (occupied.has(`${rChar}${c}`)) bookedCount++;
         }
-      });
-      const availableCount = totalHallSeats - bookedCount;
+      }
 
-      document.getElementById("seatCountTotal").textContent = totalHallSeats;
+      const availableCount = N - bookedCount;
+
+      document.getElementById("seatCountTotal").textContent = N;
       document.getElementById("seatCountAvailable").textContent = availableCount;
       document.getElementById("seatCountBooked").textContent = bookedCount;
       document.getElementById("seatCountSelected").textContent = currentSelectedSeats.length;
 
-      rows.forEach((rObj) => {
-        const isRecliner = rObj.name.includes('Recliner');
-        const rowPrice = basePrice + rObj.priceOffset;
+      const aisleCol = Math.floor(cols / 2);
+
+      let seatSizeClass = "w-7 h-7 sm:w-8 sm:h-8 text-[10px]";
+      if (cols >= 18) {
+        seatSizeClass = "w-6 h-6 sm:w-7 sm:h-7 text-[9px]";
+      } else if (cols <= 10) {
+        seatSizeClass = "w-8 h-8 sm:w-9 sm:h-9 text-[11px]";
+      }
+
+      for (let r = 0; r < totalRows; r++) {
+        const rChar = getRowLabel(r);
+        const rowInfo = getRowInfo(r, totalRows);
+        const rowPrice = basePrice + rowInfo.priceOffset;
+
+        let maxColsInRow = (r === totalRows - 1) ? (N - (totalRows - 1) * cols) : cols;
+        if (maxColsInRow <= 0) maxColsInRow = cols;
 
         const rowDiv = document.createElement("div");
-        rowDiv.className = "flex items-center justify-between gap-1 sm:gap-2";
+        rowDiv.className = "flex items-center justify-between gap-1 sm:gap-2 my-1";
 
         // Row Label
         const rowLabel = document.createElement("div");
-        rowLabel.className = `w-7 text-center font-bold text-xs font-mono ${isRecliner ? 'text-amber-400' : 'text-slate-400'}`;
-        rowLabel.innerHTML = `${rObj.char} <span class="text-[9px] block text-slate-500 font-sans">${rObj.name[0]}</span>`;
+        rowLabel.className = `w-8 text-center font-bold font-mono ${rowInfo.badgeClass} flex-shrink-0 text-[11px]`;
+        rowLabel.innerHTML = `${rChar} <span class="text-[8px] block text-slate-500 font-sans">${rowInfo.type[0]}</span>`;
         rowDiv.appendChild(rowLabel);
 
         // Seats Group
         const seatsGroup = document.createElement("div");
-        seatsGroup.className = "flex items-center gap-1.5 sm:gap-2 flex-1 justify-center";
+        seatsGroup.className = "flex items-center gap-1 sm:gap-1.5 flex-1 justify-center py-0.5";
 
-        for (let c = 1; c <= cols; c++) {
-          const seatCode = `${rObj.char}${c}`;
+        for (let c = 1; c <= maxColsInRow; c++) {
+          const seatCode = `${rChar}${c}`;
           const isBooked = occupied.has(seatCode);
           const isSelected = currentSelectedSeats.includes(seatCode);
 
@@ -1279,7 +1406,7 @@
           
           if (isBooked) {
             // 🔴 BOOKED SEAT (High Contrast Red with Cross)
-            seatBtn.className = "seat booked w-8 h-8 sm:w-9 sm:h-9 rounded-lg font-mono text-[11px] font-bold flex items-center justify-center";
+            seatBtn.className = `seat booked ${seatSizeClass} rounded-lg font-mono font-bold flex items-center justify-center flex-shrink-0`;
             seatBtn.innerHTML = `<span>✕</span>`;
             seatBtn.title = `Seat ${seatCode} is ALREADY BOOKED. Double-booking blocked!`;
             seatBtn.onclick = () => {
@@ -1287,31 +1414,31 @@
             };
           } else if (isSelected) {
             // 🟡 SELECTED SEAT (Glowing Electric Gold with Checkmark)
-            seatBtn.className = "seat selected w-8 h-8 sm:w-9 sm:h-9 rounded-lg font-mono text-[11px] font-extrabold flex items-center justify-center";
+            seatBtn.className = `seat selected ${seatSizeClass} rounded-lg font-mono font-extrabold flex items-center justify-center flex-shrink-0`;
             seatBtn.innerHTML = `<span>✓</span>`;
-            seatBtn.title = `Seat ${seatCode} Selected (${rObj.name} - ₹${rowPrice})`;
-            seatBtn.onclick = () => toggleSeatSelection(seatCode, rowPrice, rObj.name);
+            seatBtn.title = `Seat ${seatCode} Selected (${rowInfo.name} - ₹${rowPrice})`;
+            seatBtn.onclick = () => toggleSeatSelection(seatCode, rowPrice, rowInfo.name);
           } else {
             // 🟢 AVAILABLE / UNBOOKED SEAT (Crisp Green Border & Glow)
-            seatBtn.className = "seat available w-8 h-8 sm:w-9 sm:h-9 rounded-lg font-mono text-[11px] font-bold flex items-center justify-center";
+            seatBtn.className = `seat available ${seatSizeClass} rounded-lg font-mono font-bold flex items-center justify-center flex-shrink-0`;
             seatBtn.textContent = seatCode;
-            seatBtn.title = `🟢 Seat ${seatCode} is FREE (${rObj.name} - ₹${rowPrice})`;
-            seatBtn.onclick = () => toggleSeatSelection(seatCode, rowPrice, rObj.name);
+            seatBtn.title = `🟢 Seat ${seatCode} is FREE (${rowInfo.name} - ₹${rowPrice})`;
+            seatBtn.onclick = () => toggleSeatSelection(seatCode, rowPrice, rowInfo.name);
           }
 
           seatsGroup.appendChild(seatBtn);
 
           // Center Aisle Gap
-          if (c === 4) {
+          if (c === aisleCol && maxColsInRow > aisleCol) {
             const aisle = document.createElement("div");
-            aisle.className = "w-3 sm:w-6";
+            aisle.className = "w-2 sm:w-4 flex-shrink-0";
             seatsGroup.appendChild(aisle);
           }
         }
 
         rowDiv.appendChild(seatsGroup);
         container.appendChild(rowDiv);
-      });
+      }
     }
 
     function toggleSeatSelection(code, price, category) {
@@ -1334,18 +1461,22 @@
     // -------------------------------------------------------------------------
 
     function getSeatPrice(code) {
-      const row = code[0];
-      const base = selectedMovie.basePrice;
-      if (row === 'A' || row === 'B') return base - 10;
-      if (row === 'C' || row === 'D' || row === 'E') return base + 20;
-      return base + 80; // Rows F, G
+      const audi = getActiveAudi();
+      const N = audi.seats || 100;
+      const cols = (N <= 60) ? 10 : (N <= 100) ? 12 : (N <= 180) ? 14 : (N <= 260) ? 16 : (N <= 350) ? 18 : 20;
+      const totalRows = Math.ceil(N / cols);
+      const rIdx = getRowIndexFromCode(code);
+      const rowInfo = getRowInfo(rIdx, totalRows);
+      return selectedMovie.basePrice + rowInfo.priceOffset;
     }
 
     function getSeatCategory(code) {
-      const row = code[0];
-      if (row === 'A' || row === 'B') return "Silver";
-      if (row === 'C' || row === 'D' || row === 'E') return "Gold Exec";
-      return "Recliner";
+      const audi = getActiveAudi();
+      const N = audi.seats || 100;
+      const cols = (N <= 60) ? 10 : (N <= 100) ? 12 : (N <= 180) ? 14 : (N <= 260) ? 16 : (N <= 350) ? 18 : 20;
+      const totalRows = Math.ceil(N / cols);
+      const rIdx = getRowIndexFromCode(code);
+      return getRowInfo(rIdx, totalRows).type;
     }
 
     function updateBillSummary() {
@@ -1423,6 +1554,9 @@
       const fee = 30.00;
       const grandTotal = subtotal + cgst + sgst + fee;
 
+      const audi = getActiveAudi();
+      const currentShowKey = getShowKey();
+
       const newBooking = {
         bookingId: bookingCounter++,
         customerName: custName,
@@ -1436,7 +1570,8 @@
         showId: selectedShowtime.id,
         showTimeRange: selectedShowtime.timeRange,
         dateDisplay: selectedDate.display,
-        screenName: selectedShowtime.audiName,
+        screenName: `${audi.name} (${audi.seats} Seats)`,
+        showKey: currentShowKey,
         seats: [...currentSelectedSeats],
         subtotal: subtotal,
         cgst: cgst,
@@ -1496,9 +1631,13 @@
 
       if (!confirm(confirmMsg)) return;
 
-      const showKey = `${b.theatreId}-${b.movieId}-${b.dateDisplay || selectedDate.dateStr}-${b.showId}`;
-      if (seatOccupancyStore[showKey]) {
-        b.seats.forEach(sCode => seatOccupancyStore[showKey].delete(sCode));
+      if (b.showKey && seatOccupancyStore[b.showKey]) {
+        b.seats.forEach(sCode => seatOccupancyStore[b.showKey].delete(sCode));
+      } else {
+        const fallbackKey = `${b.theatreId}-${b.movieId}-${b.dateDisplay || selectedDate.dateStr}-${b.showId}`;
+        if (seatOccupancyStore[fallbackKey]) {
+          b.seats.forEach(sCode => seatOccupancyStore[fallbackKey].delete(sCode));
+        }
       }
 
       b.status = "CANCELLED";
