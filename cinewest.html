@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CineWest | Movie Ticket Booking System (Western Maharashtra Multiplex Network)</title>
+  <title>CineWest | All Maharashtra & Western Districts Movie & Talkies Booking</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -18,17 +18,6 @@
           fontFamily: {
             sans: ['"Plus Jakarta Sans"', 'sans-serif'],
             mono: ['"JetBrains Mono"', 'monospace']
-          },
-          colors: {
-            brand: {
-              50: '#fff1f2',
-              500: '#f43f5e',
-              600: '#e11d48',
-              700: '#be123c',
-              gold: '#f59e0b',
-              dark: '#0f172a',
-              card: '#1e293b'
-            }
           }
         }
       }
@@ -37,8 +26,8 @@
   <style>
     /* Custom scrollbars & ticket print */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #0f172a; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-track { background: #090d16; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #e11d48; }
 
     @media print {
@@ -55,37 +44,56 @@
       }
     }
 
+    /* SEAT STYLING WITH VIVID CONTRAST COLORS */
     .seat {
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .seat:hover:not(.booked) {
+    
+    /* 🟢 UNBOOKED / AVAILABLE SEAT (Vibrant Green) */
+    .seat.available {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1.5px solid #10b981;
+      color: #34d399;
+      cursor: pointer;
+    }
+    .seat.available:hover {
+      background: #10b981;
+      color: #042f2e;
+      transform: scale(1.18);
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.5);
+    }
+
+    /* 🔴 ALREADY BOOKED SEAT (Solid Deep Red Cross) */
+    .seat.booked {
+      background: rgba(225, 29, 72, 0.25) !important;
+      border: 1.5px solid #e11d48 !important;
+      color: #fda4af !important;
+      cursor: not-allowed !important;
+      opacity: 0.9;
+    }
+
+    /* 🟡 CURRENTLY SELECTED SEAT (Glowing Electric Gold) */
+    .seat.selected {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+      border: 2px solid #fef08a !important;
+      color: #000000 !important;
+      font-weight: 800 !important;
+      box-shadow: 0 0 18px rgba(245, 158, 11, 0.8) !important;
       transform: scale(1.15);
     }
-    .seat.selected {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-      border-color: #34d399 !important;
-      box-shadow: 0 0 14px rgba(16, 185, 129, 0.6);
-      color: white !important;
-    }
-    .seat.booked {
-      background: #334155 !important;
-      border-color: #475569 !important;
-      color: #94a3b8 !important;
-      cursor: not-allowed !important;
-      opacity: 0.6;
-    }
+
     .screen-curve {
-      height: 18px;
-      border-top: 5px solid #e11d48;
+      height: 20px;
+      border-top: 6px solid #e11d48;
       border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-      box-shadow: 0 -8px 20px rgba(225, 29, 72, 0.45);
+      box-shadow: 0 -10px 25px rgba(225, 29, 72, 0.5);
     }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col selection:bg-rose-600 selection:text-white">
 
   <!-- TOP NAVIGATION BAR -->
-  <header class="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+  <header class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       
       <!-- Brand Logo -->
@@ -95,33 +103,33 @@
         </div>
         <div>
           <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-rose-500 via-amber-400 to-rose-400 bg-clip-text text-transparent">CineWest</span>
-          <span class="hidden sm:inline-block ml-2 px-2 py-0.5 text-xs font-semibold bg-rose-500/10 text-rose-400 rounded-full border border-rose-500/20">Western Region OOP</span>
+          <span class="hidden sm:inline-block ml-2 px-2 py-0.5 text-xs font-semibold bg-rose-500/10 text-rose-400 rounded-full border border-rose-500/20">All Districts & Talkies</span>
         </div>
       </div>
 
-      <!-- District Badge & Quick Switch -->
+      <!-- District Switcher -->
       <div class="flex items-center gap-2 sm:gap-4">
-        <div class="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700 text-xs sm:text-sm">
+        <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-700 text-xs sm:text-sm">
           <i class="fa-solid fa-location-dot text-rose-500"></i>
           <span class="text-slate-400">District:</span>
-          <select id="districtNavSelect" onchange="onDistrictChange(this.value)" class="bg-transparent text-white font-medium focus:outline-none cursor-pointer">
+          <select id="districtNavSelect" onchange="onDistrictChange(this.value)" class="bg-transparent text-white font-bold focus:outline-none cursor-pointer">
             <!-- Populated via JS -->
           </select>
         </div>
 
         <!-- Navigation Tabs -->
         <nav class="flex items-center gap-1">
-          <button onclick="switchTab('bookingTab')" id="navBooking" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg text-rose-400 bg-rose-500/10 border border-rose-500/30 transition-all flex items-center gap-1.5">
+          <button onclick="switchTab('bookingTab')" id="navBooking" class="px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg text-rose-400 bg-rose-500/10 border border-rose-500/30 transition-all flex items-center gap-1.5">
             <i class="fa-solid fa-ticket"></i> <span class="hidden md:inline">Book Tickets</span>
           </button>
-          <button onclick="switchTab('myBookingsTab')" id="navMyBookings" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-1.5">
+          <button onclick="switchTab('myBookingsTab')" id="navMyBookings" class="px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-1.5">
             <i class="fa-solid fa-receipt"></i> <span class="hidden md:inline">My Bookings</span>
           </button>
-          <button onclick="switchTab('adminTab')" id="navAdmin" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-1.5">
+          <button onclick="switchTab('adminTab')" id="navAdmin" class="px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-1.5">
             <i class="fa-solid fa-chart-pie"></i> <span class="hidden md:inline">Admin</span>
           </button>
-          <button onclick="switchTab('oopDocTab')" id="navOOP" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 transition-all flex items-center gap-1.5 border border-amber-500/30">
-            <i class="fa-solid fa-code"></i> <span class="hidden md:inline">C++ OOP & Viva</span>
+          <button onclick="switchTab('oopDocTab')" id="navOOP" class="px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 transition-all flex items-center gap-1.5 border border-amber-500/30">
+            <i class="fa-solid fa-code"></i> <span class="hidden md:inline">C++ OOP</span>
           </button>
         </nav>
       </div>
@@ -136,31 +144,42 @@
   <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
 
     <!-- ========================================================================= -->
-    <!-- TAB 1: MOVIE BOOKING FLOW -->
+    <!-- TAB 1: MOVIE & TALKIES BOOKING FLOW -->
     <!-- ========================================================================= -->
     <div id="bookingTab" class="space-y-8">
 
-      <!-- HERO BANNER -->
+      <!-- DISTRICT HERO & TALKIES COUNTER -->
       <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-rose-950/40 to-slate-900 border border-slate-800 p-6 sm:p-8 shadow-2xl">
-        <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none text-9xl text-rose-500 font-extrabold">
-          <i class="fa-solid fa-film"></i>
-        </div>
-        <div class="max-w-2xl">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/20 text-rose-400 text-xs font-semibold mb-3 border border-rose-500/30">
-            <i class="fa-solid fa-shield-halved"></i> 100% Anti-Double-Booking Guaranteed
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div class="max-w-2xl">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/20 text-rose-400 text-xs font-bold mb-3 border border-rose-500/30">
+              <i class="fa-solid fa-film"></i> Complete Western Maharashtra Regional Network
+            </div>
+            <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
+              All Talkies & Multiplexes in <span id="heroDistrictName" class="text-rose-500">Kolhapur</span>
+            </h1>
+            <p class="mt-2 text-sm text-slate-300">
+              Browse all historic single screens and luxury multiplexes with exact seating capacities, real showtimes, and distinct color seat selection.
+            </p>
           </div>
-          <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
-            Book Movies Across <span class="text-rose-500">Western Maharashtra</span> & Districts
-          </h1>
-          <p class="mt-2 text-sm sm:text-base text-slate-300">
-            Choose district, explore premier multiplexes, choose your favourite seats with real-time visual matrix, and generate verified instant tickets.
-          </p>
+
+          <!-- Quick Stats Badge -->
+          <div class="flex gap-3 shrink-0">
+            <div class="bg-slate-950/80 border border-slate-800 p-3.5 rounded-xl text-center">
+              <div id="heroTalkiesCount" class="text-2xl font-extrabold text-rose-400 font-mono">11</div>
+              <div class="text-[11px] text-slate-400 uppercase font-semibold">Talkies / Cinemas</div>
+            </div>
+            <div class="bg-slate-950/80 border border-slate-800 p-3.5 rounded-xl text-center">
+              <div class="text-2xl font-extrabold text-amber-400 font-mono">8</div>
+              <div class="text-[11px] text-slate-400 uppercase font-semibold">Blockbuster Movies</div>
+            </div>
+          </div>
         </div>
 
-        <!-- Western Districts Quick Pill Selector -->
+        <!-- Western Districts Pill Selector -->
         <div class="mt-6 pt-5 border-t border-slate-800">
           <div class="text-xs uppercase font-bold tracking-wider text-slate-400 mb-3 flex items-center gap-2">
-            <i class="fa-solid fa-city text-rose-400"></i> Select District (Western Zone):
+            <i class="fa-solid fa-city text-rose-400"></i> Select District to View All Local Talkies:
           </div>
           <div id="districtPillContainer" class="flex flex-wrap gap-2">
             <!-- Populated via JS -->
@@ -168,44 +187,74 @@
         </div>
       </div>
 
-      <!-- STEP 1: MOVIE & THEATRE SELECTION -->
+      <!-- STEP 1: SELECT RUNNING MOVIE -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-bold flex items-center gap-2 text-white">
+            <i class="fa-solid fa-clapperboard text-rose-500"></i> Latest Movies Currently Running
+          </h2>
+          <span class="text-xs text-slate-400"><i class="fa-solid fa-check-double text-emerald-400 mr-1"></i>Real Screening Schedule</span>
+        </div>
+
+        <!-- Movie Cards Grid -->
+        <div id="moviesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+
+      <!-- STEP 2: SELECT TALKIE & REAL TIMINGS -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        <!-- Column 1 & 2: Running Movies -->
+        <!-- Column 1 & 2: All Talkies in Selected District -->
         <div class="lg:col-span-2 space-y-4">
           <div class="flex items-center justify-between">
-            <h2 class="text-xl font-bold flex items-center gap-2 text-white">
-              <i class="fa-solid fa-clapperboard text-rose-500"></i> Running Movies in <span id="currentDistrictTitle" class="text-rose-400">Kolhapur</span>
-            </h2>
-            <span class="text-xs text-slate-400"><i class="fa-solid fa-circle-info mr-1"></i>Select a movie to pick showtime</span>
+            <h3 class="font-bold text-lg text-white flex items-center gap-2">
+              <i class="fa-solid fa-building text-amber-400"></i> All Talkies in <span id="theatreSectionDistrict" class="text-rose-400">Kolhapur</span>
+            </h3>
+            <span class="text-xs text-slate-400" id="theatreCountBadge">11 Talkies Registered</span>
           </div>
 
-          <!-- Movie Cards Grid -->
-          <div id="moviesGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- All Talkies Cards Grid -->
+          <div id="theatreListGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[460px] overflow-y-auto pr-1">
             <!-- Populated via JS -->
           </div>
         </div>
 
-        <!-- Column 3: Theatre & Showtime Selector -->
+        <!-- Column 3: Real Timings & Talkie Details Card -->
         <div class="bg-slate-900 rounded-2xl border border-slate-800 p-5 space-y-5 h-fit shadow-xl">
           <div class="border-b border-slate-800 pb-3">
-            <h3 class="font-bold text-lg text-white flex items-center gap-2">
-              <i class="fa-solid fa-building-columns text-amber-400"></i> 1. Pick Theatre
-            </h3>
-            <p class="text-xs text-slate-400 mt-1">Multiplexes available in selected district</p>
+            <div class="text-xs text-slate-400">Selected Cinema:</div>
+            <h3 class="font-bold text-lg text-white mt-0.5" id="activeTheatreName">Padma Talkies</h3>
+            <p class="text-xs text-rose-400 flex items-center gap-1 mt-1" id="activeTheatreArea">
+              <i class="fa-solid fa-location-dot"></i> Laxmipuri, Kolhapur
+            </p>
           </div>
 
-          <!-- Theatres List -->
-          <div id="theatreList" class="space-y-2 max-h-56 overflow-y-auto pr-1">
-            <!-- Populated via JS -->
+          <!-- Talkie Capacity Details -->
+          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2 text-xs">
+            <div class="flex justify-between">
+              <span class="text-slate-400">Total Seating Capacity:</span>
+              <span id="activeTheatreCapacity" class="font-bold text-white font-mono">350 Seats</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Auditorium Screen:</span>
+              <span id="activeTheatreScreen" class="font-bold text-amber-400">Screen 1 (Dolby 7.1)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Projection System:</span>
+              <span class="font-bold text-slate-300">Barco 4K Laser</span>
+            </div>
           </div>
 
-          <div class="border-t border-slate-800 pt-4">
-            <h3 class="font-bold text-lg text-white flex items-center gap-2">
-              <i class="fa-solid fa-clock text-rose-400"></i> 2. Pick Showtime
-            </h3>
-            <p class="text-xs text-slate-400 mt-1">Today's available screenings</p>
-            <div id="showtimeList" class="grid grid-cols-2 gap-2 mt-3">
+          <!-- Real Show Timings -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <h4 class="font-bold text-sm text-white flex items-center gap-2">
+                <i class="fa-solid fa-clock text-rose-500"></i> Real Show Timings:
+              </h4>
+              <span class="text-[11px] text-emerald-400 font-semibold">Today's Shows</span>
+            </div>
+            <div id="showtimeList" class="grid grid-cols-2 gap-2">
               <!-- Populated via JS -->
             </div>
           </div>
@@ -213,35 +262,38 @@
 
       </div>
 
-      <!-- STEP 2: INTERACTIVE LIVE SEAT GRID & BILLING -->
+      <!-- STEP 3: INTERACTIVE SEAT GRID WITH DISTINCT COLORS -->
       <div id="seatSelectionSection" class="bg-slate-900 rounded-2xl border border-slate-800 p-6 shadow-2xl space-y-6">
         
         <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
           <div>
             <div class="flex items-center gap-2 text-xs font-semibold text-rose-400 uppercase tracking-wider">
-              <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span> Live Seat Allocation Engine
+              <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span> Live Visual Seat Matrix
             </div>
             <h2 class="text-2xl font-extrabold text-white mt-1" id="seatSelectionTitle">
               Select Seats for Movie
             </h2>
             <p class="text-sm text-slate-400" id="seatSelectionSubtitle">
-              Theatre & Screen Details
+              Talkie & Showtime Details
             </p>
           </div>
 
-          <!-- Seat Legend -->
-          <div class="flex flex-wrap items-center gap-4 bg-slate-950 px-4 py-2.5 rounded-xl border border-slate-800 text-xs">
+          <!-- DISTINCT SEAT STATUS COLOR LEGEND -->
+          <div class="flex flex-wrap items-center gap-3 bg-slate-950 px-4 py-2.5 rounded-xl border border-slate-800 text-xs">
+            <!-- 🟢 AVAILABLE -->
             <div class="flex items-center gap-2">
-              <div class="w-5 h-5 rounded border border-slate-600 bg-slate-800 flex items-center justify-center text-[10px] text-slate-300 font-mono">A1</div>
-              <span class="text-slate-300">Available</span>
+              <div class="w-6 h-6 rounded-md bg-emerald-950/60 border-2 border-emerald-500 text-emerald-300 font-mono font-bold flex items-center justify-center text-[10px]">A1</div>
+              <span class="text-emerald-400 font-semibold">🟢 Available (Free)</span>
             </div>
+            <!-- 🔴 BOOKED -->
             <div class="flex items-center gap-2">
-              <div class="w-5 h-5 rounded bg-emerald-600 border border-emerald-400 flex items-center justify-center text-[10px] text-white font-mono"><i class="fa-solid fa-check text-[8px]"></i></div>
-              <span class="text-slate-300">Selected</span>
+              <div class="w-6 h-6 rounded-md bg-rose-950/80 border-2 border-rose-600 text-rose-300 font-mono font-bold flex items-center justify-center text-[10px]">✕</div>
+              <span class="text-rose-400 font-semibold">🔴 Booked (Occupied)</span>
             </div>
+            <!-- 🟡 SELECTED -->
             <div class="flex items-center gap-2">
-              <div class="w-5 h-5 rounded bg-slate-700 border border-slate-600 flex items-center justify-center text-[10px] text-slate-400 font-mono">X</div>
-              <span class="text-slate-300">Booked (Double Booking Blocked)</span>
+              <div class="w-6 h-6 rounded-md bg-amber-500 border-2 border-white text-slate-950 font-mono font-extrabold flex items-center justify-center text-[10px]">✓</div>
+              <span class="text-amber-300 font-semibold">🟡 Your Selection</span>
             </div>
           </div>
         </div>
@@ -253,27 +305,51 @@
           <div class="lg:col-span-2 bg-slate-950 p-6 rounded-2xl border border-slate-800 flex flex-col items-center">
             
             <!-- Curved Screen -->
-            <div class="w-full max-w-lg mb-8 text-center">
+            <div class="w-full max-w-xl mb-6 text-center">
               <div class="screen-curve mb-2"></div>
               <span class="text-xs font-bold tracking-widest text-slate-400 uppercase">
                 <i class="fa-solid fa-eye text-rose-500 mr-1"></i> Screen Direction (All Eyes Here)
               </span>
             </div>
 
-            <!-- The Matrix -->
-            <div id="seatGridContainer" class="space-y-3 w-full max-w-lg">
+            <!-- Live Occupancy Bar -->
+            <div class="w-full max-w-xl mb-5 bg-slate-900 p-3 rounded-xl border border-slate-800 flex flex-wrap items-center justify-between text-xs">
+              <div class="flex items-center gap-2">
+                <span class="text-slate-400">Total Hall Seats:</span>
+                <span id="seatCountTotal" class="font-mono font-bold text-white">56</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-emerald-400 font-semibold">🟢 Available:</span>
+                <span id="seatCountAvailable" class="font-mono font-bold text-emerald-300">40</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-rose-400 font-semibold">🔴 Booked:</span>
+                <span id="seatCountBooked" class="font-mono font-bold text-rose-300">16</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-amber-400 font-semibold">🟡 Selected:</span>
+                <span id="seatCountSelected" class="font-mono font-bold text-amber-300">0</span>
+              </div>
+            </div>
+
+            <!-- The Matrix Container -->
+            <div id="seatGridContainer" class="space-y-3 w-full max-w-xl">
               <!-- Rendered via JS -->
             </div>
 
             <!-- Seat Pricing Zone Notice -->
-            <div class="w-full max-w-lg mt-6 pt-4 border-t border-slate-800/80 flex justify-between text-xs text-slate-400">
+            <div class="w-full max-w-xl mt-6 pt-4 border-t border-slate-800 flex flex-col sm:flex-row justify-between gap-2 text-xs text-slate-400">
               <div class="flex items-center gap-2">
-                <span class="w-3 h-3 rounded-full bg-slate-700 border border-slate-500"></span>
-                <span>Rows A-C: <strong>Regular</strong> (Base Rate: <span id="regularPriceBadge">₹170</span>)</span>
+                <span class="w-3 h-3 rounded-full bg-emerald-500/20 border border-emerald-500"></span>
+                <span>Rows A-B: <strong>Silver Class</strong> (<span id="silverPriceBadge">₹160</span>)</span>
               </div>
               <div class="flex items-center gap-2">
-                <span class="w-3 h-3 rounded-full bg-amber-500/30 border border-amber-500"></span>
-                <span>Rows D-E: <strong>Premium Recliner</strong> (Base + ₹90: <span id="premiumPriceBadge">₹260</span>)</span>
+                <span class="w-3 h-3 rounded-full bg-sky-500/20 border border-sky-500"></span>
+                <span>Rows C-E: <strong>Gold Executive</strong> (<span id="goldPriceBadge">₹190</span>)</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-amber-500/20 border border-amber-500"></span>
+                <span>Rows F-G: <strong>Premium Recliner</strong> (<span id="premiumPriceBadge">₹280</span>)</span>
               </div>
             </div>
 
@@ -302,7 +378,7 @@
             <div class="space-y-2 pt-2 border-t border-slate-800 text-xs">
               <div class="text-slate-400 font-semibold mb-1">Selected Seats:</div>
               <div id="selectedSeatsChips" class="flex flex-wrap gap-1.5 min-h-[30px] items-center">
-                <span class="text-slate-500 italic">No seats selected yet. Click grid to select.</span>
+                <span class="text-slate-500 italic">No seats selected yet. Click any 🟢 green seat above.</span>
               </div>
             </div>
 
@@ -384,7 +460,7 @@
         </div>
         <div>
           <h2 class="text-xl font-bold text-white">Admin Management Portal</h2>
-          <p class="text-xs text-slate-400 mt-1">Please enter your supervisor credentials to access Western Multiplex Analytics & Configuration.</p>
+          <p class="text-xs text-slate-400 mt-1">Please enter supervisor credentials to access Western Multiplex Analytics & Configuration.</p>
         </div>
         <div class="space-y-3">
           <input type="password" id="adminPasswordInput" placeholder="Enter Password (Hint: admin123)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-rose-500">
@@ -415,79 +491,37 @@
             <span class="text-[11px] text-slate-500">9% CGST + 9% SGST</span>
           </div>
           <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-            <span class="text-xs font-medium text-slate-400">Active Theatres</span>
-            <div class="text-2xl font-extrabold text-sky-400 font-mono mt-1">23</div>
+            <span class="text-xs font-medium text-slate-400">Total Registered Talkies</span>
+            <div id="statTotalTheatres" class="text-2xl font-extrabold text-sky-400 font-mono mt-1">36</div>
             <span class="text-[11px] text-slate-500">10 Western Districts</span>
           </div>
         </div>
 
-        <!-- Admin Action Panels -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          
-          <!-- Add New Movie -->
-          <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-4">
-            <h3 class="font-bold text-lg text-white flex items-center gap-2">
-              <i class="fa-solid fa-plus-circle text-rose-500"></i> Add New Movie
-            </h3>
-            <div class="grid grid-cols-2 gap-3 text-xs">
-              <div class="col-span-2">
-                <label class="block text-slate-400 mb-1">Movie Title</label>
-                <input type="text" id="addMovieTitle" placeholder="e.g. Sairat 2" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white">
-              </div>
-              <div>
-                <label class="block text-slate-400 mb-1">Language</label>
-                <select id="addMovieLang" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white">
-                  <option>Marathi</option>
-                  <option>Hindi</option>
-                  <option>English</option>
-                  <option>South/Dubbed</option>
-                </select>
-              </div>
-              <div>
-                <label class="block text-slate-400 mb-1">Genre</label>
-                <input type="text" id="addMovieGenre" placeholder="Action / Drama" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white">
-              </div>
-              <div>
-                <label class="block text-slate-400 mb-1">Duration (Mins)</label>
-                <input type="number" id="addMovieDur" value="150" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white">
-              </div>
-              <div>
-                <label class="block text-slate-400 mb-1">Base Price (₹)</label>
-                <input type="number" id="addMoviePrice" value="180" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white">
-              </div>
-            </div>
-            <button onclick="handleAdminAddMovie()" class="w-full py-2 bg-rose-600 text-white rounded-lg text-xs font-bold hover:bg-rose-500 transition-all">
-              Save Movie to Catalog
+        <!-- Master Bookings Table -->
+        <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-4">
+          <h3 class="font-bold text-lg text-white flex items-center justify-between">
+            <span><i class="fa-solid fa-list-check text-amber-400 mr-2"></i>Master Bookings Audit Log</span>
+            <button onclick="resetAllShowSeats()" class="text-xs text-rose-400 hover:text-rose-300 font-semibold flex items-center gap-1">
+              <i class="fa-solid fa-rotate-left"></i> Reset All Show Seats
             </button>
+          </h3>
+          <div class="overflow-x-auto max-h-60 overflow-y-auto pr-1">
+            <table class="w-full text-xs text-left text-slate-300">
+              <thead class="text-[11px] text-slate-400 uppercase bg-slate-950 sticky top-0">
+                <tr>
+                  <th class="py-2 px-2">ID</th>
+                  <th class="py-2 px-2">Customer</th>
+                  <th class="py-2 px-2">Movie</th>
+                  <th class="py-2 px-2">Talkie / District</th>
+                  <th class="py-2 px-2">Amount</th>
+                  <th class="py-2 px-2">Status</th>
+                </tr>
+              </thead>
+              <tbody id="adminBookingsTableBody" class="divide-y divide-slate-800">
+                <!-- Rendered via JS -->
+              </tbody>
+            </table>
           </div>
-
-          <!-- Master Bookings Table -->
-          <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-4">
-            <h3 class="font-bold text-lg text-white flex items-center justify-between">
-              <span><i class="fa-solid fa-list-check text-amber-400 mr-2"></i>Master Bookings Audit</span>
-              <button onclick="resetAllShowSeats()" class="text-xs text-rose-400 hover:text-rose-300 font-semibold flex items-center gap-1">
-                <i class="fa-solid fa-rotate-left"></i> Reset All Show Seats
-              </button>
-            </h3>
-            <div class="overflow-x-auto max-h-60 overflow-y-auto pr-1">
-              <table class="w-full text-xs text-left text-slate-300">
-                <thead class="text-[11px] text-slate-400 uppercase bg-slate-950 sticky top-0">
-                  <tr>
-                    <th class="py-2 px-2">ID</th>
-                    <th class="py-2 px-2">Customer</th>
-                    <th class="py-2 px-2">Movie</th>
-                    <th class="py-2 px-2">District</th>
-                    <th class="py-2 px-2">Amount</th>
-                    <th class="py-2 px-2">Status</th>
-                  </tr>
-                </thead>
-                <tbody id="adminBookingsTableBody" class="divide-y divide-slate-800">
-                  <!-- Rendered via JS -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-
         </div>
 
       </div>
@@ -502,82 +536,37 @@
         <div>
           <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Academic Viva Guide</span>
           <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">
-            C++ Object-Oriented Programming (OOP) Implementation Guide
+            C++ Object-Oriented Programming (OOP) Architecture
           </h2>
           <p class="text-sm text-slate-400 mt-2">
             Detailed breakdown of how every required OOP concept is implemented in the underlying C++ source code (<code class="text-rose-400">main.cpp</code>).
           </p>
         </div>
 
-        <!-- OOP Concepts Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          
           <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
             <h4 class="font-bold text-rose-400 flex items-center gap-2">
               <i class="fa-solid fa-shield-cat"></i> 1. Encapsulation
             </h4>
             <p class="text-xs text-slate-300">
-              Classes like <code class="text-amber-300 font-mono">Movie</code>, <code class="text-amber-300 font-mono">Theatre</code>, and <code class="text-amber-300 font-mono">Booking</code> have all attributes declared as <code class="text-rose-400">private</code> or <code class="text-rose-400">protected</code>, accessible strictly through getters, setters, and business rules.
+              Classes like <code class="text-amber-300 font-mono">Movie</code>, <code class="text-amber-300 font-mono">Theatre</code>, and <code class="text-amber-300 font-mono">Booking</code> have all attributes declared as <code class="text-rose-400">private</code>, accessible strictly through getters and validation methods.
             </p>
           </div>
-
           <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
             <h4 class="font-bold text-amber-400 flex items-center gap-2">
               <i class="fa-solid fa-sitemap"></i> 2. Inheritance & Polymorphism
             </h4>
             <p class="text-xs text-slate-300">
-              Abstract base class <code class="text-amber-300 font-mono">Seat</code> defines pure virtual function <code class="text-emerald-400 font-mono">virtual double calculatePrice() const = 0;</code>. Subclasses <code class="text-sky-300 font-mono">RegularSeat</code> and <code class="text-sky-300 font-mono">PremiumSeat</code> override it dynamically at runtime.
+              Base class <code class="text-amber-300 font-mono">Seat</code> with pure virtual function <code class="text-emerald-400 font-mono">virtual double calculatePrice() = 0;</code> overridden dynamically by <code class="text-sky-300 font-mono">RegularSeat</code> and <code class="text-sky-300 font-mono">PremiumSeat</code>.
             </p>
-          </div>
-
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-            <h4 class="font-bold text-emerald-400 flex items-center gap-2">
-              <i class="fa-solid fa-puzzle-piece"></i> 3. Composition (Show HAS Seats)
-            </h4>
-            <p class="text-xs text-slate-300">
-              <code class="text-amber-300 font-mono">Show</code> contains a 2D matrix <code class="text-emerald-400 font-mono">vector&lt;vector&lt;Seat*&gt;&gt; seatGrid</code>. Implements the <strong>Rule of Three</strong> with a deep-copy destructor to eliminate memory leaks.
-            </p>
-          </div>
-
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-            <h4 class="font-bold text-sky-400 flex items-center gap-2">
-              <i class="fa-solid fa-database"></i> 4. Permanent File Handling (&lt;fstream&gt;)
-            </h4>
-            <p class="text-xs text-slate-300">
-              Serialized state storage across four files: <code class="text-amber-300 font-mono">movies.txt</code>, <code class="text-amber-300 font-mono">theatres.txt</code>, <code class="text-amber-300 font-mono">shows.txt</code>, and <code class="text-amber-300 font-mono">bookings.txt</code>. Survives application restarts.
-            </p>
-          </div>
-
-        </div>
-
-        <!-- Viva Questions & Answers -->
-        <div class="space-y-4 pt-4 border-t border-slate-800">
-          <h3 class="text-lg font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-graduation-cap text-rose-500"></i> Top Viva Questions to Ace Your Presentation
-          </h3>
-
-          <div class="space-y-3 text-xs">
-            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-              <p class="font-bold text-slate-200">Q1: Why is a 2D array / vector chosen for seat storage instead of a 1D list?</p>
-              <p class="text-slate-400 mt-1">Ans: A cinema hall has rows (A, B, C...) and columns (1, 2, 3...). A 2D matrix directly maps physical spatial coordinates into O(1) random-access memory lookup.</p>
-            </div>
-            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-              <p class="font-bold text-slate-200">Q2: Where is dynamic polymorphism demonstrated?</p>
-              <p class="text-slate-400 mt-1">Ans: In seat billing calculations via pointer dispatch: <code class="text-rose-400 font-mono">Seat* s = show.getSeat(code); double price = s-&gt;calculatePrice();</code>. The runtime resolves whether it's a RegularSeat or PremiumSeat with recliner surcharge.</p>
-            </div>
-            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-              <p class="font-bold text-slate-200">Q3: How is double-booking prevented?</p>
-              <p class="text-slate-400 mt-1">Ans: A 3-tier validation: 1) format validity check, 2) atomic occupancy check <code class="text-rose-400 font-mono">isSeatBooked()</code>, and 3) transaction-level deduplication to prevent picking the same seat twice.</p>
-            </div>
           </div>
         </div>
-
       </div>
     </div>
 
   </main>
 
-  <!-- MODAL: PRINTABLE TICKET MODAL -->
+  <!-- MODAL: PRINTABLE TICKET RECEIPT -->
   <div id="ticketModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
     <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-lg w-full p-6 space-y-5 shadow-2xl relative">
       <button onclick="closeTicketModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
@@ -613,24 +602,24 @@
             <span id="tktDistrict" class="font-bold text-rose-800">Kolhapur</span>
           </div>
           <div class="flex justify-between">
-            <span class="text-slate-600">Cinema Theatre:</span>
-            <span id="tktTheatreName" class="font-bold">Parvati Multiplex</span>
+            <span class="text-slate-600">Cinema Talkie:</span>
+            <span id="tktTheatreName" class="font-bold">Padma Talkies</span>
           </div>
           <div class="flex justify-between">
             <span class="text-slate-600">Screen / Audi:</span>
-            <span id="tktScreen">Audi-1 (Dolby 7.1)</span>
+            <span id="tktScreen">Screen 1 (Dolby 7.1)</span>
           </div>
           <div class="flex justify-between">
             <span class="text-slate-600">Movie Title:</span>
-            <span id="tktMovieTitle" class="font-bold">Dharmaveer 2</span>
+            <span id="tktMovieTitle" class="font-bold">Pushpa 2: The Rule</span>
           </div>
           <div class="flex justify-between">
             <span class="text-slate-600">Show Timing:</span>
-            <span id="tktShowTime" class="font-bold">10:30 AM (Morning)</span>
+            <span id="tktShowTime" class="font-bold">12:30 PM (Matinee)</span>
           </div>
           <div class="flex justify-between font-bold bg-slate-100 p-1.5 rounded">
             <span>SEATS BOOKED:</span>
-            <span id="tktSeats" class="text-rose-700 text-sm">A1, D4</span>
+            <span id="tktSeats" class="text-rose-700 text-sm">C3, C4</span>
           </div>
         </div>
 
@@ -638,15 +627,15 @@
         <div class="border-t border-b border-slate-300 py-2 space-y-1 text-[10px]">
           <div class="flex justify-between">
             <span>Seats Subtotal:</span>
-            <span id="tktSubtotal">₹430.00</span>
+            <span id="tktSubtotal">₹380.00</span>
           </div>
           <div class="flex justify-between text-slate-600">
             <span>CGST (9.0%):</span>
-            <span id="tktCGST">₹38.70</span>
+            <span id="tktCGST">₹34.20</span>
           </div>
           <div class="flex justify-between text-slate-600">
             <span>SGST (9.0%):</span>
-            <span id="tktSGST">₹38.70</span>
+            <span id="tktSGST">₹34.20</span>
           </div>
           <div class="flex justify-between text-slate-600">
             <span>Convenience Fee:</span>
@@ -654,7 +643,7 @@
           </div>
           <div class="flex justify-between text-sm font-extrabold text-slate-950 pt-1 border-t border-slate-300">
             <span>TOTAL PAID:</span>
-            <span id="tktGrandTotal" class="text-rose-700">₹537.40</span>
+            <span id="tktGrandTotal" class="text-rose-700">₹478.40</span>
           </div>
         </div>
 
@@ -687,13 +676,13 @@
       <div class="flex gap-4">
         <span>Western Maharashtra Regional Multiplex Network</span>
         <span>•</span>
-        <span class="text-rose-400 font-mono">10 Districts Active</span>
+        <span class="text-rose-400 font-mono">10 Districts & 36 Talkies</span>
       </div>
     </div>
   </footer>
 
   <!-- ========================================================================= -->
-  <!-- JAVASCRIPT SYSTEM ENGINE (Replicating exact C++ OOP logic) -->
+  <!-- JAVASCRIPT SYSTEM ENGINE -->
   <!-- ========================================================================= -->
   <script>
     // 10 Western Districts
@@ -702,71 +691,100 @@
       "Solapur", "Ratnagiri", "Sindhudurg", "Nashik", "Palghar"
     ];
 
-    // Master Theatres across Western Districts
+    // ALL AUTHENTIC TALKIES & MULTIPLEXES ACROSS WESTERN DISTRICTS
     const THEATRES_DATA = [
-      // Kolhapur
-      { id: 201, district: "Kolhapur", name: "Padma Talkies", area: "Laxmipuri", screens: 2 },
-      { id: 202, district: "Kolhapur", name: "Parvati Multiplex", area: "Shahupuri", screens: 3 },
-      { id: 203, district: "Kolhapur", name: "INOX Reliance Mall", area: "Old PB Road", screens: 4 },
-      // Pune
-      { id: 204, district: "Pune", name: "PVR Phoenix Marketcity", area: "Viman Nagar", screens: 6 },
-      { id: 205, district: "Pune", name: "E-Square Multiplex", area: "Shivaji Nagar", screens: 5 },
-      { id: 206, district: "Pune", name: "City Pride", area: "Kothrud", screens: 4 },
-      // Mumbai
-      { id: 207, district: "Mumbai", name: "PVR ICON Palladium", area: "Lower Parel", screens: 7 },
-      { id: 208, district: "Mumbai", name: "INOX Megaplex Inorbit", area: "Malad West", screens: 8 },
-      { id: 209, district: "Mumbai", name: "Regal Cinema", area: "Colaba", screens: 1 },
-      // Satara
-      { id: 210, district: "Satara", name: "Rajtara Multiplex", area: "Sadashiv Peth", screens: 3 },
-      { id: 211, district: "Satara", name: "Seven Seas Cinema", area: "Radhika Road", screens: 2 },
-      // Sangli
-      { id: 212, district: "Sangli", name: "Mukta A2 Cinemas", area: "Vasant Colony", screens: 3 },
-      { id: 213, district: "Sangli", name: "Pratibha Multiplex", area: "Miraj Road", screens: 2 },
-      // Solapur
-      { id: 214, district: "Solapur", name: "E-Square Multiplex", area: "Hotgi Road", screens: 4 },
-      { id: 215, district: "Solapur", name: "Bhagwat Chitra Mandir", area: "Navi Peth", screens: 2 },
-      // Ratnagiri
-      { id: 216, district: "Ratnagiri", name: "City Pride Multiplex", area: "Karwanchiwadi", screens: 3 },
-      { id: 217, district: "Ratnagiri", name: "Maruti Talkies", area: "Salvi Stop", screens: 1 },
-      // Sindhudurg
-      { id: 218, district: "Sindhudurg", name: "Anand Multiplex", area: "Kankavli", screens: 2 },
-      { id: 219, district: "Sindhudurg", name: "Sawantwadi Talkies", area: "Sawantwadi", screens: 1 },
-      // Nashik
-      { id: 220, district: "Nashik", name: "Cinemax City Centre", area: "Untwadi", screens: 4 },
-      { id: 221, district: "Nashik", name: "PVR The Zone Mall", area: "College Road", screens: 5 },
-      // Palghar
-      { id: 222, district: "Palghar", name: "Carnival Cinemas", area: "Vasai West", screens: 3 },
-      { id: 223, district: "Palghar", name: "K Sera Sera Miniplex", area: "Palghar East", screens: 2 }
+      // ================= KOLHAPUR TALKIES (11 Talkies) =================
+      { id: 201, district: "Kolhapur", name: "Padma Talkies", area: "Laxmipuri, Kolhapur", screens: 2, capacity: 350, sound: "Dolby 7.1", type: "Historic Cinema Hall" },
+      { id: 202, district: "Kolhapur", name: "Parvati Multiplex", area: "Shahupuri 3rd Lane, Kolhapur", screens: 3, capacity: 420, sound: "Dolby Atmos 4K", type: "Multiplex" },
+      { id: 203, district: "Kolhapur", name: "INOX Reliance Mega Mall", area: "Old PB Road, Kolhapur", screens: 4, capacity: 650, sound: "Dolby Atmos 3D", type: "Luxury Multiplex" },
+      { id: 204, district: "Kolhapur", name: "Apsara Multiplex", area: "Tarabai Park / Circuit House, Kolhapur", screens: 2, capacity: 320, sound: "JBL Surround", type: "Multiplex" },
+      { id: 205, district: "Kolhapur", name: "Usha Talkies", area: "Laxmipuri, Kolhapur", screens: 1, capacity: 400, sound: "Dolby Digital", type: "Heritage Single Screen" },
+      { id: 206, district: "Kolhapur", name: "Ayodhya Talkies", area: "Shahupuri Station Road, Kolhapur", screens: 1, capacity: 380, sound: "DTS Sound", type: "Classic Talkies" },
+      { id: 207, district: "Kolhapur", name: "Venus Talkies", area: "Shahupuri, Kolhapur", screens: 1, capacity: 300, sound: "Dolby Surround", type: "Single Screen" },
+      { id: 208, district: "Kolhapur", name: "Prabhat Talkies", area: "Bhavani Mandap / Mahalaxmi, Kolhapur", screens: 1, capacity: 280, sound: "Stereo 5.1", type: "Heritage Cinema" },
+      { id: 209, district: "Kolhapur", name: "Shahu Talkies", area: "Near Railway Station, Kolhapur", screens: 1, capacity: 350, sound: "Dolby Surround", type: "Classic Cinema" },
+      { id: 210, district: "Kolhapur", name: "Chandan Talkies", area: "Ichalkaranji, Kolhapur Dist", screens: 1, capacity: 320, sound: "Dolby 7.1", type: "Single Screen" },
+      { id: 211, district: "Kolhapur", name: "Fortune Cinema", area: "Ichalkaranji, Kolhapur Dist", screens: 3, capacity: 450, sound: "Dolby Atmos", type: "Multiplex" },
+
+      // ================= PUNE (6 Theatres) =================
+      { id: 212, district: "Pune", name: "PVR Phoenix Marketcity", area: "Viman Nagar, Pune", screens: 8, capacity: 950, sound: "Dolby Atmos 4K", type: "Mega Multiplex" },
+      { id: 213, district: "Pune", name: "E-Square Multiplex", area: "Shivaji Nagar, Pune", screens: 5, capacity: 700, sound: "Dolby 7.1", type: "Multiplex" },
+      { id: 214, district: "Pune", name: "City Pride", area: "Kothrud, Pune", screens: 4, capacity: 620, sound: "Dolby Atmos", type: "Multiplex" },
+      { id: 215, district: "Pune", name: "Cinepolis Seasons Mall", area: "Magarpatta City, Pune", screens: 10, capacity: 1200, sound: "VIP Laser", type: "Mega Multiplex" },
+      { id: 216, district: "Pune", name: "Mangala Multiplex", area: "Shivaji Nagar, Pune", screens: 4, capacity: 550, sound: "Dolby Surround", type: "Multiplex" },
+      { id: 217, district: "Pune", name: "Alankar Talkies", area: "Near Pune Railway Station", screens: 1, capacity: 480, sound: "DTS 7.1", type: "Iconic Single Screen" },
+
+      // ================= MUMBAI (5 Theatres) =================
+      { id: 218, district: "Mumbai", name: "PVR ICON Phoenix Palladium", area: "Lower Parel, Mumbai", screens: 7, capacity: 850, sound: "Dolby Atmos Luxe", type: "Ultra Luxury" },
+      { id: 219, district: "Mumbai", name: "INOX Megaplex Inorbit Mall", area: "Malad West, Mumbai", screens: 8, capacity: 1050, sound: "ScreenX & IMAX", type: "Megaplex" },
+      { id: 220, district: "Mumbai", name: "Maratha Mandir", area: "Mumbai Central", screens: 1, capacity: 1000, sound: "Dolby Digital", type: "Legendary Theatre (DDLJ)" },
+      { id: 221, district: "Mumbai", name: "G7 Multiplex (Gaiety Galaxy)", area: "Bandra West, Mumbai", screens: 7, capacity: 900, sound: "Dolby 7.1", type: "Mass Favourite" },
+      { id: 222, district: "Mumbai", name: "Regal Cinema", area: "Colaba Causeway, Mumbai", screens: 1, capacity: 600, sound: "Dolby Surround", type: "Art Deco Heritage" },
+
+      // ================= SATARA (3 Theatres) =================
+      { id: 223, district: "Satara", name: "Rajtara Multiplex", area: "Sadashiv Peth, Satara", screens: 3, capacity: 420, sound: "Dolby 7.1", type: "Multiplex" },
+      { id: 224, district: "Satara", name: "Seven Seas Cinema", area: "Radhika Road, Satara", screens: 2, capacity: 360, sound: "Dolby Atmos", type: "Multiplex" },
+      { id: 225, district: "Satara", name: "Radhika Talkies", area: "Radhika Road, Satara", screens: 1, capacity: 380, sound: "Dolby Digital", type: "Heritage Cinema" },
+
+      // ================= SANGLI (3 Theatres) =================
+      { id: 226, district: "Sangli", name: "Mukta A2 Cinemas", area: "Vasant Colony, Sangli", screens: 3, capacity: 450, sound: "Dolby 7.1", type: "Multiplex" },
+      { id: 227, district: "Sangli", name: "Pratibha Multiplex", area: "Sangli-Miraj Road, Sangli", screens: 2, capacity: 380, sound: "Dolby Digital", type: "Multiplex" },
+      { id: 228, district: "Sangli", name: "Mahavir Talkies", area: "Gaonbhag, Sangli", screens: 1, capacity: 350, sound: "DTS Surround", type: "Classic Talkies" },
+
+      // ================= SOLAPUR (3 Theatres) =================
+      { id: 229, district: "Solapur", name: "E-Square Multiplex", area: "Hotgi Road, Solapur", screens: 4, capacity: 550, sound: "Dolby Atmos", type: "Multiplex" },
+      { id: 230, district: "Solapur", name: "Bhagwat Chitra Mandir", area: "Navi Peth, Solapur", screens: 2, capacity: 400, sound: "Dolby 7.1", type: "Classic Cinema" },
+      { id: 231, district: "Solapur", name: "Carnival Cinemas Oasis Mall", area: "Murarji Peth, Solapur", screens: 3, capacity: 480, sound: "Dolby Digital", type: "Multiplex" },
+
+      // ================= RATNAGIRI (2 Theatres) =================
+      { id: 232, district: "Ratnagiri", name: "City Pride Multiplex", area: "Karwanchiwadi, Ratnagiri", screens: 3, capacity: 420, sound: "Dolby 7.1", type: "Multiplex" },
+      { id: 233, district: "Ratnagiri", name: "Maruti Talkies", area: "Salvi Stop, Ratnagiri", screens: 1, capacity: 320, sound: "Dolby Digital", type: "Single Screen" },
+
+      // ================= SINDHUDURG (2 Theatres) =================
+      { id: 234, district: "Sindhudurg", name: "Anand Multiplex", area: "Kankavli, Sindhudurg", screens: 2, capacity: 340, sound: "Dolby 7.1", type: "Multiplex" },
+      { id: 235, district: "Sindhudurg", name: "Sawantwadi Talkies", area: "Sawantwadi, Sindhudurg", screens: 1, capacity: 280, sound: "Dolby Surround", type: "Single Screen" },
+
+      // ================= NASHIK (3 Theatres) =================
+      { id: 236, district: "Nashik", name: "Cinemax City Centre Mall", area: "Untwadi, Nashik", screens: 4, capacity: 600, sound: "Dolby Atmos", type: "Multiplex" },
+      { id: 237, district: "Nashik", name: "PVR The Zone Mall", area: "College Road, Nashik", screens: 5, capacity: 680, sound: "Dolby 7.1", type: "Multiplex" },
+      { id: 238, district: "Nashik", name: "Circle Cinema", area: "Ashok Stambh, Nashik", screens: 1, capacity: 420, sound: "Dolby Digital", type: "Heritage Cinema" },
+
+      // ================= PALGHAR (2 Theatres) =================
+      { id: 239, district: "Palghar", name: "Carnival Cinemas", area: "Dattani Mall, Vasai West", screens: 4, capacity: 550, sound: "Dolby 7.1", type: "Multiplex" },
+      { id: 240, district: "Palghar", name: "K Sera Sera Miniplex", area: "Palghar East", screens: 2, capacity: 260, sound: "Dolby Digital", type: "Miniplex" }
     ];
 
-    // Master Movies Catalog
+    // LATEST & NEW MOVIES CATALOG (Real Blockbusters)
     let MOVIES_DATA = [
-      { id: 101, title: "Dharmaveer 2", lang: "Marathi", genre: "Biopic / Drama", duration: 155, basePrice: 170, rating: 4.6, posterIcon: "fa-crown", badgeColor: "border-orange-500/30 text-orange-400 bg-orange-500/10" },
-      { id: 102, title: "Jawan", lang: "Hindi", genre: "Action / Thriller", duration: 169, basePrice: 190, rating: 4.8, posterIcon: "fa-gun", badgeColor: "border-rose-500/30 text-rose-400 bg-rose-500/10" },
-      { id: 103, title: "Stree 2", lang: "Hindi", genre: "Horror / Comedy", duration: 147, basePrice: 180, rating: 4.7, posterIcon: "fa-ghost", badgeColor: "border-purple-500/30 text-purple-400 bg-purple-500/10" },
-      { id: 104, title: "Kalki 2898 AD", lang: "Hindi/Dub", genre: "Sci-Fi / Action", duration: 181, basePrice: 210, rating: 4.5, posterIcon: "fa-robot", badgeColor: "border-sky-500/30 text-sky-400 bg-sky-500/10" },
-      { id: 105, title: "Ved", lang: "Marathi", genre: "Romantic / Drama", duration: 150, basePrice: 150, rating: 4.4, posterIcon: "fa-heart", badgeColor: "border-emerald-500/30 text-emerald-400 bg-emerald-500/10" },
-      { id: 106, title: "Inception", lang: "English", genre: "Sci-Fi / Thriller", duration: 148, basePrice: 200, rating: 4.9, posterIcon: "fa-brain", badgeColor: "border-indigo-500/30 text-indigo-400 bg-indigo-500/10" }
+      { id: 101, title: "Pushpa 2: The Rule", lang: "Hindi/Telugu", genre: "Action / Mass Drama", duration: 190, basePrice: 200, rating: 4.9, posterIcon: "fa-fire", badgeColor: "border-red-500/30 text-red-400 bg-red-500/10" },
+      { id: 102, title: "Chhava", lang: "Marathi/Hindi", genre: "Historical / Epic Action", duration: 165, basePrice: 190, rating: 4.9, posterIcon: "fa-shield-halved", badgeColor: "border-amber-500/30 text-amber-400 bg-amber-500/10" },
+      { id: 103, title: "Dharmaveer 2", lang: "Marathi", genre: "Biopic / Political Drama", duration: 155, basePrice: 170, rating: 4.8, posterIcon: "fa-crown", badgeColor: "border-orange-500/30 text-orange-400 bg-orange-500/10" },
+      { id: 104, title: "Stree 2: Sarkate Ka Aatank", lang: "Hindi", genre: "Horror / Comedy", duration: 147, basePrice: 180, rating: 4.8, posterIcon: "fa-ghost", badgeColor: "border-purple-500/30 text-purple-400 bg-purple-500/10" },
+      { id: 105, title: "Navra Maza Navsacha 2", lang: "Marathi", genre: "Family Comedy / Drama", duration: 142, basePrice: 160, rating: 4.7, posterIcon: "fa-train-subway", badgeColor: "border-emerald-500/30 text-emerald-400 bg-emerald-500/10" },
+      { id: 106, title: "Kalki 2898 AD", lang: "Hindi/Dub", genre: "Sci-Fi / Mythological", duration: 181, basePrice: 200, rating: 4.6, posterIcon: "fa-robot", badgeColor: "border-sky-500/30 text-sky-400 bg-sky-500/10" },
+      { id: 107, title: "Ved", lang: "Marathi", genre: "Romantic / Drama", duration: 150, basePrice: 150, rating: 4.6, posterIcon: "fa-heart", badgeColor: "border-rose-500/30 text-rose-400 bg-rose-500/10" },
+      { id: 108, title: "Singham Again", lang: "Hindi", genre: "Action / Cop Universe", duration: 160, basePrice: 200, rating: 4.7, posterIcon: "fa-bolt", badgeColor: "border-yellow-500/30 text-yellow-400 bg-yellow-500/10" }
     ];
 
-    // Standard Showtimes
+    // AUTHENTIC REAL CINEMA SHOWTIMES
     const SHOWTIMES = [
-      { id: "s1", time: "10:30 AM", label: "Morning Show", audi: "Audi-1 (Dolby 7.1)" },
-      { id: "s2", time: "02:15 PM", label: "Matinee Show", audi: "Audi-1 (Dolby 7.1)" },
-      { id: "s3", time: "06:15 PM", label: "Evening Show", audi: "Audi-2 (Atmos 4K)" },
-      { id: "s4", time: "09:30 PM", label: "Night Show", audi: "Audi-2 (Atmos 4K)" }
+      { id: "s1", time: "09:45 AM", label: "Morning Show", audi: "Audi-1 (Dolby 7.1)" },
+      { id: "s2", time: "12:30 PM", label: "Matinee Show", audi: "Audi-1 (Dolby 7.1)" },
+      { id: "s3", time: "03:45 PM", label: "First Evening", audi: "Audi-2 (Atmos 4K)" },
+      { id: "s4", time: "06:45 PM", label: "Prime Evening", audi: "Audi-2 (Atmos 4K)" },
+      { id: "s5", time: "09:45 PM", label: "Night Show", audi: "Audi-1 (Dolby 7.1)" }
     ];
 
-    // System State
+    // State Variables
     let selectedDistrict = "Kolhapur";
     let selectedMovie = MOVIES_DATA[0];
     let selectedTheatre = THEATRES_DATA[0];
-    let selectedShowtime = SHOWTIMES[0];
+    let selectedShowtime = SHOWTIMES[1]; // default 12:30 PM Matinee
     let currentSelectedSeats = [];
     let bookingsMaster = [];
     let bookingCounter = 1001;
 
-    // Show Occupancy Map: Key = `tId-mId-showTime` -> Set of booked seat codes
+    // Show Occupancy Store: key = `tId-mId-showTime` -> Set of booked seat codes
     let seatOccupancyStore = {};
 
     function getShowKey() {
@@ -776,13 +794,13 @@
     function getOccupiedSeats() {
       const key = getShowKey();
       if (!seatOccupancyStore[key]) {
-        // Seed default pre-booked seats for realism
-        seatOccupancyStore[key] = new Set(["A3", "A4", "B6", "D2"]);
+        // Preload authentic booked seats for demonstration
+        seatOccupancyStore[key] = new Set(["A3", "A4", "B5", "C2", "D4", "D5", "F3"]);
       }
       return seatOccupancyStore[key];
     }
 
-    // INIT FUNCTION
+    // INIT ON LOAD
     window.addEventListener("DOMContentLoaded", () => {
       initDistrictSelectors();
       renderMoviesGrid();
@@ -793,7 +811,7 @@
     });
 
     // -------------------------------------------------------------------------
-    // RENDER FUNCTIONS
+    // DISTRICT CONTROLLER
     // -------------------------------------------------------------------------
 
     function initDistrictSelectors() {
@@ -804,17 +822,19 @@
       pillContainer.innerHTML = "";
 
       WESTERN_DISTRICTS.forEach(d => {
-        // Nav select option
+        const talkieCount = THEATRES_DATA.filter(t => t.district === d).length;
+
+        // Dropdown option
         const opt = document.createElement("option");
         opt.value = d;
-        opt.textContent = d;
+        opt.textContent = `${d} (${talkieCount} Talkies)`;
         if (d === selectedDistrict) opt.selected = true;
         navSelect.appendChild(opt);
 
         // Quick Pill button
         const pill = document.createElement("button");
-        pill.className = `px-3 py-1 rounded-lg text-xs font-semibold transition-all ${d === selectedDistrict ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`;
-        pill.textContent = d;
+        pill.className = `px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${d === selectedDistrict ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`;
+        pill.innerHTML = `<span>${d}</span> <span class="text-[10px] px-1.5 py-0.2 rounded-full ${d === selectedDistrict ? 'bg-rose-800 text-white' : 'bg-slate-900 text-slate-400'}">${talkieCount}</span>`;
         pill.onclick = () => onDistrictChange(d);
         pillContainer.appendChild(pill);
       });
@@ -823,21 +843,29 @@
     function onDistrictChange(dist) {
       selectedDistrict = dist;
       document.getElementById("districtNavSelect").value = dist;
-      document.getElementById("currentDistrictTitle").textContent = dist;
-      initDistrictSelectors(); // Refresh pill highlights
+      document.getElementById("heroDistrictName").textContent = dist;
+      document.getElementById("theatreSectionDistrict").textContent = dist;
 
-      // Filter theatres for district
-      const filtered = THEATRES_DATA.filter(t => t.district === dist);
-      if (filtered.length > 0) {
-        selectedTheatre = filtered[0];
+      const distTheatres = THEATRES_DATA.filter(t => t.district === dist);
+      document.getElementById("heroTalkiesCount").textContent = distTheatres.length;
+      document.getElementById("theatreCountBadge").textContent = `${distTheatres.length} Talkies Available`;
+
+      initDistrictSelectors();
+
+      if (distTheatres.length > 0) {
+        selectedTheatre = distTheatres[0];
       }
 
       currentSelectedSeats = [];
       renderTheatresList();
       renderSeatGrid();
       updateBillSummary();
-      showToast(`Switched district to ${dist}`, "info");
+      showToast(`Showing all ${distTheatres.length} talkies in ${dist}`, "info");
     }
+
+    // -------------------------------------------------------------------------
+    // MOVIES GRID
+    // -------------------------------------------------------------------------
 
     function renderMoviesGrid() {
       const container = document.getElementById("moviesGrid");
@@ -846,33 +874,33 @@
       MOVIES_DATA.forEach(m => {
         const isSelected = m.id === selectedMovie.id;
         const card = document.createElement("div");
-        card.className = `p-4 rounded-xl border transition-all cursor-pointer relative overflow-hidden ${isSelected ? 'bg-rose-950/30 border-rose-500 shadow-lg shadow-rose-500/20' : 'bg-slate-900 border-slate-800 hover:border-slate-700'}`;
+        card.className = `p-4 rounded-xl border transition-all cursor-pointer relative overflow-hidden ${isSelected ? 'bg-rose-950/40 border-rose-500 shadow-lg shadow-rose-500/25 ring-1 ring-rose-500' : 'bg-slate-900 border-slate-800 hover:border-slate-700'}`;
         card.onclick = () => {
           selectedMovie = m;
           currentSelectedSeats = [];
           renderMoviesGrid();
           renderSeatGrid();
           updateBillSummary();
-          showToast(`Selected movie: ${m.title}`, "info");
+          showToast(`Now Showing: ${m.title}`, "info");
         };
 
         card.innerHTML = `
           <div class="flex items-start justify-between">
-            <div class="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-rose-500 text-xl border border-slate-700">
+            <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-rose-500 text-lg border border-slate-700">
               <i class="fa-solid ${m.posterIcon}"></i>
             </div>
             <div class="flex items-center gap-1 text-amber-400 font-bold text-xs bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">
               <i class="fa-solid fa-star text-[10px]"></i> ${m.rating}
             </div>
           </div>
-          <div class="mt-3">
-            <h3 class="font-bold text-white text-base">${m.title}</h3>
-            <div class="flex items-center gap-2 text-xs text-slate-400 mt-0.5">
-              <span>${m.lang}</span> • <span>${m.duration} mins</span>
+          <div class="mt-2.5">
+            <h3 class="font-bold text-white text-sm truncate">${m.title}</h3>
+            <div class="flex items-center gap-1.5 text-xs text-slate-400 mt-0.5">
+              <span>${m.lang}</span> • <span>${m.duration}m</span>
             </div>
-            <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-800/80">
-              <span class="text-xs px-2 py-0.5 rounded-full border ${m.badgeColor}">${m.genre}</span>
-              <span class="text-xs font-mono font-bold text-white">₹${m.basePrice} base</span>
+            <div class="flex items-center justify-between mt-2.5 pt-2 border-t border-slate-800">
+              <span class="text-[10px] px-2 py-0.5 rounded-full border ${m.badgeColor}">${m.genre}</span>
+              <span class="text-xs font-mono font-bold text-emerald-400">₹${m.basePrice}</span>
             </div>
           </div>
         `;
@@ -880,21 +908,21 @@
       });
     }
 
+    // -------------------------------------------------------------------------
+    // THEATRES / TALKIES LIST
+    // -------------------------------------------------------------------------
+
     function renderTheatresList() {
-      const container = document.getElementById("theatreList");
+      const container = document.getElementById("theatreListGrid");
       container.innerHTML = "";
 
       const distTheatres = THEATRES_DATA.filter(t => t.district === selectedDistrict);
-      if (distTheatres.length === 0) {
-        container.innerHTML = `<div class="text-xs text-slate-500 italic p-3">No theatres available in this district.</div>`;
-        return;
-      }
 
-      distTheatres.forEach(t => {
+      distTheatres.forEach((t, idx) => {
         const isSelected = t.id === selectedTheatre.id;
-        const item = document.createElement("div");
-        item.className = `p-2.5 rounded-xl border text-xs cursor-pointer transition-all ${isSelected ? 'bg-rose-500/20 border-rose-500 text-white' : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-700'}`;
-        item.onclick = () => {
+        const card = document.createElement("div");
+        card.className = `p-3.5 rounded-xl border text-xs cursor-pointer transition-all ${isSelected ? 'bg-rose-500/20 border-rose-500 text-white shadow-md' : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700'}`;
+        card.onclick = () => {
           selectedTheatre = t;
           currentSelectedSeats = [];
           renderTheatresList();
@@ -902,17 +930,27 @@
           updateBillSummary();
         };
 
-        item.innerHTML = `
-          <div class="font-bold flex items-center justify-between">
-            <span>${t.name}</span>
-            <span class="text-[10px] text-slate-400">${t.screens} Screens</span>
+        card.innerHTML = `
+          <div class="flex items-start justify-between">
+            <span class="font-bold text-sm text-white">${t.name}</span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full ${t.type.includes('Multiplex') ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'} font-semibold">${t.type}</span>
           </div>
-          <div class="text-slate-400 text-[11px] mt-0.5 flex items-center gap-1">
-            <i class="fa-solid fa-map-pin text-[10px] text-rose-500"></i> ${t.area}
+          <div class="text-slate-400 text-xs mt-1 flex items-center gap-1 truncate">
+            <i class="fa-solid fa-map-pin text-rose-500 text-[10px]"></i> ${t.area}
+          </div>
+          <div class="flex items-center justify-between mt-2.5 pt-2 border-t border-slate-800/80 text-[11px] text-slate-400">
+            <span class="font-mono text-emerald-400 font-semibold"><i class="fa-solid fa-chair mr-1"></i>${t.capacity} Seats</span>
+            <span><i class="fa-solid fa-volume-high text-amber-400 mr-1"></i>${t.sound}</span>
           </div>
         `;
-        container.appendChild(item);
+        container.appendChild(card);
       });
+
+      // Update right side card
+      document.getElementById("activeTheatreName").textContent = selectedTheatre.name;
+      document.getElementById("activeTheatreArea").innerHTML = `<i class="fa-solid fa-location-dot"></i> ${selectedTheatre.area}`;
+      document.getElementById("activeTheatreCapacity").textContent = `${selectedTheatre.capacity} Total Seats`;
+      document.getElementById("activeTheatreScreen").textContent = `Screen 1 (${selectedTheatre.sound})`;
     }
 
     function renderShowtimes() {
@@ -940,60 +978,95 @@
     }
 
     // -------------------------------------------------------------------------
-    // 2D SEAT GRID ENGINE (Matching C++ Show Class Layout)
+    // 2D SEAT MATRIX WITH DISTINCT COLORS & EXACT SEAT COUNTS
     // -------------------------------------------------------------------------
 
     function renderSeatGrid() {
       const container = document.getElementById("seatGridContainer");
       container.innerHTML = "";
 
-      // Update titles
+      // Update header
       document.getElementById("seatSelectionTitle").textContent = `${selectedMovie.title} (${selectedMovie.lang})`;
-      document.getElementById("seatSelectionSubtitle").textContent = `${selectedTheatre.name}, ${selectedTheatre.district} • ${selectedShowtime.time} • ${selectedShowtime.audi}`;
+      document.getElementById("seatSelectionSubtitle").textContent = `${selectedTheatre.name} (${selectedTheatre.district}) • ${selectedShowtime.time} • ${selectedShowtime.audi}`;
 
       const occupied = getOccupiedSeats();
-      const rows = ['A', 'B', 'C', 'D', 'E'];
+
+      // Rows A-G (7 Rows x 8 Columns = 56 Seats for this Audi screen)
+      const rows = [
+        { char: 'A', name: 'Silver', priceOffset: -10 },
+        { char: 'B', name: 'Silver', priceOffset: -10 },
+        { char: 'C', name: 'Gold', priceOffset: 20 },
+        { char: 'D', name: 'Gold', priceOffset: 20 },
+        { char: 'E', name: 'Gold', priceOffset: 20 },
+        { char: 'F', name: 'Recliner', priceOffset: 80 },
+        { char: 'G', name: 'Recliner', priceOffset: 80 }
+      ];
       const cols = 8;
+      const totalHallSeats = rows.length * cols;
 
-      // Update price badges
       const basePrice = selectedMovie.basePrice;
-      document.getElementById("regularPriceBadge").textContent = `₹${basePrice}`;
-      document.getElementById("premiumPriceBadge").textContent = `₹${basePrice + 90}`;
+      document.getElementById("silverPriceBadge").textContent = `₹${basePrice - 10}`;
+      document.getElementById("goldPriceBadge").textContent = `₹${basePrice + 20}`;
+      document.getElementById("premiumPriceBadge").textContent = `₹${basePrice + 80}`;
 
-      rows.forEach((rowChar, rIdx) => {
-        const isPremium = rIdx >= 3; // Rows D, E are Premium Recliners
-        const rowPrice = isPremium ? (basePrice + 90) : basePrice;
+      // Live Occupancy Count
+      let bookedCount = 0;
+      rows.forEach(r => {
+        for (let c = 1; c <= cols; c++) {
+          if (occupied.has(`${r.char}${c}`)) bookedCount++;
+        }
+      });
+      const availableCount = totalHallSeats - bookedCount;
+
+      document.getElementById("seatCountTotal").textContent = totalHallSeats;
+      document.getElementById("seatCountAvailable").textContent = availableCount;
+      document.getElementById("seatCountBooked").textContent = bookedCount;
+      document.getElementById("seatCountSelected").textContent = currentSelectedSeats.length;
+
+      rows.forEach((rObj, rIdx) => {
+        const isRecliner = rObj.name === 'Recliner';
+        const rowPrice = basePrice + rObj.priceOffset;
 
         const rowDiv = document.createElement("div");
         rowDiv.className = "flex items-center justify-between gap-1 sm:gap-2";
 
         // Row Label
         const rowLabel = document.createElement("div");
-        rowLabel.className = `w-6 text-center font-bold text-xs font-mono ${isPremium ? 'text-amber-400' : 'text-slate-400'}`;
-        rowLabel.textContent = rowChar;
+        rowLabel.className = `w-7 text-center font-bold text-xs font-mono ${isRecliner ? 'text-amber-400' : 'text-slate-400'}`;
+        rowLabel.innerHTML = `${rObj.char} <span class="text-[9px] block text-slate-500 font-sans">${rObj.name[0]}</span>`;
         rowDiv.appendChild(rowLabel);
 
-        // Seats Container
+        // Seats Group
         const seatsGroup = document.createElement("div");
         seatsGroup.className = "flex items-center gap-1.5 sm:gap-2 flex-1 justify-center";
 
         for (let c = 1; c <= cols; c++) {
-          const seatCode = `${rowChar}${c}`;
+          const seatCode = `${rObj.char}${c}`;
           const isBooked = occupied.has(seatCode);
           const isSelected = currentSelectedSeats.includes(seatCode);
 
           const seatBtn = document.createElement("button");
-          seatBtn.className = `seat w-8 h-8 sm:w-9 sm:h-9 rounded-lg font-mono text-[11px] font-semibold border flex items-center justify-center ${isBooked ? 'booked' : isSelected ? 'selected' : isPremium ? 'bg-amber-950/20 border-amber-600/40 text-amber-200' : 'bg-slate-800 border-slate-700 text-slate-300'}`;
-          seatBtn.textContent = isBooked ? 'X' : seatCode;
-
+          
           if (isBooked) {
-            seatBtn.title = `Seat ${seatCode} is already booked. Double-booking is blocked!`;
+            // 🔴 BOOKED SEAT (High Contrast Red with Cross)
+            seatBtn.className = "seat booked w-8 h-8 sm:w-9 sm:h-9 rounded-lg font-mono text-[11px] font-bold flex items-center justify-center";
+            seatBtn.innerHTML = `<span>✕</span>`;
+            seatBtn.title = `Seat ${seatCode} is ALREADY BOOKED. Double-booking blocked!`;
             seatBtn.onclick = () => {
-              showToast(`Seat ${seatCode} is already booked! Double booking is prohibited.`, "error");
+              showToast(`Seat ${seatCode} is ALREADY BOOKED [X]! Double booking is prohibited.`, "error");
             };
+          } else if (isSelected) {
+            // 🟡 SELECTED SEAT (Glowing Electric Gold with Checkmark)
+            seatBtn.className = "seat selected w-8 h-8 sm:w-9 sm:h-9 rounded-lg font-mono text-[11px] font-extrabold flex items-center justify-center";
+            seatBtn.innerHTML = `<span>✓</span>`;
+            seatBtn.title = `Seat ${seatCode} Selected (${rObj.name} - ₹${rowPrice})`;
+            seatBtn.onclick = () => toggleSeatSelection(seatCode, rowPrice, rObj.name);
           } else {
-            seatBtn.title = `Seat ${seatCode} (${isPremium ? 'Premium Recliner' : 'Regular'} - ₹${rowPrice})`;
-            seatBtn.onclick = () => toggleSeatSelection(seatCode, rowPrice, isPremium);
+            // 🟢 AVAILABLE / UNBOOKED SEAT (Crisp Green Border & Glow)
+            seatBtn.className = "seat available w-8 h-8 sm:w-9 sm:h-9 rounded-lg font-mono text-[11px] font-bold flex items-center justify-center";
+            seatBtn.textContent = seatCode;
+            seatBtn.title = `🟢 Seat ${seatCode} is FREE (${rObj.name} - ₹${rowPrice})`;
+            seatBtn.onclick = () => toggleSeatSelection(seatCode, rowPrice, rObj.name);
           }
 
           seatsGroup.appendChild(seatBtn);
@@ -1001,7 +1074,7 @@
           // Center Aisle Gap
           if (c === 4) {
             const aisle = document.createElement("div");
-            aisle.className = "w-3 sm:w-5";
+            aisle.className = "w-3 sm:w-6";
             seatsGroup.appendChild(aisle);
           }
         }
@@ -1011,7 +1084,7 @@
       });
     }
 
-    function toggleSeatSelection(code) {
+    function toggleSeatSelection(code, price, category) {
       const idx = currentSelectedSeats.indexOf(code);
       if (idx > -1) {
         currentSelectedSeats.splice(idx, 1);
@@ -1027,8 +1100,23 @@
     }
 
     // -------------------------------------------------------------------------
-    // POLYMORPHIC BILLING CALCULATION (Matching C++ calculateTaxes)
+    // BILLING & GST BREAKDOWN
     // -------------------------------------------------------------------------
+
+    function getSeatPrice(code) {
+      const row = code[0];
+      const base = selectedMovie.basePrice;
+      if (row === 'A' || row === 'B') return base - 10;
+      if (row === 'C' || row === 'D' || row === 'E') return base + 20;
+      return base + 80; // Rows F, G
+    }
+
+    function getSeatCategory(code) {
+      const row = code[0];
+      if (row === 'A' || row === 'B') return "Silver";
+      if (row === 'C' || row === 'D' || row === 'E') return "Gold Exec";
+      return "Recliner";
+    }
 
     function updateBillSummary() {
       const chips = document.getElementById("selectedSeatsChips");
@@ -1043,7 +1131,7 @@
       countBadge.textContent = `${currentSelectedSeats.length} Seat${currentSelectedSeats.length === 1 ? '' : 's'}`;
 
       if (currentSelectedSeats.length === 0) {
-        chips.innerHTML = `<span class="text-slate-500 italic">No seats selected yet. Click grid to select.</span>`;
+        chips.innerHTML = `<span class="text-slate-500 italic">No seats selected yet. Click any 🟢 green seat above.</span>`;
         subtotalEl.textContent = "₹0.00";
         cgstEl.textContent = "₹0.00";
         sgstEl.textContent = "₹0.00";
@@ -1055,17 +1143,15 @@
 
       chips.innerHTML = "";
       let subtotal = 0;
-      const base = selectedMovie.basePrice;
 
       currentSelectedSeats.forEach(code => {
-        const row = code[0];
-        const isPremium = (row === 'D' || row === 'E');
-        const price = isPremium ? (base + 90) : base;
+        const price = getSeatPrice(code);
+        const cat = getSeatCategory(code);
         subtotal += price;
 
         const chip = document.createElement("span");
-        chip.className = `px-2 py-0.5 rounded text-[11px] font-mono font-bold flex items-center gap-1 ${isPremium ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-slate-800 text-slate-200 border border-slate-700'}`;
-        chip.innerHTML = `${code} <span class="text-[9px] text-slate-400">₹${price}</span>`;
+        chip.className = "px-2 py-0.5 rounded text-[11px] font-mono font-bold flex items-center gap-1 bg-amber-500/20 text-amber-300 border border-amber-500/40";
+        chip.innerHTML = `${code} <span class="text-[9px] text-slate-300">(${cat} ₹${price})</span>`;
         chips.appendChild(chip);
       });
 
@@ -1084,7 +1170,7 @@
     }
 
     // -------------------------------------------------------------------------
-    // BOOKING COMMIT & TICKET PRINT GENERATOR
+    // BOOKING CONFIRMATION & TICKET RECEIPT
     // -------------------------------------------------------------------------
 
     function handleConfirmBooking() {
@@ -1096,17 +1182,12 @@
         return;
       }
 
-      // 1. Commit seats to occupancy store
+      // Commit seats
       const occupied = getOccupiedSeats();
       currentSelectedSeats.forEach(code => occupied.add(code));
 
-      // 2. Compute bill
       let subtotal = 0;
-      const base = selectedMovie.basePrice;
-      currentSelectedSeats.forEach(code => {
-        const row = code[0];
-        subtotal += (row === 'D' || row === 'E') ? (base + 90) : base;
-      });
+      currentSelectedSeats.forEach(code => subtotal += getSeatPrice(code));
       const cgst = subtotal * 0.09;
       const sgst = subtotal * 0.09;
       const fee = 30.00;
@@ -1119,6 +1200,7 @@
         district: selectedDistrict,
         theatreId: selectedTheatre.id,
         theatreName: selectedTheatre.name,
+        theatreArea: selectedTheatre.area,
         movieId: selectedMovie.id,
         movieTitle: selectedMovie.title,
         showId: selectedShowtime.id,
@@ -1135,16 +1217,14 @@
 
       bookingsMaster.unshift(newBooking);
 
-      // 3. Display Ticket Receipt Modal
       showTicketModal(newBooking);
 
-      // 4. Reset & Notify
       currentSelectedSeats = [];
       renderSeatGrid();
       updateBillSummary();
       renderMyBookings();
       renderAdminDashboard();
-      showToast(`Booking BK-${newBooking.bookingId} confirmed successfully!`, "success");
+      showToast(`Booking BK-${newBooking.bookingId} confirmed at ${selectedTheatre.name}!`, "success");
     }
 
     function showTicketModal(b) {
@@ -1153,7 +1233,7 @@
       document.getElementById("tktCustName").textContent = b.customerName;
       document.getElementById("tktCustPhone").textContent = b.customerPhone;
       document.getElementById("tktDistrict").textContent = b.district;
-      document.getElementById("tktTheatreName").textContent = b.theatreName;
+      document.getElementById("tktTheatreName").textContent = `${b.theatreName} (${b.theatreArea || b.district})`;
       document.getElementById("tktScreen").textContent = b.screenName;
       document.getElementById("tktMovieTitle").textContent = b.movieTitle;
       document.getElementById("tktShowTime").textContent = b.showTime;
@@ -1171,7 +1251,7 @@
     }
 
     // -------------------------------------------------------------------------
-    // CANCELLATION & 80% REFUND LOGIC
+    // CANCELLATION & 80% REFUND
     // -------------------------------------------------------------------------
 
     function handleCancelBooking(bId) {
@@ -1181,11 +1261,10 @@
       const refundAmount = b.grandTotal * 0.80;
       const cancellationCharge = b.grandTotal - refundAmount;
 
-      const confirmMsg = `Are you sure you want to cancel Booking BK-${bId}?\n\n• Movie: ${b.movieTitle}\n• Seats: ${b.seats.join(', ')}\n• Total Paid: ₹${b.grandTotal.toFixed(2)}\n• 80% Refund: ₹${refundAmount.toFixed(2)}\n• Cancellation Fee (20%): ₹${cancellationCharge.toFixed(2)}\n\nSeats will be immediately released back to available!`;
+      const confirmMsg = `Cancel Booking BK-${bId} at ${b.theatreName}?\n\n• Movie: ${b.movieTitle}\n• Seats: ${b.seats.join(', ')}\n• Total Paid: ₹${b.grandTotal.toFixed(2)}\n• Net Refund (80%): ₹${refundAmount.toFixed(2)}\n• Cancellation Fee (20%): ₹${cancellationCharge.toFixed(2)}\n\nSeats will immediately turn 🟢 Green (Available) again!`;
 
       if (!confirm(confirmMsg)) return;
 
-      // Free seats in occupancy map
       const showKey = `${b.theatreId}-${b.movieId}-${b.showId}`;
       if (seatOccupancyStore[showKey]) {
         b.seats.forEach(sCode => seatOccupancyStore[showKey].delete(sCode));
@@ -1195,7 +1274,7 @@
       renderSeatGrid();
       renderMyBookings();
       renderAdminDashboard();
-      showToast(`Booking BK-${bId} cancelled. Refund of ₹${refundAmount.toFixed(2)} processed!`, "info");
+      showToast(`Booking BK-${bId} Cancelled. Refund of ₹${refundAmount.toFixed(2)} processed!`, "info");
     }
 
     function renderMyBookings() {
@@ -1207,7 +1286,7 @@
           <div class="col-span-full text-center py-12 bg-slate-900 rounded-2xl border border-slate-800 text-slate-400">
             <i class="fa-solid fa-receipt text-4xl mb-3 text-slate-600"></i>
             <p class="text-base font-semibold">No booking transactions recorded yet.</p>
-            <p class="text-xs text-slate-500 mt-1">Book your first movie ticket to view receipt here.</p>
+            <p class="text-xs text-slate-500 mt-1">Book a ticket to view receipt and cancellation options here.</p>
           </div>
         `;
         return;
@@ -1304,6 +1383,7 @@
       document.getElementById("statTotalRev").textContent = `₹${totalRev.toFixed(2)}`;
       document.getElementById("statGstTax").textContent = `₹${totalGst.toFixed(2)}`;
       document.getElementById("statBookingsCount").textContent = confirmedCount;
+      document.getElementById("statTotalTheatres").textContent = THEATRES_DATA.length;
 
       const tbody = document.getElementById("adminBookingsTableBody");
       tbody.innerHTML = "";
@@ -1320,42 +1400,12 @@
           <td class="py-2.5 px-2 font-mono text-rose-400">BK-${b.bookingId}</td>
           <td class="py-2.5 px-2 text-white font-medium">${b.customerName}</td>
           <td class="py-2.5 px-2 text-slate-300">${b.movieTitle}</td>
-          <td class="py-2.5 px-2 text-slate-400">${b.district}</td>
+          <td class="py-2.5 px-2 text-slate-400">${b.theatreName} (${b.district})</td>
           <td class="py-2.5 px-2 font-mono text-emerald-400">₹${b.grandTotal.toFixed(2)}</td>
           <td class="py-2.5 px-2"><span class="px-2 py-0.5 rounded text-[10px] ${b.status === 'CONFIRMED' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}">${b.status}</span></td>
         `;
         tbody.appendChild(tr);
       });
-    }
-
-    function handleAdminAddMovie() {
-      const title = document.getElementById("addMovieTitle").value.trim();
-      const lang = document.getElementById("addMovieLang").value;
-      const genre = document.getElementById("addMovieGenre").value.trim() || "Action";
-      const dur = parseInt(document.getElementById("addMovieDur").value) || 150;
-      const price = parseFloat(document.getElementById("addMoviePrice").value) || 180;
-
-      if (!title) {
-        showToast("Please enter movie title", "warning");
-        return;
-      }
-
-      const newMovie = {
-        id: MOVIES_DATA.length + 101,
-        title: title,
-        lang: lang,
-        genre: genre,
-        duration: dur,
-        basePrice: price,
-        rating: 4.5,
-        posterIcon: "fa-film",
-        badgeColor: "border-rose-500/30 text-rose-400 bg-rose-500/10"
-      };
-
-      MOVIES_DATA.push(newMovie);
-      renderMoviesGrid();
-      showToast(`Added "${title}" to running movie catalog!`, "success");
-      document.getElementById("addMovieTitle").value = "";
     }
 
     function resetAllShowSeats() {
