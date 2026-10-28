@@ -8,6 +8,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- QRCode.js library for scannable digital tickets -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   <script>
@@ -127,6 +129,9 @@
           </button>
           <button onclick="switchTab('myBookingsTab')" id="navMyBookings" class="px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-1.5">
             <i class="fa-solid fa-receipt"></i> <span class="hidden md:inline">My Bookings</span>
+          </button>
+          <button onclick="switchTab('adminTab')" id="navAdmin" class="px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 transition-all flex items-center gap-1.5 border border-emerald-500/30">
+            <i class="fa-solid fa-chart-pie"></i> <span class="hidden md:inline">Admin Panel</span>
           </button>
           <button onclick="switchTab('oopDocTab')" id="navOOP" class="px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 transition-all flex items-center gap-1.5 border border-amber-500/30">
             <i class="fa-solid fa-code"></i> <span class="hidden md:inline">C++ OOP</span>
@@ -385,6 +390,30 @@
               </div>
             </div>
 
+            <!-- Feature 1: Snacks & Popcorn F&B Add-on Card -->
+            <div class="w-full max-w-xl mt-6 pt-5 border-t border-slate-800 space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl">🍿</span>
+                  <div>
+                    <h4 class="font-bold text-sm text-white flex items-center gap-1.5">
+                      स्नॅक्स व फूड कॉम्बो जोडा <span class="text-[10px] text-amber-400 font-semibold border border-amber-500/30 px-2 py-0.5 rounded-full bg-amber-500/10">पर्यायी (Optional)</span>
+                    </h4>
+                    <p class="text-[11px] text-slate-400">चित्रपट पाहताना ताजे पॉपकॉर्न व पेयांचा आनंद घ्या (5% GST)</p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span id="snacksItemCountBadge" class="text-[11px] text-slate-400 font-mono">0 आयटम</span>
+                  <div id="snacksSubtotalBadge" class="font-mono text-xs font-bold text-amber-400">₹0.00</div>
+                </div>
+              </div>
+
+              <!-- Snacks Items Grid -->
+              <div id="snacksGridContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-60 overflow-y-auto pr-1">
+                <!-- Rendered dynamically via JS -->
+              </div>
+            </div>
+
           </div>
 
           <!-- Checkout & Bill Summary (Col 3) -->
@@ -414,23 +443,51 @@
               </div>
             </div>
 
-            <!-- Itemized GST Calculation Table -->
-            <div class="space-y-2 pt-3 border-t border-slate-800 text-xs text-slate-300">
+            <!-- Feature 2: Promo Code & Discount Voucher -->
+            <div class="space-y-2 pt-2 border-t border-slate-800 text-xs">
+              <div class="flex items-center justify-between">
+                <span class="text-slate-400 font-semibold"><i class="fa-solid fa-tag text-emerald-400 mr-1.5"></i>कूपन / डिस्काउंट कोड:</span>
+                <span id="promoStatusTag" class="hidden text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20"></span>
+              </div>
+              <div class="flex gap-1.5">
+                <input type="text" id="promoInput" placeholder="उदा. STUDENT20, MAHA50" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white uppercase font-mono tracking-wider focus:outline-none focus:border-rose-500">
+                <button type="button" onclick="applyPromoCode()" id="applyPromoBtn" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg text-xs transition-all">
+                  लागू करा
+                </button>
+              </div>
+              <!-- Quick promo pills -->
+              <div class="flex flex-wrap gap-1 text-[10px]">
+                <button type="button" onclick="quickApplyPromo('STUDENT20')" class="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 font-mono">STUDENT20 (20% Off)</button>
+                <button type="button" onclick="quickApplyPromo('MAHA50')" class="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 font-mono">MAHA50 (₹50 Off)</button>
+                <button type="button" onclick="quickApplyPromo('FIRSTSHOW')" class="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 font-mono">FIRSTSHOW (15% Off)</button>
+              </div>
+            </div>
+
+            <!-- Itemized Calculation Table -->
+            <div class="space-y-1.5 pt-3 border-t border-slate-800 text-xs text-slate-300">
               <div class="flex justify-between">
-                <span>सीट रक्कम (Subtotal):</span>
+                <span>सीट रक्कम (Tickets Subtotal):</span>
                 <span id="billSubtotal" class="font-mono font-medium">₹0.00</span>
               </div>
-              <div class="flex justify-between text-slate-400">
-                <span>CGST (9.0%):</span>
-                <span id="billCGST" class="font-mono">₹0.00</span>
+              <div id="billSnacksRow" class="hidden flex justify-between text-amber-300">
+                <span>🍿 स्नॅक्स रक्कम (F&B Subtotal):</span>
+                <span id="billSnacksTotal" class="font-mono font-medium">₹0.00</span>
               </div>
               <div class="flex justify-between text-slate-400">
-                <span>SGST (9.0%):</span>
-                <span id="billSGST" class="font-mono">₹0.00</span>
+                <span>तिकीट GST (18.0%):</span>
+                <span id="billTicketGST" class="font-mono">₹0.00</span>
+              </div>
+              <div id="billSnacksGSTRow" class="hidden flex justify-between text-slate-400">
+                <span>स्नॅक्स GST (5.0%):</span>
+                <span id="billSnacksGST" class="font-mono">₹0.00</span>
               </div>
               <div class="flex justify-between text-slate-400">
                 <span>Internet Convenience Fee:</span>
                 <span id="billFee" class="font-mono">₹0.00</span>
+              </div>
+              <div id="billDiscountRow" class="hidden flex justify-between text-emerald-400 font-bold border-t border-dashed border-emerald-500/30 pt-1">
+                <span><i class="fa-solid fa-gift mr-1"></i>कूपन सूट (Discount):</span>
+                <span id="billDiscount" class="font-mono">-₹0.00</span>
               </div>
               <div class="flex justify-between text-base font-extrabold text-white pt-2 border-t border-slate-800">
                 <span>एकूण देय रक्कम (Grand Total):</span>
@@ -438,12 +495,12 @@
               </div>
             </div>
 
-            <!-- Book Ticket Button -->
-            <button onclick="handleConfirmBooking()" id="bookNowBtn" disabled class="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-rose-600 to-amber-600 text-white hover:from-rose-500 hover:to-amber-500 disabled:opacity-40 disabled:cursor-not-allowed shadow-lg shadow-rose-600/30 transition-all flex items-center justify-center gap-2">
-              <i class="fa-solid fa-lock"></i> तिकीट बुक करा (Confirm Booking)
+            <!-- Feature 3: Proceed to Payment Simulator Button -->
+            <button onclick="openPaymentModal()" id="bookNowBtn" disabled class="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-emerald-600 via-rose-600 to-amber-600 text-white hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed shadow-lg shadow-rose-600/30 transition-all flex items-center justify-center gap-2">
+              <i class="fa-solid fa-credit-card"></i> पे करा व तिकीट बुक करा (Pay & Confirm)
             </button>
             <p class="text-[11px] text-center text-slate-500">
-              थेट PDF/प्रिंट पावती मिळेल. रद्द केल्यास ८०% परतावा हमी.
+              सुरक्षित UPI / Card पेमेंट व डिजिटल QR कोड तिकीट. रद्द केल्यास ८०% परतावा.
             </p>
           </div>
 
@@ -542,11 +599,286 @@
               Base class <code class="text-amber-300 font-mono">Seat</code> with pure virtual function <code class="text-emerald-400 font-mono">virtual double calculatePrice() = 0;</code> overridden dynamically by <code class="text-sky-300 font-mono">RegularSeat</code> and <code class="text-sky-300 font-mono">PremiumSeat</code>.
             </p>
           </div>
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+            <h4 class="font-bold text-emerald-400 flex items-center gap-2">
+              <i class="fa-solid fa-credit-card"></i> 3. Abstraction & Payment Interface
+            </h4>
+            <p class="text-xs text-slate-300">
+              Abstract base class <code class="text-emerald-300 font-mono">PaymentGateway</code> with <code class="text-rose-400 font-mono">virtual bool processPayment() = 0;</code> implemented polymorphically by <code class="text-amber-300 font-mono">UPIPayment</code>, <code class="text-amber-300 font-mono">CardPayment</code>, and <code class="text-amber-300 font-mono">NetBankingPayment</code>.
+            </p>
+          </div>
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+            <h4 class="font-bold text-sky-400 flex items-center gap-2">
+              <i class="fa-solid fa-burger"></i> 4. Aggregation & Strategy Pattern
+            </h4>
+            <p class="text-xs text-slate-300">
+              Class <code class="text-sky-300 font-mono">Booking</code> aggregates <code class="text-amber-300 font-mono">vector&lt;SnackItem&gt;</code> (F&B orders), while promo discounts implement a strategy pattern via dynamic discount resolvers.
+            </p>
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- ========================================================================= -->
+    <!-- TAB 5: ADMIN REVENUE & OCCUPANCY ANALYTICS DASHBOARD -->
+    <!-- ========================================================================= -->
+    <div id="adminTab" class="hidden space-y-6">
+      
+      <!-- Admin Header -->
+      <div class="bg-gradient-to-r from-slate-900 via-emerald-950/40 to-slate-900 p-6 sm:p-8 rounded-2xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold mb-2 border border-emerald-500/30">
+            <i class="fa-solid fa-chart-line"></i> लाइव्ह ॲडमिन कंट्रोल व ॲनालिटिक्स सेंटर (Admin Intelligence)
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white">
+            सिनेवेस्ट ॲडमिन डॅशबोर्ड (CineWest Administration)
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-400 mt-1">सर्व 10 जिल्ह्यांतील रिअल-टाइम महसूल, सीट्स ऑक्युपन्सी, F&B स्नॅक्स विक्री आणि चित्रपट व्यवस्थापन.</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800 text-xs">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="font-mono text-emerald-400 font-bold">LIVE TELEMETRY</span>
+          </div>
+          <button onclick="exportBookingsJSON()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold border border-slate-700 transition-all flex items-center gap-1.5">
+            <i class="fa-solid fa-download"></i> Export JSON
+          </button>
+        </div>
+      </div>
+
+      <!-- 4 Live Metric KPI Cards -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Total Revenue -->
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2">
+          <div class="flex items-center justify-between text-xs text-slate-400 font-semibold">
+            <span>एकूण महसूल (Revenue)</span>
+            <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+          </div>
+          <div id="adminMetricRevenue" class="text-2xl font-extrabold text-emerald-400 font-mono">₹0.00</div>
+          <div class="text-[10px] text-slate-500">तिकीट + स्नॅक्स + GST संकलन</div>
+        </div>
+
+        <!-- Total Tickets Sold -->
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2">
+          <div class="flex items-center justify-between text-xs text-slate-400 font-semibold">
+            <span>सीट्स विक्री (Tickets)</span>
+            <div class="w-7 h-7 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center"><i class="fa-solid fa-ticket"></i></div>
+          </div>
+          <div id="adminMetricTickets" class="text-2xl font-extrabold text-rose-400 font-mono">0 सीट्स</div>
+          <div class="text-[10px] text-slate-500">बुक केलेल्या एकूण सीट्स</div>
+        </div>
+
+        <!-- Total Snacks Sold -->
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2">
+          <div class="flex items-center justify-between text-xs text-slate-400 font-semibold">
+            <span>स्नॅक्स महसूल (F&B)</span>
+            <div class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center"><i class="fa-solid fa-burger"></i></div>
+          </div>
+          <div id="adminMetricSnacks" class="text-2xl font-extrabold text-amber-400 font-mono">₹0.00</div>
+          <div class="text-[10px] text-slate-500">पॉपकॉर्न व पेये विक्री</div>
+        </div>
+
+        <!-- Total Transactions -->
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2">
+          <div class="flex items-center justify-between text-xs text-slate-400 font-semibold">
+            <span>एकूण बुकिंग्ज (Orders)</span>
+            <div class="w-7 h-7 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center"><i class="fa-solid fa-receipt"></i></div>
+          </div>
+          <div id="adminMetricOrders" class="text-2xl font-extrabold text-sky-400 font-mono">0 ऑर्डर</div>
+          <div class="text-[10px] text-slate-500">यशस्वी ग्राहक ट्रान्झॅक्शन्स</div>
+        </div>
+      </div>
+
+      <!-- Analytics Breakdown Sections -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- District-wise Occupancy Share -->
+        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
+          <h3 class="font-bold text-sm text-white flex items-center justify-between border-b border-slate-800 pb-3">
+            <span><i class="fa-solid fa-map-location-dot text-rose-500 mr-2"></i>जिल्हावार ऑक्युपन्सी (District Occupancy)</span>
+            <span class="text-xs text-slate-400 font-mono">10 जिल्हे</span>
+          </h3>
+          <div id="adminDistrictBarsContainer" class="space-y-3">
+            <!-- Rendered dynamically via JS -->
+          </div>
+        </div>
+
+        <!-- Top Grossing Movies -->
+        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
+          <h3 class="font-bold text-sm text-white flex items-center justify-between border-b border-slate-800 pb-3">
+            <span><i class="fa-solid fa-trophy text-amber-400 mr-2"></i>चित्रपट कमाई लीडरबोर्ड (Box Office Leaderboard)</span>
+            <span class="text-xs text-amber-400 font-mono">नवीनतम चित्रपट</span>
+          </h3>
+          <div id="adminMoviesLeaderboard" class="space-y-3">
+            <!-- Rendered dynamically via JS -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Add New Movie Form (For viva demonstration) -->
+      <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
+        <h3 class="font-bold text-sm text-white flex items-center gap-2 border-b border-slate-800 pb-3">
+          <i class="fa-solid fa-plus-circle text-emerald-400"></i> नवीन चित्रपट ॲड करा (Admin Quick Movie Ingestion)
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+          <div>
+            <label class="block text-slate-400 mb-1">चित्रपटाचे नाव</label>
+            <input type="text" id="adminNewMovieTitle" placeholder="उदा. Sikandar (सिकंदर)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">भाषा (Language)</label>
+            <input type="text" id="adminNewMovieLang" value="Marathi/Hindi" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">कालावधी (Duration in Mins)</label>
+            <input type="number" id="adminNewMovieDuration" value="150" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">तिकीट मूळ दर (Base Price ₹)</label>
+            <input type="number" id="adminNewMoviePrice" value="180" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white">
+          </div>
+        </div>
+        <div class="flex justify-end">
+          <button type="button" onclick="adminAddNewMovie()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5">
+            <i class="fa-solid fa-plus"></i> कॅटलॉगमध्ये जोडा (Save to Catalog)
+          </button>
+        </div>
+      </div>
+
+    </div>
+
   </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: SECURE PAYMENT GATEWAY SIMULATOR (FEATURE 3) -->
+  <!-- ========================================================================= -->
+  <div id="paymentModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl relative">
+      <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- Payment Header -->
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-lg border border-emerald-500/30">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-white text-base">CineWest Secure Pay</h3>
+            <span class="text-[10px] text-emerald-400 flex items-center gap-1 font-semibold">
+              <i class="fa-solid fa-lock text-[9px]"></i> 256-Bit SSL Encrypted
+            </span>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="text-[10px] text-slate-400 uppercase font-semibold">रक्कम (Amount)</div>
+          <div id="payModalAmount" class="text-lg font-extrabold font-mono text-amber-400">₹0.00</div>
+        </div>
+      </div>
+
+      <!-- Payment Method Switcher Tabs -->
+      <div class="grid grid-cols-3 gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-semibold">
+        <button type="button" onclick="switchPayTab('upi')" id="payTabBtn-upi" class="py-2 rounded-lg bg-rose-600 text-white font-bold transition-all flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-qrcode"></i> UPI / QR
+        </button>
+        <button type="button" onclick="switchPayTab('card')" id="payTabBtn-card" class="py-2 rounded-lg text-slate-400 hover:text-white transition-all flex items-center justify-center gap-1.5">
+          <i class="fa-regular fa-credit-card"></i> Card
+        </button>
+        <button type="button" onclick="switchPayTab('net')" id="payTabBtn-net" class="py-2 rounded-lg text-slate-400 hover:text-white transition-all flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-building-columns"></i> NetBanking
+        </button>
+      </div>
+
+      <!-- TAB 1: UPI & QR CODE -->
+      <div id="payContent-upi" class="space-y-4">
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex flex-col items-center text-center space-y-3">
+          <div class="text-xs font-semibold text-slate-300">कोणत्याही UPI ॲपवरून हा QR स्कॅन करा:</div>
+          <!-- Dynamic QR Image Box -->
+          <div class="p-3 bg-white rounded-2xl shadow-lg border border-slate-300 flex items-center justify-center">
+            <div id="upiLiveQrCode" class="w-36 h-36 flex items-center justify-center"></div>
+          </div>
+          <div class="flex items-center gap-3 text-xs text-slate-400">
+            <span class="flex items-center gap-1"><i class="fa-brands fa-google-pay text-lg text-emerald-400"></i> GPay</span>
+            <span>•</span>
+            <span class="font-bold text-sky-400">PhonePe</span>
+            <span>•</span>
+            <span class="font-bold text-cyan-400">Paytm</span>
+          </div>
+          <div class="text-[11px] text-amber-400 font-mono font-semibold flex items-center gap-1">
+            <i class="fa-regular fa-clock"></i> QR कालबाह्य वेळ: <span id="upiTimer">04:59</span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">किंवा थेट UPI ID प्रविष्ट करा:</label>
+          <div class="flex gap-2">
+            <input type="text" id="upiIdInput" value="sourav@okhdfcbank" placeholder="e.g. mobile@upi" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-500 font-mono">
+            <button type="button" onclick="verifyUpiId()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl border border-slate-700">तपासा</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: CREDIT / DEBIT CARD -->
+      <div id="payContent-card" class="hidden space-y-3">
+        <div class="bg-gradient-to-tr from-slate-800 to-slate-900 p-4 rounded-2xl border border-slate-700 space-y-3 shadow-inner">
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-1">कार्ड नंबर (Card Number)</label>
+            <input type="text" id="cardNumInput" maxlength="19" value="4532 8901 2345 6789" placeholder="XXXX XXXX XXXX XXXX" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono tracking-wider focus:outline-none focus:border-rose-500">
+          </div>
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-1">कार्डवरील नाव (Name on Card)</label>
+            <input type="text" id="cardNameInput" value="Sourav Patil" placeholder="Cardholder Name" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-500 uppercase">
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">वैधता (MM/YY)</label>
+              <input type="text" id="cardExpInput" maxlength="5" value="08/29" placeholder="MM/YY" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono text-center focus:outline-none focus:border-rose-500">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">CVV / CVC</label>
+              <input type="password" id="cardCvvInput" maxlength="3" value="882" placeholder="***" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono text-center focus:outline-none focus:border-rose-500">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: NET BANKING -->
+      <div id="payContent-net" class="hidden space-y-3">
+        <label class="block text-xs font-semibold text-slate-400">आपली बँक निवडा:</label>
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <label class="flex items-center gap-2 p-2.5 bg-slate-950 rounded-xl border border-slate-800 cursor-pointer hover:border-slate-700">
+            <input type="radio" name="bankSelect" checked class="text-rose-600 focus:ring-0">
+            <span class="text-slate-200 font-semibold">State Bank of India</span>
+          </label>
+          <label class="flex items-center gap-2 p-2.5 bg-slate-950 rounded-xl border border-slate-800 cursor-pointer hover:border-slate-700">
+            <input type="radio" name="bankSelect" class="text-rose-600 focus:ring-0">
+            <span class="text-slate-200 font-semibold">HDFC Bank</span>
+          </label>
+          <label class="flex items-center gap-2 p-2.5 bg-slate-950 rounded-xl border border-slate-800 cursor-pointer hover:border-slate-700">
+            <input type="radio" name="bankSelect" class="text-rose-600 focus:ring-0">
+            <span class="text-slate-200 font-semibold">ICICI Bank</span>
+          </label>
+          <label class="flex items-center gap-2 p-2.5 bg-slate-950 rounded-xl border border-slate-800 cursor-pointer hover:border-slate-700">
+            <input type="radio" name="bankSelect" class="text-rose-600 focus:ring-0">
+            <span class="text-slate-200 font-semibold">Bank of Maharashtra</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Payment Action Button & Loader -->
+      <div class="space-y-2 pt-2">
+        <button type="button" onclick="processPaymentTransaction()" id="payExecuteBtn" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold rounded-xl shadow-lg shadow-emerald-600/30 text-sm transition-all flex items-center justify-center gap-2">
+          <i class="fa-solid fa-lock"></i> <span id="payExecuteBtnText">पे करा (Pay Securely)</span>
+        </button>
+        <p class="text-[10px] text-center text-slate-500">
+          आरबीआय मार्गदर्शक तत्त्वांनुसार सुरक्षित पेमेंट गेटवे सिम्युलेटर
+        </p>
+      </div>
+
+    </div>
+  </div>
 
   <!-- MODAL: PRINTABLE TICKET RECEIPT -->
   <div id="ticketModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
@@ -611,17 +943,21 @@
             <span>Seats Subtotal:</span>
             <span id="tktSubtotal">₹380.00</span>
           </div>
-          <div class="flex justify-between text-slate-600">
-            <span>CGST (9.0%):</span>
-            <span id="tktCGST">₹34.20</span>
+          <div id="tktSnacksRow" class="hidden flex justify-between text-amber-800">
+            <span>F&B Snacks & Beverages:</span>
+            <span id="tktSnacks">₹0.00</span>
           </div>
           <div class="flex justify-between text-slate-600">
-            <span>SGST (9.0%):</span>
-            <span id="tktSGST">₹34.20</span>
+            <span>Taxes & GST (Ticket 18% + Food 5%):</span>
+            <span id="tktTaxes">₹34.20</span>
           </div>
           <div class="flex justify-between text-slate-600">
-            <span>Convenience Fee:</span>
+            <span>Internet Convenience Fee:</span>
             <span>₹30.00</span>
+          </div>
+          <div id="tktDiscountRow" class="hidden flex justify-between text-emerald-700 font-bold">
+            <span>Promo Discount (Voucher):</span>
+            <span id="tktDiscount">-₹0.00</span>
           </div>
           <div class="flex justify-between text-sm font-extrabold text-slate-950 pt-1 border-t border-slate-300">
             <span>TOTAL PAID:</span>
@@ -629,10 +965,17 @@
           </div>
         </div>
 
-        <!-- Barcode / QR Simulation -->
-        <div class="text-center pt-1">
-          <div class="tracking-[6px] text-xs font-mono font-bold text-slate-800">||||| | |||| || |||||| | |||||</div>
-          <div class="text-[9px] text-slate-500 font-sans mt-1">Status: VERIFIED & CONFIRMED | Present at Cinema Gate</div>
+        <!-- Live Scannable Digital QR Code (Feature 4) -->
+        <div class="border-t border-slate-200 pt-2 flex flex-col items-center justify-center text-center space-y-1">
+          <div class="text-[9px] font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1">
+            <i class="fa-solid fa-qrcode text-rose-600"></i> डिजिटल गेट पास (DIGITAL VERIFIED PASS)
+          </div>
+          <div class="p-2 bg-white rounded-xl border-2 border-slate-900 shadow-sm flex items-center justify-center">
+            <div id="ticketQrCanvas" class="w-24 h-24 flex items-center justify-center"></div>
+          </div>
+          <div class="text-[9px] text-slate-500 font-mono font-semibold">
+            STATUS: CONFIRMED & VERIFIED • SCAN AT CINEMA ENTRANCE
+          </div>
         </div>
 
       </div>
@@ -932,8 +1275,10 @@
       renderTheatresList();
       renderShowtimes();
       renderSeatGrid();
+      renderSnacksGrid();
       updateBillSummary();
       renderFullScheduleTimetable();
+      renderAdminDashboard();
     });
 
     // -------------------------------------------------------------------------
@@ -1479,36 +1824,187 @@
       return getRowInfo(rIdx, totalRows).type;
     }
 
+    // =========================================================================
+    // FEATURE 1: FOOD & BEVERAGES (SNACKS DATA & SELECTION)
+    // =========================================================================
+    const SNACKS_DATA = [
+      { id: 'f1', name: 'चीझ पॉपकॉर्न (Cheese Popcorn)', sub: 'Large Tub (120g) • Hot & Fresh', price: 180, icon: '🍿' },
+      { id: 'f2', name: 'कॅरामल पॉपकॉर्न (Caramel Popcorn)', sub: 'Sweet Gourmet Golden Tub', price: 200, icon: '🍿' },
+      { id: 'f3', name: 'सॉल्टेड क्लासिक पॉपकॉर्न', sub: 'Regular Tub (80g) • Crunchy', price: 130, icon: '🍿' },
+      { id: 'f4', name: 'पेप्सी / थम्स अप (Pepsi / Thums Up)', sub: '500ml Chilled Bottle', price: 90, icon: '🥤' },
+      { id: 'f5', name: 'समोसा जोडी (Crispy Samosa Duo)', sub: '2 pcs with Mint Chutney', price: 100, icon: '🥟' },
+      { id: 'f6', name: 'चीझ नाचोज (Cheese Nachos)', sub: 'Nachos with Jalapeno Dip & Salsa', price: 160, icon: '🧀' },
+      { id: 'f7', name: 'व्हेज बर्गर कॉम्बो (Burger + Drink)', sub: 'Crispy Burger + Fries + Drink', price: 230, icon: '🍔' }
+    ];
+    let selectedSnacks = {}; // { 'f1': 1, 'f4': 2 }
+
+    function renderSnacksGrid() {
+      const container = document.getElementById("snacksGridContainer");
+      if (!container) return;
+      container.innerHTML = "";
+
+      SNACKS_DATA.forEach(item => {
+        const qty = selectedSnacks[item.id] || 0;
+        const card = document.createElement("div");
+        card.className = `p-2.5 rounded-xl border text-xs flex items-center justify-between transition-all ${
+          qty > 0 
+            ? 'bg-amber-950/40 border-amber-500 shadow-md ring-1 ring-amber-500/30' 
+            : 'bg-slate-900 border-slate-800 hover:border-slate-700'
+        }`;
+
+        card.innerHTML = `
+          <div class="flex items-center gap-2.5">
+            <span class="text-2xl">${item.icon}</span>
+            <div>
+              <div class="font-bold text-white text-xs">${item.name}</div>
+              <div class="text-[10px] text-slate-400">${item.sub}</div>
+              <div class="font-mono font-bold text-amber-400 text-xs mt-0.5">₹${item.price}</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5 bg-slate-950 px-2 py-1 rounded-lg border border-slate-800">
+            <button type="button" onclick="updateSnackQty('${item.id}', -1)" class="w-5 h-5 rounded flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all">-</button>
+            <span class="w-4 text-center font-mono font-bold text-white text-xs">${qty}</span>
+            <button type="button" onclick="updateSnackQty('${item.id}', 1)" class="w-5 h-5 rounded flex items-center justify-center bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition-all">+</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      // Update badge
+      let totalItems = 0;
+      let totalSnacksPrice = 0;
+      for (const id in selectedSnacks) {
+        const count = selectedSnacks[id];
+        if (count > 0) {
+          totalItems += count;
+          const found = SNACKS_DATA.find(s => s.id === id);
+          if (found) totalSnacksPrice += found.price * count;
+        }
+      }
+      const countBadge = document.getElementById("snacksItemCountBadge");
+      const priceBadge = document.getElementById("snacksSubtotalBadge");
+      if (countBadge) countBadge.textContent = `${totalItems} आयटम`;
+      if (priceBadge) priceBadge.textContent = `₹${totalSnacksPrice.toFixed(2)}`;
+    }
+
+    function updateSnackQty(snackId, change) {
+      const current = selectedSnacks[snackId] || 0;
+      const next = current + change;
+      if (next <= 0) {
+        delete selectedSnacks[snackId];
+      } else {
+        selectedSnacks[snackId] = next;
+      }
+      renderSnacksGrid();
+      updateBillSummary();
+    }
+
+    function getSnacksBreakdown() {
+      let subtotal = 0;
+      let list = [];
+      for (const id in selectedSnacks) {
+        const count = selectedSnacks[id];
+        if (count > 0) {
+          const item = SNACKS_DATA.find(s => s.id === id);
+          if (item) {
+            const lineTotal = item.price * count;
+            subtotal += lineTotal;
+            list.push({ ...item, qty: count, lineTotal });
+          }
+        }
+      }
+      const gst = subtotal * 0.05; // 5% GST on F&B
+      return { subtotal, gst, list };
+    }
+
+    // =========================================================================
+    // FEATURE 2: PROMO CODES & DISCOUNT VOUCHERS
+    // =========================================================================
+    const PROMO_CODES = {
+      "STUDENT20": { code: "STUDENT20", type: "percent", val: 0.20, max: 100, label: "Student 20% Discount (Max ₹100)" },
+      "MAHA50": { code: "MAHA50", type: "flat", val: 50, label: "Maharashtra Special Flat ₹50 Off" },
+      "FIRSTSHOW": { code: "FIRSTSHOW", type: "percent", val: 0.15, max: 150, label: "15% First Booking Off" },
+      "POPCORN10": { code: "POPCORN10", type: "percent", val: 0.10, max: 80, label: "10% Snacks Discount" }
+    };
+    let appliedPromo = null;
+
+    function applyPromoCode() {
+      const input = document.getElementById("promoInput");
+      if (!input) return;
+      const code = input.value.trim().toUpperCase();
+      if (!code) {
+        showToast("कृपया आधी वैध प्रोमो कोड टाका.", "warning");
+        return;
+      }
+      if (!PROMO_CODES[code]) {
+        showToast(`'${code}' हा प्रोमो कोड अमान्य आहे! वैध कोड वापरा.`, "error");
+        return;
+      }
+      if (currentSelectedSeats.length === 0) {
+        showToast("प्रोमो कोड लागू करण्यासाठी प्रथम किमान १ सीट निवडा.", "warning");
+        return;
+      }
+
+      appliedPromo = PROMO_CODES[code];
+      updateBillSummary();
+      showToast(`अभिनंदन! '${code}' प्रोमो कोड यशस्वीपणे लागू झाला!`, "success");
+    }
+
+    function quickApplyPromo(code) {
+      const input = document.getElementById("promoInput");
+      if (input) input.value = code;
+      applyPromoCode();
+    }
+
+    function removePromoCode() {
+      appliedPromo = null;
+      const input = document.getElementById("promoInput");
+      if (input) input.value = "";
+      updateBillSummary();
+      showToast("प्रोमो कोड काढून टाकला.", "info");
+    }
+
+    // -------------------------------------------------------------------------
+    // BILLING & GST BREAKDOWN (WITH SNACKS & DISCOUNT)
+    // -------------------------------------------------------------------------
+
     function updateBillSummary() {
       const chips = document.getElementById("selectedSeatsChips");
       const subtotalEl = document.getElementById("billSubtotal");
-      const cgstEl = document.getElementById("billCGST");
-      const sgstEl = document.getElementById("billSGST");
+      const snacksRow = document.getElementById("billSnacksRow");
+      const snacksTotalEl = document.getElementById("billSnacksTotal");
+      const ticketGstEl = document.getElementById("billTicketGST");
+      const snacksGstRow = document.getElementById("billSnacksGSTRow");
+      const snacksGstEl = document.getElementById("billSnacksGST");
       const feeEl = document.getElementById("billFee");
+      const discountRow = document.getElementById("billDiscountRow");
+      const discountEl = document.getElementById("billDiscount");
       const grandTotalEl = document.getElementById("billGrandTotal");
       const countBadge = document.getElementById("selectedCountBadge");
       const bookBtn = document.getElementById("bookNowBtn");
+      const promoStatusTag = document.getElementById("promoStatusTag");
 
       countBadge.textContent = `${currentSelectedSeats.length} Seat${currentSelectedSeats.length === 1 ? '' : 's'}`;
 
       if (currentSelectedSeats.length === 0) {
         chips.innerHTML = `<span class="text-slate-500 italic">कोणतीही सीट निवडलेली नाही. 🟢 हिरव्या सीटवर क्लिक करा.</span>`;
         subtotalEl.textContent = "₹0.00";
-        cgstEl.textContent = "₹0.00";
-        sgstEl.textContent = "₹0.00";
+        if (snacksRow) snacksRow.classList.add("hidden");
+        ticketGstEl.textContent = "₹0.00";
+        if (snacksGstRow) snacksGstRow.classList.add("hidden");
         feeEl.textContent = "₹0.00";
+        if (discountRow) discountRow.classList.add("hidden");
         grandTotalEl.textContent = "₹0.00";
         bookBtn.disabled = true;
         return;
       }
 
       chips.innerHTML = "";
-      let subtotal = 0;
-
+      let ticketSubtotal = 0;
       currentSelectedSeats.forEach(code => {
         const price = getSeatPrice(code);
         const cat = getSeatCategory(code);
-        subtotal += price;
+        ticketSubtotal += price;
 
         const chip = document.createElement("span");
         chip.className = "px-2 py-0.5 rounded text-[11px] font-mono font-bold flex items-center gap-1 bg-amber-500/20 text-amber-300 border border-amber-500/40";
@@ -1516,46 +2012,196 @@
         chips.appendChild(chip);
       });
 
-      // 18% GST (9% CGST + 9% SGST) + ₹30 Flat Fee
-      const cgst = subtotal * 0.09;
-      const sgst = subtotal * 0.09;
-      const fee = 30.00;
-      const grandTotal = subtotal + cgst + sgst + fee;
+      // Snacks calculation
+      const snacks = getSnacksBreakdown();
+      if (snacks.subtotal > 0) {
+        if (snacksRow) {
+          snacksRow.classList.remove("hidden");
+          snacksTotalEl.textContent = `₹${snacks.subtotal.toFixed(2)}`;
+        }
+        if (snacksGstRow) {
+          snacksGstRow.classList.remove("hidden");
+          snacksGstEl.textContent = `₹${snacks.gst.toFixed(2)}`;
+        }
+      } else {
+        if (snacksRow) snacksRow.classList.add("hidden");
+        if (snacksGstRow) snacksGstRow.classList.add("hidden");
+      }
 
-      subtotalEl.textContent = `₹${subtotal.toFixed(2)}`;
-      cgstEl.textContent = `₹${cgst.toFixed(2)}`;
-      sgstEl.textContent = `₹${sgst.toFixed(2)}`;
-      feeEl.textContent = `₹${fee.toFixed(2)}`;
+      // 18% GST on tickets
+      const ticketGst = ticketSubtotal * 0.18;
+      const convenienceFee = 30.00;
+
+      // Discount calculation
+      let discountAmount = 0;
+      if (appliedPromo) {
+        if (appliedPromo.type === "percent") {
+          discountAmount = ticketSubtotal * appliedPromo.val;
+          if (appliedPromo.max && discountAmount > appliedPromo.max) discountAmount = appliedPromo.max;
+        } else if (appliedPromo.type === "flat") {
+          discountAmount = appliedPromo.val;
+        }
+        if (discountAmount > (ticketSubtotal + snacks.subtotal)) {
+          discountAmount = ticketSubtotal + snacks.subtotal;
+        }
+
+        if (discountRow) {
+          discountRow.classList.remove("hidden");
+          discountEl.textContent = `-₹${discountAmount.toFixed(2)}`;
+        }
+        if (promoStatusTag) {
+          promoStatusTag.classList.remove("hidden");
+          promoStatusTag.innerHTML = `✓ ${appliedPromo.code} <button type="button" onclick="removePromoCode()" class="ml-1 text-red-400 hover:text-red-300 font-bold">✕</button>`;
+        }
+      } else {
+        if (discountRow) discountRow.classList.add("hidden");
+        if (promoStatusTag) promoStatusTag.classList.add("hidden");
+      }
+
+      const grandTotal = Math.max(0, ticketSubtotal + snacks.subtotal + ticketGst + snacks.gst + convenienceFee - discountAmount);
+
+      subtotalEl.textContent = `₹${ticketSubtotal.toFixed(2)}`;
+      ticketGstEl.textContent = `₹${ticketGst.toFixed(2)}`;
+      feeEl.textContent = `₹${convenienceFee.toFixed(2)}`;
       grandTotalEl.textContent = `₹${grandTotal.toFixed(2)}`;
       bookBtn.disabled = false;
     }
 
-    // -------------------------------------------------------------------------
-    // BOOKING CONFIRMATION & TICKET RECEIPT
-    // -------------------------------------------------------------------------
+    // =========================================================================
+    // FEATURE 3: PAYMENT GATEWAY SIMULATOR
+    // =========================================================================
+    let activePayMethod = "upi";
+    let upiTimerInterval = null;
 
-    function handleConfirmBooking() {
-      const custName = document.getElementById("custNameInput").value.trim() || "Guest Customer";
-      const custPhone = document.getElementById("custPhoneInput").value.trim() || "9876543210";
-
-      if (currentSelectedSeats.length === 0) {
-        showToast("Please choose at least one seat before booking.", "warning");
+    function openPaymentModal() {
+      const custName = document.getElementById("custNameInput").value.trim();
+      const custPhone = document.getElementById("custPhoneInput").value.trim();
+      if (!custName || !custPhone) {
+        showToast("कृपया आधी ग्राहकाचे नाव आणि फोन नंबर भरा.", "warning");
         return;
       }
+      if (currentSelectedSeats.length === 0) {
+        showToast("कृपया किमान १ सीट निवडा.", "warning");
+        return;
+      }
+
+      const totalText = document.getElementById("billGrandTotal").textContent;
+      document.getElementById("payModalAmount").textContent = totalText;
+      document.getElementById("payExecuteBtnText").textContent = `पे करा ${totalText} (Pay Securely)`;
+
+      // Generate Live Payment QR Code using QRCode library
+      const qrEl = document.getElementById("upiLiveQrCode");
+      qrEl.innerHTML = "";
+      const rawAmt = parseFloat(totalText.replace("₹", "")) || 200;
+      const upiUrl = `upi://pay?pa=cinewest@hdfcbank&pn=CineWest_Cinemas&am=${rawAmt.toFixed(2)}&cu=INR&tn=MovieTicket_${selectedMovie.title}`;
+      if (typeof QRCode !== "undefined") {
+        new QRCode(qrEl, {
+          text: upiUrl,
+          width: 130,
+          height: 130,
+          colorDark: "#0f172a",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      }
+
+      startUpiCountdown();
+      document.getElementById("paymentModal").classList.remove("hidden");
+    }
+
+    function closePaymentModal() {
+      if (upiTimerInterval) clearInterval(upiTimerInterval);
+      document.getElementById("paymentModal").classList.add("hidden");
+    }
+
+    function switchPayTab(method) {
+      activePayMethod = method;
+      ['upi', 'card', 'net'].forEach(m => {
+        const btn = document.getElementById(`payTabBtn-${m}`);
+        const content = document.getElementById(`payContent-${m}`);
+        if (m === method) {
+          btn.className = "py-2 rounded-lg bg-rose-600 text-white font-bold transition-all flex items-center justify-center gap-1.5 shadow-md";
+          content.classList.remove("hidden");
+        } else {
+          btn.className = "py-2 rounded-lg text-slate-400 hover:text-white transition-all flex items-center justify-center gap-1.5";
+          content.classList.add("hidden");
+        }
+      });
+    }
+
+    function startUpiCountdown() {
+      if (upiTimerInterval) clearInterval(upiTimerInterval);
+      let seconds = 300;
+      const el = document.getElementById("upiTimer");
+      upiTimerInterval = setInterval(() => {
+        seconds--;
+        if (seconds <= 0) {
+          clearInterval(upiTimerInterval);
+          el.textContent = "00:00 (Expired)";
+          return;
+        }
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        el.textContent = `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
+      }, 1000);
+    }
+
+    function verifyUpiId() {
+      const upi = document.getElementById("upiIdInput").value.trim();
+      if (!upi || !upi.includes("@")) {
+        showToast("कृपया वैध UPI ID प्रविष्ट करा (उदा. user@upi)", "warning");
+        return;
+      }
+      showToast(`UPI ID '${upi}' यशस्वीरीत्या पडताळणी झाली! ✓`, "success");
+    }
+
+    function processPaymentTransaction() {
+      const btn = document.getElementById("payExecuteBtn");
+      
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> बँक गेटवेद्वारे सुरक्षित पेमेंट प्रक्रिया सुरू आहे...`;
+
+      setTimeout(() => {
+        btn.className = "w-full py-3 bg-emerald-600 text-white font-extrabold rounded-xl shadow-lg shadow-emerald-600/30 text-sm transition-all flex items-center justify-center gap-2";
+        btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> पेमेंट यशस्वी झाले! (Payment Successful ✓)`;
+
+        setTimeout(() => {
+          closePaymentModal();
+          btn.disabled = false;
+          btn.className = "w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold rounded-xl shadow-lg shadow-emerald-600/30 text-sm transition-all flex items-center justify-center gap-2";
+          btn.innerHTML = `<i class="fa-solid fa-lock"></i> <span id="payExecuteBtnText">पे करा (Pay Securely)</span>`;
+          
+          finalizeConfirmedBooking();
+        }, 800);
+      }, 1500);
+    }
+
+    function finalizeConfirmedBooking() {
+      const custName = document.getElementById("custNameInput").value.trim() || "Guest Customer";
+      const custPhone = document.getElementById("custPhoneInput").value.trim() || "9876543210";
 
       // Commit seats
       const occupied = getOccupiedSeats();
       currentSelectedSeats.forEach(code => occupied.add(code));
 
-      let subtotal = 0;
-      currentSelectedSeats.forEach(code => subtotal += getSeatPrice(code));
-      const cgst = subtotal * 0.09;
-      const sgst = subtotal * 0.09;
+      let ticketSubtotal = 0;
+      currentSelectedSeats.forEach(code => ticketSubtotal += getSeatPrice(code));
+      const snacks = getSnacksBreakdown();
+      const ticketGst = ticketSubtotal * 0.18;
       const fee = 30.00;
-      const grandTotal = subtotal + cgst + sgst + fee;
 
+      let discountAmount = 0;
+      if (appliedPromo) {
+        if (appliedPromo.type === "percent") {
+          discountAmount = ticketSubtotal * appliedPromo.val;
+          if (appliedPromo.max && discountAmount > appliedPromo.max) discountAmount = appliedPromo.max;
+        } else if (appliedPromo.type === "flat") {
+          discountAmount = appliedPromo.val;
+        }
+      }
+
+      const grandTotal = Math.max(0, ticketSubtotal + snacks.subtotal + ticketGst + snacks.gst + fee - discountAmount);
       const audi = getActiveAudi();
-      const currentShowKey = getShowKey();
 
       const newBooking = {
         bookingId: bookingCounter++,
@@ -1571,12 +2217,16 @@
         showTimeRange: selectedShowtime.timeRange,
         dateDisplay: selectedDate.display,
         screenName: `${audi.name} (${audi.seats} Seats)`,
-        showKey: currentShowKey,
+        showKey: getShowKey(),
         seats: [...currentSelectedSeats],
-        subtotal: subtotal,
-        cgst: cgst,
-        sgst: sgst,
+        snacksList: [...snacks.list],
+        ticketSubtotal: ticketSubtotal,
+        snacksSubtotal: snacks.subtotal,
+        taxesTotal: ticketGst + snacks.gst,
+        discountAmount: discountAmount,
+        promoCode: appliedPromo ? appliedPromo.code : null,
         grandTotal: grandTotal,
+        paymentMethod: activePayMethod.toUpperCase(),
         status: "CONFIRMED",
         date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
       };
@@ -1585,14 +2235,25 @@
 
       showTicketModal(newBooking);
 
+      // Reset selection state
       currentSelectedSeats = [];
+      selectedSnacks = {};
+      appliedPromo = null;
+      const promoInput = document.getElementById("promoInput");
+      if (promoInput) promoInput.value = "";
+
       renderSeatGrid();
+      renderSnacksGrid();
       updateBillSummary();
       renderMyBookings();
       renderFullScheduleTimetable();
-      showToast(`Booking BK-${newBooking.bookingId} confirmed at ${selectedTheatre.name}!`, "success");
+      renderAdminDashboard();
+      showToast(`बुकिंग BK-${newBooking.bookingId} यशस्वी! डिजिटल QR तिकीट तयार झाले.`, "success");
     }
 
+    // =========================================================================
+    // FEATURE 4: LIVE SCANNABLE QR CODE & TICKET RECEIPT MODAL
+    // =========================================================================
     function showTicketModal(b) {
       document.getElementById("tktBookingId").textContent = `BK-${b.bookingId}`;
       document.getElementById("tktDate").textContent = `${b.dateDisplay || b.date}`;
@@ -1604,16 +2265,209 @@
       document.getElementById("tktMovieTitle").textContent = b.movieTitle;
       document.getElementById("tktShowTime").textContent = b.showTimeRange || b.showTime;
       document.getElementById("tktSeats").textContent = b.seats.join(", ");
-      document.getElementById("tktSubtotal").textContent = `₹${b.subtotal.toFixed(2)}`;
-      document.getElementById("tktCGST").textContent = `₹${b.cgst.toFixed(2)}`;
-      document.getElementById("tktSGST").textContent = `₹${b.sgst.toFixed(2)}`;
+      document.getElementById("tktSubtotal").textContent = `₹${(b.ticketSubtotal || b.subtotal || 0).toFixed(2)}`;
+
+      // Snacks row on ticket
+      const tktSnacksRow = document.getElementById("tktSnacksRow");
+      if (tktSnacksRow) {
+        if (b.snacksSubtotal && b.snacksSubtotal > 0) {
+          tktSnacksRow.classList.remove("hidden");
+          document.getElementById("tktSnacks").textContent = `₹${b.snacksSubtotal.toFixed(2)}`;
+        } else {
+          tktSnacksRow.classList.add("hidden");
+        }
+      }
+
+      // Taxes row on ticket
+      const tktTaxesEl = document.getElementById("tktTaxes");
+      if (tktTaxesEl) {
+        tktTaxesEl.textContent = `₹${(b.taxesTotal || (b.cgst + b.sgst) || 0).toFixed(2)}`;
+      }
+
+      // Discount row on ticket
+      const tktDiscountRow = document.getElementById("tktDiscountRow");
+      if (tktDiscountRow) {
+        if (b.discountAmount && b.discountAmount > 0) {
+          tktDiscountRow.classList.remove("hidden");
+          document.getElementById("tktDiscount").textContent = `-₹${b.discountAmount.toFixed(2)} (${b.promoCode || 'PROMO'})`;
+        } else {
+          tktDiscountRow.classList.add("hidden");
+        }
+      }
+
       document.getElementById("tktGrandTotal").textContent = `₹${b.grandTotal.toFixed(2)}`;
+
+      // Feature 4: Generate Scannable Digital QR Code
+      const qrBox = document.getElementById("ticketQrCanvas");
+      if (qrBox) {
+        qrBox.innerHTML = "";
+        const qrPayload = `CINEWEST-TICKET-VERIFIED\nBookingID: BK-${b.bookingId}\nMovie: ${b.movieTitle}\nTheatre: ${b.theatreName}\nSeats: ${b.seats.join(', ')}\nTotal: INR ${b.grandTotal.toFixed(2)}\nStatus: CONFIRMED ENTRY PASS`;
+        if (typeof QRCode !== "undefined") {
+          new QRCode(qrBox, {
+            text: qrPayload,
+            width: 95,
+            height: 95,
+            colorDark: "#0f172a",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.M
+          });
+        }
+      }
 
       document.getElementById("ticketModal").classList.remove("hidden");
     }
 
     function closeTicketModal() {
       document.getElementById("ticketModal").classList.add("hidden");
+    }
+
+    // =========================================================================
+    // FEATURE 5: ADMIN REVENUE & OCCUPANCY ANALYTICS
+    // =========================================================================
+    function renderAdminDashboard() {
+      let totalRevenue = 0;
+      let totalTickets = 0;
+      let totalSnacksRev = 0;
+      let totalOrders = bookingsMaster.filter(b => b.status === "CONFIRMED").length;
+
+      let baseRevenue = 42850.00;
+      let baseTickets = 194;
+      let baseSnacks = 8450.00;
+      let baseOrders = 72;
+
+      bookingsMaster.forEach(b => {
+        if (b.status === "CONFIRMED") {
+          totalRevenue += b.grandTotal;
+          totalTickets += b.seats.length;
+          totalSnacksRev += (b.snacksSubtotal || 0);
+        }
+      });
+
+      const grandRev = baseRevenue + totalRevenue;
+      const grandTkt = baseTickets + totalTickets;
+      const grandSnk = baseSnacks + totalSnacksRev;
+      const grandOrd = baseOrders + totalOrders;
+
+      const revEl = document.getElementById("adminMetricRevenue");
+      const tktEl = document.getElementById("adminMetricTickets");
+      const snkEl = document.getElementById("adminMetricSnacks");
+      const ordEl = document.getElementById("adminMetricOrders");
+
+      if (revEl) revEl.textContent = `₹${grandRev.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+      if (tktEl) tktEl.textContent = `${grandTkt} सीट्स`;
+      if (snkEl) snkEl.textContent = `₹${grandSnk.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+      if (ordEl) ordEl.textContent = `${grandOrd} ऑर्डर`;
+
+      // District Occupancy Bars
+      const distContainer = document.getElementById("adminDistrictBarsContainer");
+      if (distContainer) {
+        distContainer.innerHTML = "";
+        const sampleDistStats = [
+          { name: "कोल्हापूर (Kolhapur)", pct: 86, color: "bg-rose-500", count: "11 टॉकीज" },
+          { name: "पुणे (Pune)", pct: 94, color: "bg-amber-500", count: "12 टॉकीज" },
+          { name: "मुंबई (Mumbai)", pct: 89, color: "bg-emerald-500", count: "11 टॉकीज" },
+          { name: "सातारा (Satara)", pct: 75, color: "bg-sky-500", count: "7 टॉकीज" },
+          { name: "सांगली (Sangli)", pct: 78, color: "bg-purple-500", count: "6 टॉकीज" },
+          { name: "सोलापूर (Solapur)", pct: 71, color: "bg-orange-500", count: "9 टॉकीज" }
+        ];
+
+        sampleDistStats.forEach(d => {
+          const row = document.createElement("div");
+          row.className = "space-y-1";
+          row.innerHTML = `
+            <div class="flex justify-between text-xs font-semibold">
+              <span class="text-white">${d.name} <span class="text-[10px] text-slate-500 font-normal">(${d.count})</span></span>
+              <span class="font-mono text-slate-300">${d.pct}% ऑक्युपन्सी</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+              <div class="h-full rounded-full ${d.color} transition-all duration-500" style="width: ${d.pct}%"></div>
+            </div>
+          `;
+          distContainer.appendChild(row);
+        });
+      }
+
+      // Top Grossing Movies
+      const moviesBox = document.getElementById("adminMoviesLeaderboard");
+      if (moviesBox) {
+        moviesBox.innerHTML = "";
+        const movieLeaderboard = [
+          { title: "Pushpa 2: The Rule", collection: "₹18,420", share: 88, lang: "Hindi/Telugu" },
+          { title: "Chhava (छावा)", collection: "₹14,960", share: 74, lang: "Marathi/Hindi" },
+          { title: "Bhool Bhulaiyaa 3", collection: "₹11,200", share: 62, lang: "Hindi" },
+          { title: "Singham Again", collection: "₹9,800", share: 55, lang: "Hindi" },
+          { title: "Phullwanti (फुलवंती)", collection: "₹7,650", share: 45, lang: "Marathi" }
+        ];
+
+        movieLeaderboard.forEach((m, idx) => {
+          const item = document.createElement("div");
+          item.className = "flex items-center justify-between p-2 rounded-xl bg-slate-950 border border-slate-800/80 text-xs";
+          item.innerHTML = `
+            <div class="flex items-center gap-2.5">
+              <span class="w-6 h-6 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center font-bold text-amber-400 font-mono text-xs">#${idx + 1}</span>
+              <div>
+                <div class="font-bold text-white">${m.title}</div>
+                <div class="text-[10px] text-slate-500">${m.lang}</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="font-mono font-bold text-emerald-400">${m.collection}</div>
+              <div class="text-[10px] text-slate-500">Box Office Share</div>
+            </div>
+          `;
+          moviesBox.appendChild(item);
+        });
+      }
+    }
+
+    function exportBookingsJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(bookingsMaster, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `CineWest_Bookings_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast("Bookings JSON exported successfully!", "info");
+    }
+
+    function adminAddNewMovie() {
+      const title = document.getElementById("adminNewMovieTitle").value.trim();
+      const lang = document.getElementById("adminNewMovieLang").value.trim();
+      const duration = parseInt(document.getElementById("adminNewMovieDuration").value) || 140;
+      const price = parseFloat(document.getElementById("adminNewMoviePrice").value) || 180;
+
+      if (!title) {
+        showToast("चित्रपटाचे नाव प्रविष्ट करा.", "warning");
+        return;
+      }
+
+      const newMovie = {
+        id: MOVIES_DATA.length + 1,
+        title: title,
+        lang: lang,
+        genre: "Action / Drama",
+        duration: duration,
+        basePrice: price,
+        rating: 4.8,
+        posterIcon: "fa-film",
+        badgeColor: "border-emerald-500/30 text-emerald-400 bg-emerald-500/10"
+      };
+
+      MOVIES_DATA.unshift(newMovie);
+      selectedMovie = newMovie;
+      showtimesList = getShowtimesForMovie(duration);
+      selectedShowtime = showtimesList[1];
+
+      renderMoviesGrid();
+      renderShowtimes();
+      renderSeatGrid();
+      updateBillSummary();
+      renderFullScheduleTimetable();
+      renderAdminDashboard();
+
+      document.getElementById("adminNewMovieTitle").value = "";
+      showToast(`'${title}' चित्रपट यशस्वीरीत्या कॅटलॉगमध्ये ॲड केला!`, "success");
     }
 
     // -------------------------------------------------------------------------
@@ -1644,6 +2498,7 @@
       renderSeatGrid();
       renderMyBookings();
       renderFullScheduleTimetable();
+      renderAdminDashboard();
       showToast(`Booking BK-${bId} Cancelled. Refund of ₹${refundAmount.toFixed(2)} processed!`, "info");
     }
 
@@ -1726,13 +2581,16 @@
     // -------------------------------------------------------------------------
 
     function switchTab(tabId) {
-      ['bookingTab', 'scheduleTab', 'myBookingsTab', 'oopDocTab'].forEach(id => {
-        document.getElementById(id).classList.add("hidden");
+      ['bookingTab', 'scheduleTab', 'myBookingsTab', 'adminTab', 'oopDocTab'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add("hidden");
       });
-      document.getElementById(tabId).classList.remove("hidden");
+      const activeEl = document.getElementById(tabId);
+      if (activeEl) activeEl.classList.remove("hidden");
 
       if (tabId === 'myBookingsTab') renderMyBookings();
       if (tabId === 'scheduleTab') renderFullScheduleTimetable();
+      if (tabId === 'adminTab') renderAdminDashboard();
     }
 
     function showToast(msg, type = "info") {
